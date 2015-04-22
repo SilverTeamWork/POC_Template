@@ -1,0 +1,175 @@
+/* ----------------------------- */
+/* ==forms                       */
+/* ----------------------------- */
+
+/* thanks to HTML5boilerplate,
+* github.com/nathansmith/formalize and www.sitepen.com
+*/
+
+/* buttons */
+.btn {
+	display: inline-block;
+}
+
+/* forms items */
+form,
+fieldset {
+	border: none;
+}
+
+input,
+button,
+select,
+label,
+.btn {
+	vertical-align: middle;
+	font-family: inherit;
+	font-size: inherit;
+}
+
+label {
+	display: inline-block;
+	vertical-align: middle;
+	cursor: pointer;
+}
+
+legend {
+	border: 0;
+	white-space: normal;
+}
+
+textarea {
+	min-height: 5em;
+	vertical-align: top;
+	font-family: inherit;
+	font-size: inherit;
+	resize: vertical;
+}
+
+/* if select styling bugs on WebKit */
+/* select { -webkit-appearance: none; } */
+
+/* 'x' appears on right of search input when text is entered. This removes it */
+input[type="search"]::-webkit-search-decoration,
+input[type="search"]::-webkit-search-cancel-button,
+input[type="search"]::-webkit-search-results-button,
+input[type="search"]::-webkit-search-results-decoration {
+	display: none;
+}
+
+
+input[type=submit],
+input[type=email],
+input[type=number],
+input[type=password],
+input[type=tel],
+input[type=text],
+input[type=url] {
+  appearance: none;
+  display: inline-block;
+  height: 36px;
+  padding: 0 8px;
+  margin: 0;
+  background: #fff;
+  border: 1px solid #d9d9d9;
+  border-top: 1px solid #c0c0c0;
+  box-sizing: border-box;
+  border-radius: 1px;
+  font-size: 15px; /*TAILLE POLICE*/
+  color: #404040;
+  &:hover {
+		border: 1px solid #b9b9b9;
+		border-top: 1px solid #a0a0a0;
+		box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+  }
+  &:focus{
+	outline: none;
+	border: 1px solid @bgColor1-btn;
+	-moz-box-shadow: inset 0 1px 2px rgba(0,0,0,0.3);
+	-webkit-box-shadow: inset 0 1px 2px rgba(0,0,0,0.3);
+	box-shadow: inset 0 1px 2px rgba(0,0,0,0.3);
+  }
+} 
+ 
+input[type=checkbox],
+input[type=radio] {
+  appearance: none;
+  display: inline-block;
+  width: 13px;
+  height: 13px;
+  margin: 0;
+  cursor: pointer;
+  vertical-align: bottom;
+  background: #fff;
+  border: 1px solid #c6c6c6;
+  border-radius: 1px;
+  box-sizing: border-box;
+  position: relative;
+}
+input[type=checkbox]:active,
+input[type=radio]:active {
+  background: #ebebeb;
+}
+input[type=checkbox]:hover {
+  border-color: #c6c6c6;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+}
+input[type=radio] {
+  border-radius: 1em;
+  width: 15px;
+  height: 15px;
+}
+input[type=checkbox]:checked,
+input[type=radio]:checked {
+  background: #fff;
+}
+
+input[type=checkbox]:focus {
+  outline: none;
+  border-color: @bgColor1-btn;
+}
+
+input[type=submit],
+input[type=submit]:visited {
+	appearance:button;
+	border: 1px solid #3079ed;
+	border-radius:@br-btn;
+	color: #fff;
+	text-shadow: 0 1px rgba(0,0,0,0.1);
+	background-color: @bgColor1-btn;
+	background-image: -webkit-linear-gradient(top,@bgColor1-btn,@bgColor2-btn);
+	background-image: -moz-linear-gradient(top,@bgColor1-btn,@bgColor2-btn);
+	background-image: -ms-linear-gradient(top,@bgColor1-btn,@bgColor2-btn);
+	background-image: -o-linear-gradient(top,@bgColor1-btn,@bgColor2-btn);
+	background-image: linear-gradient(top,@bgColor1-btn,@bgColor2-btn);
+	&:hover {		
+		background-color: @bgColor2-btn;
+		background-image: -webkit-linear-gradient(top,@bgColor2-btn,@bgColor1-btn);
+		background-image: -moz-linear-gradient(top,@bgColor2-btn,@bgColor1-btn);
+		background-image: -ms-linear-gradient(top,@bgColor2-btn,@bgColor1-btn);
+		background-image: -o-linear-gradient(top,@bgColor2-btn,@bgColor1-btn);
+		background-image: linear-gradient(top,@bgColor2-btn,@bgColor1-btn);
+	}
+}
+
+::-webkit-input-placeholder {
+	color: #777;
+}
+
+input:-moz-placeholder,
+textarea:-moz-placeholder {
+	color: #777;
+}
+
+.btn:focus,
+input:focus,
+button:focus {
+	outline: 0;
+	-webkit-tap-highlight-color: transparent;
+	-webkit-user-select: none;
+	   -moz-user-select: none;
+	    -ms-user-select: none;
+	        user-select: none;
+	background-image: none;
+	border-color:#4285f4;
+}

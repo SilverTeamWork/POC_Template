@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<title>POC > Accueil</title>
+<meta name="description" content=""/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<link rel="apple-touch-icon" href="apple-touch-icon.png" />
+<link rel="icon" href="favicon.ico" sizes="16x16" type="image/vnd.microsoft.icon">
+<link rel="stylesheet/less" type="text/css" href="css/knacss.less" />
+<!-- a voir si on utilise �a  <script src="js/vendor/modernizr-2.8.3-respond-1.4.2.min.js"></script>-->
+<script src="js/less.min.js"></script>
+<script>
+var header = document.getElementById("header");
+
+function scrolled(){
+	var windowHeight = document.body.clientHeight,
+		currentScroll = document.body.scrollTop || document.documentElement.scrollTop;
+
+	document.getElementById("header").className = (currentScroll >= 273) ? "fixed" : "wrapper clearfix txtcenter";
+}
+
+addEventListener("scroll", scrolled, false);
+</script>
+</head>
+<body class="page-home w100 flexbox-v">
+<div class="header-container">
+  <header id="header" class="wrapper clearfix txtcenter">
+    <h1 class="title"><img src="img/logo-header.png" alt="silverpeas" /></h1>
+    <nav>
+    	<ul>
+        	<li class="selected"><a href="#">Home sweet home</a></li>
+        	<li><a href="#">Administratif</a></li>
+        	<li><a href="#">Commercial</a></li>
+        	<li><a href="#">Communication</a></li>
+        	<li><a href="espace.html">Chez Silverpeas</a>
+        	  <ul>
+        	    <li><a href="#">Silverpeas v6</a></li>
+        	    <li><a href="#">Blogs SP</a></li>
+        	    <li><a href="#">Documentation</a></li>
+        	    <li><a href="#">Logothèque</a></li>
+        	    <li><a href="#">Enquêtes</a></li>
+      	      </ul>
+        	</li>
+       	</ul>
+    </nav>
+  </header>
+</div>
+<div class="main-container flexitem-fluid">
+  <div class="main wrapper clearfix">
+    <section class="pal ">
+      <h2 class="titleCenter">Bienvenue sur le poc <br />de Silverpeas v6 !</h2>
+       <blockquote class="mbl txtcenter">
+    	<p>Nous croyons en la collaboration, et nous savons d'expérience qu'elle est la clef de l'efficacité et de la réussite dans le monde du travail. <br>
+		Dans le monde informatique le partage des connaissances et l'intéraction entre les différents acteurs a toujours était présent. <br>
+		Grâce à ses bases de connaissance, ces forums, un développeur ne part jamais de 0.</p>
+		<p>Nous voulons étendre et améliorer cette façon de penser et de travailler à tous. C'est pourquoi nous avons construit une plate-forme collaborative  qui est à la fois intuitive et prêt à être utilisée: Silverpeas.</p>
+   </blockquote>
+  		<div id="TheTexte">
+  		  <p>Inter haec Orfitus praefecti potestate regebat urbem aeternam ultra   modum delatae dignitatis sese efferens insolenter, vir quidem prudens et   forensium negotiorum oppido gnarus, sed splendore liberalium   doctrinarum minus quam nobilem decuerat institutus, quo administrante   seditiones sunt concitatae graves ob inopiam vini: huius avidis usibus   vulgus intentum ad motus asperos excitatur et crebros.</p>
+  		  <p>Itaque tum Scaevola cum in eam ipsam mentionem incidisset, exposuit   nobis sermonem Laeli de amicitia habitum ab illo secum et cum altero   genero, C. Fannio Marci filio, paucis diebus post mortem Africani. Eius   disputationis sententias memoriae mandavi, quas hoc libro exposui   arbitratu meo; quasi enim ipsos induxi loquentes, ne 'inquam' et   'inquit' saepius interponeretur, atque ut tamquam a praesentibus coram   haberi sermo videretur.</p>
+  		  <p>Fieri, inquam, Triari, nullo pacto potest, ut non dicas, quid non   probes eius, a quo dissentias. quid enim me prohiberet Epicureum esse,   si probarem, quae ille diceret? cum praesertim illa perdiscere ludus   esset. Quam ob rem dissentientium inter se reprehensiones non sunt   vituperandae, maledicta, contumeliae, tum iracundiae, contentiones   concertationesque in disputando pertinaces indignae philosophia mihi   videri solent.</p>
+  		  <p>Quapropter a natura mihi videtur potius quam ab indigentia orta   amicitia, applicatione magis animi cum quodam sensu amandi quam   cogitatione quantum illa res utilitatis esset habitura. Quod quidem   quale sit, etiam in bestiis quibusdam animadverti potest, quae ex se   natos ita amant ad quoddam tempus et ab eis ita amantur ut facile earum   sensus appareat. Quod in homine multo est evidentius, primum ex ea   caritate quae est inter natos et parentes, quae dirimi nisi detestabili   scelere non potest; deinde cum similis sensus exstitit amoris, si   aliquem nacti sumus cuius cum moribus et natura congruamus, quod in eo   quasi lumen aliquod probitatis et virtutis perspicere videamur.</p>
+  		  <p>Hac ita persuasione reducti intra moenia bellatores obseratis undique   portarum aditibus, propugnaculis insistebant et pinnis, congesta   undique saxa telaque habentes in promptu, ut si quis se proripuisset   interius, multitudine missilium sterneretur et lapidum.</p>
+  		  <p>Iamque non umbratis fallaciis res agebatur, sed qua palatium est   extra muros, armatis omne circumdedit. ingressusque obscuro iam die,   ablatis regiis indumentis Caesarem tunica texit et paludamento communi,   eum post haec nihil passurum velut mandato principis iurandi crebritate   confirmans et statim inquit exsurge et inopinum carpento privato   inpositum ad Histriam duxit prope oppidum Polam, ubi quondam peremptum   Constantini filium accepimus Crispum.</p>
+  		  <p>Et quoniam inedia gravi adflictabantur, locum petivere Paleas nomine,   vergentem in mare, valido muro firmatum, ubi conduntur nunc usque   commeatus distribui militibus omne latus Isauriae defendentibus adsueti.   circumstetere igitur hoc munimentum per triduum et trinoctium et cum   neque adclivitas ipsa sine discrimine adiri letali, nec cuniculis   quicquam geri posset, nec procederet ullum obsidionale commentum, maesti   excedunt postrema vi subigente maiora viribus adgressuri.</p>
+  		  <p>Et quoniam mirari posse quosdam peregrinos existimo haec lecturos   forsitan, si contigerit, quamobrem cum oratio ad ea monstranda   deflexerit quae Romae gererentur, nihil praeter seditiones narratur et   tabernas et vilitates harum similis alias, summatim causas perstringam   nusquam a veritate sponte propria digressurus.</p>
+  		  <p>Post hoc impie perpetratum quod in aliis quoque iam timebatur,   tamquam licentia crudelitati indulta per suspicionum nebulas aestimati   quidam noxii damnabantur. quorum pars necati, alii puniti bonorum   multatione actique laribus suis extorres nullo sibi relicto praeter   querelas et lacrimas, stipe conlaticia victitabant, et civili iustoque   imperio ad voluntatem converso cruentam, claudebantur opulentae domus et   clarae.</p>
+  		  <p>Et interdum acciderat, ut siquid in penetrali secreto nullo   citerioris vitae ministro praesente paterfamilias uxori susurrasset in   aurem, velut Amphiarao referente aut Marcio, quondam vatibus inclitis,   postridie disceret imperator. ideoque etiam parietes arcanorum soli   conscii timebantur.</p>
+  		  <p>Haec igitur Epicuri non probo, inquam. De cetero vellem equidem aut   ipse doctrinis fuisset instructior est enim, quod tibi ita videri   necesse est, non satis politus iis artibus, quas qui tenent, eruditi   appellantur aut ne deterruisset alios a studiis. quamquam te quidem   video minime esse deterritum.</p>
+  		  <p>Quo cognito Constantius ultra mortalem modum exarsit ac nequo casu   idem Gallus de futuris incertus agitare quaedam conducentia saluti suae   per itinera conaretur, remoti sunt omnes de industria milites agentes in   civitatibus perviis.</p>
+  		  <p>Circa hos dies Lollianus primae lanuginis adulescens, Lampadi filius   ex praefecto, exploratius causam Maximino spectante, convictus codicem   noxiarum artium nondum per aetatem firmato consilio descripsisse,   exulque mittendus, ut sperabatur, patris inpulsu provocavit ad   principem, et iussus ad eius comitatum duci, de fumo, ut aiunt, in   flammam traditus Phalangio Baeticae consulari cecidit funesti carnificis   manu.</p>
+  		  <p>Et prima post Osdroenam quam, ut dictum est, ab hac descriptione   discrevimus, Commagena, nunc Euphratensis, clementer adsurgit,   Hierapoli, vetere Nino et Samosata civitatibus amplis inlustris.</p>
+  		  <p>Et Epigonus quidem amictu tenus philosophus, ut apparuit, prece   frustra temptata, sulcatis lateribus mortisque metu admoto turpi   confessione cogitatorum socium, quae nulla erant, fuisse firmavit cum   nec vidisset quicquam nec audisset penitus expers forensium rerum;   Eusebius vero obiecta fidentius negans, suspensus in eodem gradu   constantiae stetit latrocinium illud esse, non iudicium clamans.</p>
+  		  <p>Atque, ut Tullius ait, ut etiam ferae fame monitae plerumque ad eum   locum ubi aliquando pastae sunt revertuntur, ita homines instar turbinis   degressi montibus impeditis et arduis loca petivere mari confinia, per   quae viis latebrosis sese convallibusque occultantes cum appeterent   noctes luna etiam tum cornuta ideoque nondum solido splendore fulgente   nauticos observabant quos cum in somnum sentirent effusos per ancoralia,   quadrupedo gradu repentes seseque suspensis passibus iniectantes in   scaphas eisdem sensim nihil opinantibus adsistebant et incendente   aviditate saevitiam ne cedentium quidem ulli parcendo obtruncatis   omnibus merces opimas velut viles nullis repugnantibus avertebant.   haecque non diu sunt perpetrata.</p>
+  		  <p>Et prima post Osdroenam quam, ut dictum est, ab hac descriptione   discrevimus, Commagena, nunc Euphratensis, clementer adsurgit,   Hierapoli, vetere Nino et Samosata civitatibus amplis inlustris.</p>
+  		  <p>Ego vero sic intellego, Patres conscripti, nos hoc tempore in   provinciis decernendis perpetuae pacis habere oportere rationem. Nam   quis hoc non sentit omnia alia esse nobis vacua ab omni periculo atque   etiam suspicione belli?</p>
+  		  <p>Abusus enim multitudine hominum, quam tranquillis in rebus diutius   rexit, ex agrestibus habitaculis urbes construxit multis opibus firmas   et viribus, quarum ad praesens pleraeque licet Graecis nominibus   appellentur, quae isdem ad arbitrium inposita sunt conditoris,   primigenia tamen nomina non amittunt, quae eis Assyria lingua   institutores veteres indiderunt.</p>
+  		  <p>Equitis Romani autem esse filium criminis loco poni ab accusatoribus   neque his iudicantibus oportuit neque defendentibus nobis. Nam quod de   pietate dixistis, est quidem ista nostra existimatio, sed iudicium certe   parentis; quid nos opinemur, audietis ex iuratis; quid parentes   sentiant, lacrimae matris incredibilisque maeror, squalor patris et haec   praesens maestitia, quam cernitis, luctusque declarat.</p>
+	  </div>
+  		<p></p>
+    </section>
+  </div>
+  <!-- #main -->
+</div>
+<!-- #main-container -->
+<div class="footer-container pam">
+  <footer class="wrapper"> 2015 Silverpeas Represente ! Tac tac </footer>
+</div>
+</body>
+</html>
