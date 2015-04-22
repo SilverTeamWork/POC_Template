@@ -18,7 +18,8 @@ function scrolled(){
 	var windowHeight = document.body.clientHeight,
 		currentScroll = document.body.scrollTop || document.documentElement.scrollTop;
 
-	document.getElementById("header").className = (currentScroll >= 273) ? "fixed" : "wrapper clearfix txtcenter";
+	document.getElementById("header").className = (currentScroll >= 273) ? "wrapper clearfix txtcenter fixed" : "wrapper clearfix txtcenter";
+	document.getElementById("aside-app-fixed").className = (currentScroll >= 273) ? "aside-app fixed" : "aside-app";
 }
 
 addEventListener("scroll", scrolled, false);
@@ -46,10 +47,10 @@ function menuToggle(){
         	<li><a href="#">Administratif</a></li>
         	<li><a href="#">Commercial</a></li>
         	<li><a href="#">Communication</a></li>
-        	<li class="selected"><a href="#">Chez Silverpeas</a>
+        	<li class="selected"><a href="espace.html">Chez Silverpeas</a>
         	  <ul>
         	    <li><a href="#">Silverpeas v6</a></li>
-        	    <li><a href="#">Blogs SP</a></li>
+        	    <li><a href="blog.html">Blogs SP</a></li>
         	    <li><a href="#">Documentation</a></li>
         	    <li><a href="#">Logothèque</a></li>
         	    <li><a href="#">Enquêtes</a></li>
@@ -76,19 +77,21 @@ function menuToggle(){
   	<section class="blog with-aside-app">
     	<nav class="breadcrumb"><a href="espace.html" class="space-breadcrump">Chez Silverpeas</a> <a href="blog.html" class="app-breadcrump blog">Blog SP</a></nav>
         <header>
-        	<h2 class="title">Blog SP</h1>
-            <p>Créé pour tout l'équipe, il regroupe les billets aussi bien R&D que projet...</p>
+        	<h2 class="title">Blog SP</h2>
+            <p>Créé pour tout l'équipe, il regroupe les billets aussi bien R&amp;D que projet...</p>
         </header>
-        <aside class="aside-app"><br>
+        <aside class="aside-app" id="aside-app-fixed">
 			Le calendrier ici ...
         </aside>
-        <div>
         <article>
         	<header>
             <time class="calendar-presentation" datetime="2015-04-13"><span class="day">Samedi</span> <span class="number">13</span> <span class="month">MARS</span> <span class="year">2015</span></time>
            
-        	<h3>Réponse à appel d'offres : retour d'expérience</h3>
-            <p class="post-info">Par Lulu, crée le <time datetime="2015-04-22">22 Mars</time>, modifié hier </p>
+        	<h3><a class="link-article" href="#"><span class="editable input text">Réponse à appel d'offres : retour d'expérience</span></a></h3>
+            <p class="post-info">
+                Note <a href="#" class="nb-comment"><img src="/silverpeas/util/icons/talk2user.gif" alt="commentaire"/> 0</a>
+            	
+            </p>
             </header>
             <div class="content-from-wysiwyg">
             		Je récupère notre réponse chez l'imprimeur dans 3/4 d'heure et le dépose dans la foulée.<br>
@@ -127,6 +130,470 @@ function menuToggle(){
                     Je continue à croire que les prospects sont attentifs à une réponse adaptée et personnalisée à leurs besoins.<br>
                     Je continue à croire également que nous devons faire plus de qualité et moins de quantité. 
 			</div>
+        <footer>
+        			
+                    <p class="publication-detail">
+                    	<span class="publication">Publiée le <time datetime="2014-11-19">19/11/2014 15:11</time> <span class="auteur">par Lulu</span></span>
+                        <span class="sep"> - </span>
+                        <span class="modification">Modifié le <time datetime="2014-11-19">22/11/2014 15:11</time> <span class="auteur">par Ingrid</span></span>
+                    </p>
+					<div class="operation">
+						<a title="Modifier" href="Edit?Id=90511759-2f00-4879-b027-10dc6e25e35e"><img title="Modifier" alt="Modifier" src="/silverpeas/util/icons/update.gif"  /></a>
+						<a title="Supprimer" href="javascript:onclick=confirmDelete('90511759-2f00-4879-b027-10dc6e25e35e', 'Etes-vous sûr(e) de vouloir supprimer définitivement cette actualité ?')">
+                        	<img title="Supprimer" alt="Supprimer" src="/silverpeas/util/icons/delete.gif"  />
+                        </a>
+					</div>
+				
+			
+        </footer>
+        </article>
+        <article>
+        	<header>
+            <time class="calendar-presentation" datetime="2015-04-13"><span class="day">Samedi</span> <span class="number">13</span> <span class="month">MARS</span> <span class="year">2015</span></time>
+           
+        	<h3><a href="#"><span class="editable input text">Réponse à appel d'offres : retour d'expérience</span></a></h3>
+            <p class="post-info">
+                Note <a href="#" class="nb-comment"><img src="/silverpeas/util/icons/talk2user.gif" alt="commentaire"/> 0</a>
+            	
+            </p>
+            </header>
+            <div class="content-from-wysiwyg">
+            		Je récupère notre réponse chez l'imprimeur dans 3/4 d'heure et le dépose dans la foulée.<br>
+                    Je voulais en profiter pour faire un petit bilan suite à mon investissement personnel sur cet AO.<br>
+                    <br>
+                    Cela faisait un moment que je voulais participer (presque) de A à Z à une réponse.<br>
+                    Pour sentir les besoins, le formalisme attendu, les délais, le contenu de nos réponses.<br>
+                    L'occasion était trop belle avec cet AO. C'était l'occasion idéale.<br>
+                    <br>
+                    Mon investissement personnel est de 40h (lecture, analyse, chiffrage, argumentaire, nettoyage de notre réponse).<br>
+                    C'est plus que conséquent mais une bonne partie est de l'investissement.<br>
+                    <br>
+                    Nous avons maintenant un mémoire technique homogène et assez complet. Je   pense tout de même qu'il manque quelques captures d'écran bien   senties...<br>
+                    Il utilise sept styles seulement. Nous devons donc repartir de ce modèle de document pour répondre aux prochains AOs.<br>
+                    Il suffit d'afficher uniquement les styles appliqués pour ne pas être tenté d'en utiliser d'autres.<br>
+                    <br>
+                    Le plan est lui aussi cadré :<br>
+                    <ol>
+                      <li>Contexte, objectifs du projet et présentation de Silverpeas</li>
+                      <li>Réponse point à point au cahier des charges</li>
+                      <li>Pilotage du projet, qualité, prestations et livrables</li>
+                      <li>Charges, planning, offre financière et atouts de notre offre</li>
+                    </ol>
+                    <br>
+                    Pour les nouvelles offres, seule la partie 2 nécessite un réel   investissement dont un argumentaire. La phase de chiffrage est   évidemment essentielle.<br>
+                    Cet investissement ne peut évidemment pas toujours être aussi important.   D'où l’intérêt de détecter et qualifier les AOs le plus tôt possible.<br>
+                    Le résultat de la qualification doit déterminer l'investissement maximal   selon l'évaluation de nos chances et l'adéquation du projet avec le   métier de Silverpeas.<br>
+                    <br>
+                    Une bonne partie de l'argumentaire de cet AO devrait pouvoir être réutilisé afin de gagner du temps.<br>
+                    Il faudrait trouver un moyen pour retrouver facilement des fragments d'argumentation passés pour les AOs à venir.<br>
+                    Je vais réfléchir au meilleur moyen de faire cela.<br>
+                    <br>
+                    Je pense qu'il faudrait également revoir nos autres documents afin de les homogénéiser avec le mémoire technique.<br>
+                    Les références du DC2 doivent être mises à jour. Tenir à jour, une liste plus détaillée des projets sur 3 ans glissants.<br>
+                    <br>
+                    Je continue à croire que les prospects sont attentifs à une réponse adaptée et personnalisée à leurs besoins.<br>
+                    Je continue à croire également que nous devons faire plus de qualité et moins de quantité. 
+			</div>
+        <footer>
+        			
+                    <p class="publication-detail">
+                    	<span class="publication">Publiée le <time datetime="2014-11-19">19/11/2014 15:11</time> <span class="auteur">par Lulu</span></span>
+                        <span class="sep"> - </span>
+                        <span class="modification">Modifié le <time datetime="2014-11-19">22/11/2014 15:11</time> <span class="auteur">par Ingrid</span></span>
+                    </p>
+					<div class="operation">
+						<a title="Modifier" href="Edit?Id=90511759-2f00-4879-b027-10dc6e25e35e"><img title="Modifier" alt="Modifier" src="/silverpeas/util/icons/update.gif" /></a>
+						<a title="Supprimer" href="javascript:onclick=confirmDelete('90511759-2f00-4879-b027-10dc6e25e35e', 'Etes-vous sûr(e) de vouloir supprimer définitivement cette actualité ?')">
+                        	<img title="Supprimer" alt="Supprimer" src="/silverpeas/util/icons/delete.gif"  />
+                        </a>
+					</div>
+				
+			
+        </footer>
+        </article>
+        <article>
+        	<header>
+            <time class="calendar-presentation" datetime="2015-04-13"><span class="day">Samedi</span> <span class="number">13</span> <span class="month">MARS</span> <span class="year">2015</span></time>
+           
+        	<h3><a href="#"><span class="editable input text">Réponse à appel d'offres : retour d'expérience</span></a></h3>
+            <p class="post-info">
+                Note <a href="#" class="nb-comment"><img src="/silverpeas/util/icons/talk2user.gif" alt="commentaire"/> 0</a>
+            	
+            </p>
+            </header>
+            <div class="content-from-wysiwyg">
+            		Je récupère notre réponse chez l'imprimeur dans 3/4 d'heure et le dépose dans la foulée.<br>
+                    Je voulais en profiter pour faire un petit bilan suite à mon investissement personnel sur cet AO.<br>
+                    <br>
+                    Cela faisait un moment que je voulais participer (presque) de A à Z à une réponse.<br>
+                    Pour sentir les besoins, le formalisme attendu, les délais, le contenu de nos réponses.<br>
+                    L'occasion était trop belle avec cet AO. C'était l'occasion idéale.<br>
+                    <br>
+                    Mon investissement personnel est de 40h (lecture, analyse, chiffrage, argumentaire, nettoyage de notre réponse).<br>
+                    C'est plus que conséquent mais une bonne partie est de l'investissement.<br>
+                    <br>
+                    Nous avons maintenant un mémoire technique homogène et assez complet. Je   pense tout de même qu'il manque quelques captures d'écran bien   senties...<br>
+                    Il utilise sept styles seulement. Nous devons donc repartir de ce modèle de document pour répondre aux prochains AOs.<br>
+                    Il suffit d'afficher uniquement les styles appliqués pour ne pas être tenté d'en utiliser d'autres.<br>
+                    <br>
+                    Le plan est lui aussi cadré :<br>
+                    <ol>
+                      <li>Contexte, objectifs du projet et présentation de Silverpeas</li>
+                      <li>Réponse point à point au cahier des charges</li>
+                      <li>Pilotage du projet, qualité, prestations et livrables</li>
+                      <li>Charges, planning, offre financière et atouts de notre offre</li>
+                    </ol>
+                    <br>
+                    Pour les nouvelles offres, seule la partie 2 nécessite un réel   investissement dont un argumentaire. La phase de chiffrage est   évidemment essentielle.<br>
+                    Cet investissement ne peut évidemment pas toujours être aussi important.   D'où l’intérêt de détecter et qualifier les AOs le plus tôt possible.<br>
+                    Le résultat de la qualification doit déterminer l'investissement maximal   selon l'évaluation de nos chances et l'adéquation du projet avec le   métier de Silverpeas.<br>
+                    <br>
+                    Une bonne partie de l'argumentaire de cet AO devrait pouvoir être réutilisé afin de gagner du temps.<br>
+                    Il faudrait trouver un moyen pour retrouver facilement des fragments d'argumentation passés pour les AOs à venir.<br>
+                    Je vais réfléchir au meilleur moyen de faire cela.<br>
+                    <br>
+                    Je pense qu'il faudrait également revoir nos autres documents afin de les homogénéiser avec le mémoire technique.<br>
+                    Les références du DC2 doivent être mises à jour. Tenir à jour, une liste plus détaillée des projets sur 3 ans glissants.<br>
+                    <br>
+                    Je continue à croire que les prospects sont attentifs à une réponse adaptée et personnalisée à leurs besoins.<br>
+                    Je continue à croire également que nous devons faire plus de qualité et moins de quantité. 
+			</div>
+        <footer>
+        			
+                    <p class="publication-detail">
+                    	<span class="publication">Publiée le <time datetime="2014-11-19">19/11/2014 15:11</time> <span class="auteur">par Lulu</span></span>
+                        <span class="sep"> - </span>
+                        <span class="modification">Modifié le <time datetime="2014-11-19">22/11/2014 15:11</time> <span class="auteur">par Ingrid</span></span>
+                    </p>
+					<div class="operation">
+						<a title="Modifier" href="Edit?Id=90511759-2f00-4879-b027-10dc6e25e35e"><img title="Modifier" alt="Modifier" src="/silverpeas/util/icons/update.gif" /></a>
+						<a title="Supprimer" href="javascript:onclick=confirmDelete('90511759-2f00-4879-b027-10dc6e25e35e', 'Etes-vous sûr(e) de vouloir supprimer définitivement cette actualité ?')">
+                        	<img title="Supprimer" alt="Supprimer" src="/silverpeas/util/icons/delete.gif"  />
+                        </a>
+					</div>
+				
+			
+        </footer>
+        </article>
+        <article>
+        	<header>
+            <time class="calendar-presentation" datetime="2015-04-13"><span class="day">Samedi</span> <span class="number">13</span> <span class="month">MARS</span> <span class="year">2015</span></time>
+           
+        	<h3><a href="#"><span class="editable input text">Réponse à appel d'offres : retour d'expérience</span></a></h3>
+            <p class="post-info">
+                Note <a href="#" class="nb-comment"><img src="/silverpeas/util/icons/talk2user.gif" alt="commentaire"/> 0</a>
+            	
+            </p>
+            </header>
+            <div class="content-from-wysiwyg">
+            		Je récupère notre réponse chez l'imprimeur dans 3/4 d'heure et le dépose dans la foulée.<br>
+                    Je voulais en profiter pour faire un petit bilan suite à mon investissement personnel sur cet AO.<br>
+                    <br>
+                    Cela faisait un moment que je voulais participer (presque) de A à Z à une réponse.<br>
+                    Pour sentir les besoins, le formalisme attendu, les délais, le contenu de nos réponses.<br>
+                    L'occasion était trop belle avec cet AO. C'était l'occasion idéale.<br>
+                    <br>
+                    Mon investissement personnel est de 40h (lecture, analyse, chiffrage, argumentaire, nettoyage de notre réponse).<br>
+                    C'est plus que conséquent mais une bonne partie est de l'investissement.<br>
+                    <br>
+                    Nous avons maintenant un mémoire technique homogène et assez complet. Je   pense tout de même qu'il manque quelques captures d'écran bien   senties...<br>
+                    Il utilise sept styles seulement. Nous devons donc repartir de ce modèle de document pour répondre aux prochains AOs.<br>
+                    Il suffit d'afficher uniquement les styles appliqués pour ne pas être tenté d'en utiliser d'autres.<br>
+                    <br>
+                    Le plan est lui aussi cadré :<br>
+                    <ol>
+                      <li>Contexte, objectifs du projet et présentation de Silverpeas</li>
+                      <li>Réponse point à point au cahier des charges</li>
+                      <li>Pilotage du projet, qualité, prestations et livrables</li>
+                      <li>Charges, planning, offre financière et atouts de notre offre</li>
+                    </ol>
+                    <br>
+                    Pour les nouvelles offres, seule la partie 2 nécessite un réel   investissement dont un argumentaire. La phase de chiffrage est   évidemment essentielle.<br>
+                    Cet investissement ne peut évidemment pas toujours être aussi important.   D'où l’intérêt de détecter et qualifier les AOs le plus tôt possible.<br>
+                    Le résultat de la qualification doit déterminer l'investissement maximal   selon l'évaluation de nos chances et l'adéquation du projet avec le   métier de Silverpeas.<br>
+                    <br>
+                    Une bonne partie de l'argumentaire de cet AO devrait pouvoir être réutilisé afin de gagner du temps.<br>
+                    Il faudrait trouver un moyen pour retrouver facilement des fragments d'argumentation passés pour les AOs à venir.<br>
+                    Je vais réfléchir au meilleur moyen de faire cela.<br>
+                    <br>
+                    Je pense qu'il faudrait également revoir nos autres documents afin de les homogénéiser avec le mémoire technique.<br>
+                    Les références du DC2 doivent être mises à jour. Tenir à jour, une liste plus détaillée des projets sur 3 ans glissants.<br>
+                    <br>
+                    Je continue à croire que les prospects sont attentifs à une réponse adaptée et personnalisée à leurs besoins.<br>
+                    Je continue à croire également que nous devons faire plus de qualité et moins de quantité. 
+			</div>
+        <footer>
+        			
+                    <p class="publication-detail">
+                    	<span class="publication">Publiée le <time datetime="2014-11-19">19/11/2014 15:11</time> <span class="auteur">par Lulu</span></span>
+                        <span class="sep"> - </span>
+                        <span class="modification">Modifié le <time datetime="2014-11-19">22/11/2014 15:11</time> <span class="auteur">par Ingrid</span></span>
+                    </p>
+					<div class="operation">
+						<a title="Modifier" href="Edit?Id=90511759-2f00-4879-b027-10dc6e25e35e"><img title="Modifier" alt="Modifier" src="/silverpeas/util/icons/update.gif" /></a>
+						<a title="Supprimer" href="javascript:onclick=confirmDelete('90511759-2f00-4879-b027-10dc6e25e35e', 'Etes-vous sûr(e) de vouloir supprimer définitivement cette actualité ?')">
+                        	<img title="Supprimer" alt="Supprimer" src="/silverpeas/util/icons/delete.gif"  />
+                        </a>
+					</div>
+				
+			
+        </footer>
+        </article>
+        <article>
+        	<header>
+            <time class="calendar-presentation" datetime="2015-04-13"><span class="day">Samedi</span> <span class="number">13</span> <span class="month">MARS</span> <span class="year">2015</span></time>
+           
+        	<h3><a href="#"><span class="editable input text">Réponse à appel d'offres : retour d'expérience</span></a></h3>
+            <p class="post-info">
+                Note <a href="#" class="nb-comment"><img src="/silverpeas/util/icons/talk2user.gif" alt="commentaire"/> 0</a>
+            	
+            </p>
+            </header>
+            <div class="content-from-wysiwyg">
+            		Je récupère notre réponse chez l'imprimeur dans 3/4 d'heure et le dépose dans la foulée.<br>
+                    Je voulais en profiter pour faire un petit bilan suite à mon investissement personnel sur cet AO.<br>
+                    <br>
+                    Cela faisait un moment que je voulais participer (presque) de A à Z à une réponse.<br>
+                    Pour sentir les besoins, le formalisme attendu, les délais, le contenu de nos réponses.<br>
+                    L'occasion était trop belle avec cet AO. C'était l'occasion idéale.<br>
+                    <br>
+                    Mon investissement personnel est de 40h (lecture, analyse, chiffrage, argumentaire, nettoyage de notre réponse).<br>
+                    C'est plus que conséquent mais une bonne partie est de l'investissement.<br>
+                    <br>
+                    Nous avons maintenant un mémoire technique homogène et assez complet. Je   pense tout de même qu'il manque quelques captures d'écran bien   senties...<br>
+                    Il utilise sept styles seulement. Nous devons donc repartir de ce modèle de document pour répondre aux prochains AOs.<br>
+                    Il suffit d'afficher uniquement les styles appliqués pour ne pas être tenté d'en utiliser d'autres.<br>
+                    <br>
+                    Le plan est lui aussi cadré :<br>
+                    <ol>
+                      <li>Contexte, objectifs du projet et présentation de Silverpeas</li>
+                      <li>Réponse point à point au cahier des charges</li>
+                      <li>Pilotage du projet, qualité, prestations et livrables</li>
+                      <li>Charges, planning, offre financière et atouts de notre offre</li>
+                    </ol>
+                    <br>
+                    Pour les nouvelles offres, seule la partie 2 nécessite un réel   investissement dont un argumentaire. La phase de chiffrage est   évidemment essentielle.<br>
+                    Cet investissement ne peut évidemment pas toujours être aussi important.   D'où l’intérêt de détecter et qualifier les AOs le plus tôt possible.<br>
+                    Le résultat de la qualification doit déterminer l'investissement maximal   selon l'évaluation de nos chances et l'adéquation du projet avec le   métier de Silverpeas.<br>
+                    <br>
+                    Une bonne partie de l'argumentaire de cet AO devrait pouvoir être réutilisé afin de gagner du temps.<br>
+                    Il faudrait trouver un moyen pour retrouver facilement des fragments d'argumentation passés pour les AOs à venir.<br>
+                    Je vais réfléchir au meilleur moyen de faire cela.<br>
+                    <br>
+                    Je pense qu'il faudrait également revoir nos autres documents afin de les homogénéiser avec le mémoire technique.<br>
+                    Les références du DC2 doivent être mises à jour. Tenir à jour, une liste plus détaillée des projets sur 3 ans glissants.<br>
+                    <br>
+                    Je continue à croire que les prospects sont attentifs à une réponse adaptée et personnalisée à leurs besoins.<br>
+                    Je continue à croire également que nous devons faire plus de qualité et moins de quantité. 
+			</div>
+        <footer>
+        			
+                    <p class="publication-detail">
+                    	<span class="publication">Publiée le <time datetime="2014-11-19">19/11/2014 15:11</time> <span class="auteur">par Lulu</span></span>
+                        <span class="sep"> - </span>
+                        <span class="modification">Modifié le <time datetime="2014-11-19">22/11/2014 15:11</time> <span class="auteur">par Ingrid</span></span>
+                    </p>
+					<div class="operation">
+						<a title="Modifier" href="Edit?Id=90511759-2f00-4879-b027-10dc6e25e35e"><img title="Modifier" alt="Modifier" src="/silverpeas/util/icons/update.gif" /></a>
+						<a title="Supprimer" href="javascript:onclick=confirmDelete('90511759-2f00-4879-b027-10dc6e25e35e', 'Etes-vous sûr(e) de vouloir supprimer définitivement cette actualité ?')">
+                        	<img title="Supprimer" alt="Supprimer" src="/silverpeas/util/icons/delete.gif"  />
+                        </a>
+					</div>
+				
+			
+        </footer>
+        </article>
+        <article>
+        	<header>
+            <time class="calendar-presentation" datetime="2015-04-13"><span class="day">Samedi</span> <span class="number">13</span> <span class="month">MARS</span> <span class="year">2015</span></time>
+           
+        	<h3><a href="#"><span class="editable input text">Réponse à appel d'offres : retour d'expérience</span></a></h3>
+            <p class="post-info">
+                Note <a href="#" class="nb-comment"><img src="/silverpeas/util/icons/talk2user.gif" alt="commentaire"/> 0</a>
+            	
+            </p>
+            </header>
+            <div class="content-from-wysiwyg">
+            		Je récupère notre réponse chez l'imprimeur dans 3/4 d'heure et le dépose dans la foulée.<br>
+                    Je voulais en profiter pour faire un petit bilan suite à mon investissement personnel sur cet AO.<br>
+                    <br>
+                    Cela faisait un moment que je voulais participer (presque) de A à Z à une réponse.<br>
+                    Pour sentir les besoins, le formalisme attendu, les délais, le contenu de nos réponses.<br>
+                    L'occasion était trop belle avec cet AO. C'était l'occasion idéale.<br>
+                    <br>
+                    Mon investissement personnel est de 40h (lecture, analyse, chiffrage, argumentaire, nettoyage de notre réponse).<br>
+                    C'est plus que conséquent mais une bonne partie est de l'investissement.<br>
+                    <br>
+                    Nous avons maintenant un mémoire technique homogène et assez complet. Je   pense tout de même qu'il manque quelques captures d'écran bien   senties...<br>
+                    Il utilise sept styles seulement. Nous devons donc repartir de ce modèle de document pour répondre aux prochains AOs.<br>
+                    Il suffit d'afficher uniquement les styles appliqués pour ne pas être tenté d'en utiliser d'autres.<br>
+                    <br>
+                    Le plan est lui aussi cadré :<br>
+                    <ol>
+                      <li>Contexte, objectifs du projet et présentation de Silverpeas</li>
+                      <li>Réponse point à point au cahier des charges</li>
+                      <li>Pilotage du projet, qualité, prestations et livrables</li>
+                      <li>Charges, planning, offre financière et atouts de notre offre</li>
+                    </ol>
+                    <br>
+                    Pour les nouvelles offres, seule la partie 2 nécessite un réel   investissement dont un argumentaire. La phase de chiffrage est   évidemment essentielle.<br>
+                    Cet investissement ne peut évidemment pas toujours être aussi important.   D'où l’intérêt de détecter et qualifier les AOs le plus tôt possible.<br>
+                    Le résultat de la qualification doit déterminer l'investissement maximal   selon l'évaluation de nos chances et l'adéquation du projet avec le   métier de Silverpeas.<br>
+                    <br>
+                    Une bonne partie de l'argumentaire de cet AO devrait pouvoir être réutilisé afin de gagner du temps.<br>
+                    Il faudrait trouver un moyen pour retrouver facilement des fragments d'argumentation passés pour les AOs à venir.<br>
+                    Je vais réfléchir au meilleur moyen de faire cela.<br>
+                    <br>
+                    Je pense qu'il faudrait également revoir nos autres documents afin de les homogénéiser avec le mémoire technique.<br>
+                    Les références du DC2 doivent être mises à jour. Tenir à jour, une liste plus détaillée des projets sur 3 ans glissants.<br>
+                    <br>
+                    Je continue à croire que les prospects sont attentifs à une réponse adaptée et personnalisée à leurs besoins.<br>
+                    Je continue à croire également que nous devons faire plus de qualité et moins de quantité. 
+			</div>
+        <footer>
+        			
+                    <p class="publication-detail">
+                    	<span class="publication">Publiée le <time datetime="2014-11-19">19/11/2014 15:11</time> <span class="auteur">par Lulu</span></span>
+                        <span class="sep"> - </span>
+                        <span class="modification">Modifié le <time datetime="2014-11-19">22/11/2014 15:11</time> <span class="auteur">par Ingrid</span></span>
+                    </p>
+					<div class="operation">
+						<a title="Modifier" href="Edit?Id=90511759-2f00-4879-b027-10dc6e25e35e"><img title="Modifier" alt="Modifier" src="/silverpeas/util/icons/update.gif" /></a>
+						<a title="Supprimer" href="javascript:onclick=confirmDelete('90511759-2f00-4879-b027-10dc6e25e35e', 'Etes-vous sûr(e) de vouloir supprimer définitivement cette actualité ?')">
+                        	<img title="Supprimer" alt="Supprimer" src="/silverpeas/util/icons/delete.gif"  />
+                        </a>
+					</div>
+				
+			
+        </footer>
+        </article>
+        <article>
+        	<header>
+            <time class="calendar-presentation" datetime="2015-04-13"><span class="day">Samedi</span> <span class="number">13</span> <span class="month">MARS</span> <span class="year">2015</span></time>
+           
+        	<h3><a href="#"><span class="editable input text">Réponse à appel d'offres : retour d'expérience</span></a></h3>
+            <p class="post-info">
+                Note <a href="#" class="nb-comment"><img src="/silverpeas/util/icons/talk2user.gif" alt="commentaire"/> 0</a>
+            	
+            </p>
+            </header>
+            <div class="content-from-wysiwyg">
+            		Je récupère notre réponse chez l'imprimeur dans 3/4 d'heure et le dépose dans la foulée.<br>
+                    Je voulais en profiter pour faire un petit bilan suite à mon investissement personnel sur cet AO.<br>
+                    <br>
+                    Cela faisait un moment que je voulais participer (presque) de A à Z à une réponse.<br>
+                    Pour sentir les besoins, le formalisme attendu, les délais, le contenu de nos réponses.<br>
+                    L'occasion était trop belle avec cet AO. C'était l'occasion idéale.<br>
+                    <br>
+                    Mon investissement personnel est de 40h (lecture, analyse, chiffrage, argumentaire, nettoyage de notre réponse).<br>
+                    C'est plus que conséquent mais une bonne partie est de l'investissement.<br>
+                    <br>
+                    Nous avons maintenant un mémoire technique homogène et assez complet. Je   pense tout de même qu'il manque quelques captures d'écran bien   senties...<br>
+                    Il utilise sept styles seulement. Nous devons donc repartir de ce modèle de document pour répondre aux prochains AOs.<br>
+                    Il suffit d'afficher uniquement les styles appliqués pour ne pas être tenté d'en utiliser d'autres.<br>
+                    <br>
+                    Le plan est lui aussi cadré :<br>
+                    <ol>
+                      <li>Contexte, objectifs du projet et présentation de Silverpeas</li>
+                      <li>Réponse point à point au cahier des charges</li>
+                      <li>Pilotage du projet, qualité, prestations et livrables</li>
+                      <li>Charges, planning, offre financière et atouts de notre offre</li>
+                    </ol>
+                    <br>
+                    Pour les nouvelles offres, seule la partie 2 nécessite un réel   investissement dont un argumentaire. La phase de chiffrage est   évidemment essentielle.<br>
+                    Cet investissement ne peut évidemment pas toujours être aussi important.   D'où l’intérêt de détecter et qualifier les AOs le plus tôt possible.<br>
+                    Le résultat de la qualification doit déterminer l'investissement maximal   selon l'évaluation de nos chances et l'adéquation du projet avec le   métier de Silverpeas.<br>
+                    <br>
+                    Une bonne partie de l'argumentaire de cet AO devrait pouvoir être réutilisé afin de gagner du temps.<br>
+                    Il faudrait trouver un moyen pour retrouver facilement des fragments d'argumentation passés pour les AOs à venir.<br>
+                    Je vais réfléchir au meilleur moyen de faire cela.<br>
+                    <br>
+                    Je pense qu'il faudrait également revoir nos autres documents afin de les homogénéiser avec le mémoire technique.<br>
+                    Les références du DC2 doivent être mises à jour. Tenir à jour, une liste plus détaillée des projets sur 3 ans glissants.<br>
+                    <br>
+                    Je continue à croire que les prospects sont attentifs à une réponse adaptée et personnalisée à leurs besoins.<br>
+                    Je continue à croire également que nous devons faire plus de qualité et moins de quantité. 
+			</div>
+        <footer>
+        			
+                    <p class="publication-detail">
+                    	<span class="publication">Publiée le <time datetime="2014-11-19">19/11/2014 15:11</time> <span class="auteur">par Lulu</span></span>
+                        <span class="sep"> - </span>
+                        <span class="modification">Modifié le <time datetime="2014-11-19">22/11/2014 15:11</time> <span class="auteur">par Ingrid</span></span>
+                    </p>
+					<div class="operation">
+						<a title="Modifier" href="Edit?Id=90511759-2f00-4879-b027-10dc6e25e35e"><img title="Modifier" alt="Modifier" src="/silverpeas/util/icons/update.gif" /></a>
+						<a title="Supprimer" href="javascript:onclick=confirmDelete('90511759-2f00-4879-b027-10dc6e25e35e', 'Etes-vous sûr(e) de vouloir supprimer définitivement cette actualité ?')">
+                        	<img title="Supprimer" alt="Supprimer" src="/silverpeas/util/icons/delete.gif"  />
+                        </a>
+					</div>
+				
+			
+        </footer>
+        </article>
+        <article>
+        	<header>
+            <time class="calendar-presentation" datetime="2015-04-13"><span class="day">Samedi</span> <span class="number">13</span> <span class="month">MARS</span> <span class="year">2015</span></time>
+           
+        	<h3><a href="#"><span class="editable input text">Réponse à appel d'offres : retour d'expérience</span></a></h3>
+            <p class="post-info">
+                Note <a href="#" class="nb-comment"><img src="/silverpeas/util/icons/talk2user.gif" alt="commentaire"/> 0</a>
+            	
+            </p>
+            </header>
+            <div class="content-from-wysiwyg">
+            		Je récupère notre réponse chez l'imprimeur dans 3/4 d'heure et le dépose dans la foulée.<br>
+                    Je voulais en profiter pour faire un petit bilan suite à mon investissement personnel sur cet AO.<br>
+                    <br>
+                    Cela faisait un moment que je voulais participer (presque) de A à Z à une réponse.<br>
+                    Pour sentir les besoins, le formalisme attendu, les délais, le contenu de nos réponses.<br>
+                    L'occasion était trop belle avec cet AO. C'était l'occasion idéale.<br>
+                    <br>
+                    Mon investissement personnel est de 40h (lecture, analyse, chiffrage, argumentaire, nettoyage de notre réponse).<br>
+                    C'est plus que conséquent mais une bonne partie est de l'investissement.<br>
+                    <br>
+                    Nous avons maintenant un mémoire technique homogène et assez complet. Je   pense tout de même qu'il manque quelques captures d'écran bien   senties...<br>
+                    Il utilise sept styles seulement. Nous devons donc repartir de ce modèle de document pour répondre aux prochains AOs.<br>
+                    Il suffit d'afficher uniquement les styles appliqués pour ne pas être tenté d'en utiliser d'autres.<br>
+                    <br>
+                    Le plan est lui aussi cadré :<br>
+                    <ol>
+                      <li>Contexte, objectifs du projet et présentation de Silverpeas</li>
+                      <li>Réponse point à point au cahier des charges</li>
+                      <li>Pilotage du projet, qualité, prestations et livrables</li>
+                      <li>Charges, planning, offre financière et atouts de notre offre</li>
+                    </ol>
+                    <br>
+                    Pour les nouvelles offres, seule la partie 2 nécessite un réel   investissement dont un argumentaire. La phase de chiffrage est   évidemment essentielle.<br>
+                    Cet investissement ne peut évidemment pas toujours être aussi important.   D'où l’intérêt de détecter et qualifier les AOs le plus tôt possible.<br>
+                    Le résultat de la qualification doit déterminer l'investissement maximal   selon l'évaluation de nos chances et l'adéquation du projet avec le   métier de Silverpeas.<br>
+                    <br>
+                    Une bonne partie de l'argumentaire de cet AO devrait pouvoir être réutilisé afin de gagner du temps.<br>
+                    Il faudrait trouver un moyen pour retrouver facilement des fragments d'argumentation passés pour les AOs à venir.<br>
+                    Je vais réfléchir au meilleur moyen de faire cela.<br>
+                    <br>
+                    Je pense qu'il faudrait également revoir nos autres documents afin de les homogénéiser avec le mémoire technique.<br>
+                    Les références du DC2 doivent être mises à jour. Tenir à jour, une liste plus détaillée des projets sur 3 ans glissants.<br>
+                    <br>
+                    Je continue à croire que les prospects sont attentifs à une réponse adaptée et personnalisée à leurs besoins.<br>
+                    Je continue à croire également que nous devons faire plus de qualité et moins de quantité. 
+			</div>
+        <footer>
+        			
+                    <p class="publication-detail">
+                    	<span class="publication">Publiée le <time datetime="2014-11-19">19/11/2014 15:11</time> <span class="auteur">par Lulu</span></span>
+                        <span class="sep"> - </span>
+                        <span class="modification">Modifié le <time datetime="2014-11-19">22/11/2014 15:11</time> <span class="auteur">par Ingrid</span></span>
+                    </p>
+					<div class="operation">
+						<a title="Modifier" href="Edit?Id=90511759-2f00-4879-b027-10dc6e25e35e"><img title="Modifier" alt="Modifier" src="/silverpeas/util/icons/update.gif" /></a>
+						<a title="Supprimer" href="javascript:onclick=confirmDelete('90511759-2f00-4879-b027-10dc6e25e35e', 'Etes-vous sûr(e) de vouloir supprimer définitivement cette actualité ?')">
+                        	<img title="Supprimer" alt="Supprimer" src="/silverpeas/util/icons/delete.gif"  />
+                        </a>
+					</div>
+				
+			
+        </footer>
         </article>
         <footer>
         	--

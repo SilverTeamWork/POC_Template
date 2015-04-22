@@ -18,7 +18,7 @@ function scrolled(){
 	var windowHeight = document.body.clientHeight,
 		currentScroll = document.body.scrollTop || document.documentElement.scrollTop;
 
-	document.getElementById("header").className = (currentScroll >= 273) ? "fixed" : "wrapper clearfix txtcenter";
+	document.getElementById("header").className = (currentScroll >= 273) ?  "wrapper clearfix txtcenter fixed" : "wrapper clearfix txtcenter";
 }
 
 addEventListener("scroll", scrolled, false);
@@ -49,7 +49,7 @@ function menuToggle(){
         	<li class="selected"><a href="#">Chez Silverpeas</a>
         	  <ul>
         	    <li><a href="#">Silverpeas v6</a></li>
-        	    <li><a href="#">Blogs SP</a></li>
+        	    <li><a href="blog.html">Blogs SP</a></li>
         	    <li><a href="#">Documentation</a></li>
         	    <li><a href="#">Logothèque</a></li>
         	    <li><a href="#">Enquêtes</a></li>
@@ -61,7 +61,7 @@ function menuToggle(){
 </div>
 <div class="main-container flexitem-fluid flexbox-h">
   <aside class="aside-gauche" id="nav-gauche">
-  	<a class="icon-menu" href="#" title="Cacher ce menu que je ne saurais voir" onclick="menuToggle();">Menu</a>
+  	<a class="icon-menu" href="#" title="Cacher ce menu que je ne saurais voir" onClick="menuToggle();">Menu</a>
   	<nav>
         <ul>
             <li><a href="#">Silverpeas v6</a></li>
