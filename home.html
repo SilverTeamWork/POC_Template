@@ -10,6 +10,7 @@
 <link rel="stylesheet/less" type="text/css" href="css/knacss.less" />
 <!-- a voir si on utilise �a  <script src="js/vendor/modernizr-2.8.3-respond-1.4.2.min.js"></script>-->
 <script src="js/less.min.js"></script>
+  <script src="js/main.js"></script>
 <script>
 var header = document.getElementById("header");
 
@@ -49,7 +50,7 @@ addEventListener("scroll", scrolled, false);
 <div class="main-container flexitem-fluid">
   <div class="main wrapper clearfix">
     <section class="pal ">
-      <h2 class="titleCenter">Bienvenue sur le poc <br />de Silverpeas v6 !</h2>
+      <h2 class="titleCenter">Bienvenue sur le poc <br />de Silverpeas v6</h2>
        <blockquote class="mbl txtcenter">
     	<p>Nous croyons en la collaboration, et nous savons d'expérience qu'elle est la clef de l'efficacité et de la réussite dans le monde du travail. <br>
 		Dans le monde informatique le partage des connaissances et l'intéraction entre les différents acteurs a toujours était présent. <br>
@@ -87,5 +88,14 @@ addEventListener("scroll", scrolled, false);
 <div class="footer-container pam">
   <footer class="wrapper"> 2015 Silverpeas Represente ! Tac tac </footer>
 </div>
+<script>
+  // just to test the session id that was retrieved is valid
+  get('http://localhost:8000/silverpeas/services/profile/users/0').then(function(user) {
+    var text = document.querySelector('.titleCenter').innerHTML;
+    document.querySelector('.titleCenter').innerHTML = text + ' ' + user.firstName + ' ' + user.lastName;
+  }, function(error) {
+    alert(error);
+  });
+</script>
 </body>
 </html>
