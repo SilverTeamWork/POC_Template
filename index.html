@@ -2,58 +2,61 @@
 
 <html lang="fr">
 <head>
-	<meta charset="utf-8" />
+  <meta charset="utf-8"/>
 
-	<title>POC > Page de login</title>
-	
-	<meta name="description" content=""/>
-	<meta name="viewport" content="width=device-width, initial-scale=1"/>
-	
-	<link rel="apple-touch-icon" href="apple-touch-icon.png" />
-	<link rel="icon" href="favicon.ico" sizes="16x16" type="image/vnd.microsoft.icon">
-	
-	<link rel="stylesheet/less" type="text/css" href="css/knacss.less" />
+  <title>POC > Page de login</title>
 
-   <!-- a voir si on utilise �a  <script src="js/vendor/modernizr-2.8.3-respond-1.4.2.min.js"></script>-->
-	<script src="js/less.min.js"></script>
-	<script src="js/main.js"></script>
-	
+  <meta name="description" content=""/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+  <link rel="apple-touch-icon" href="apple-touch-icon.png"/>
+  <link rel="icon" href="favicon.ico" sizes="16x16" type="image/vnd.microsoft.icon">
+
+  <link rel="stylesheet/less" type="text/css" href="css/knacss.less"/>
+
+  <!-- a voir si on utilise �a  <script src="js/vendor/modernizr-2.8.3-respond-1.4.2.min.js"></script>-->
+  <script src="js/less.min.js"></script>
+  <script src="js/main.js"></script>
+
 </head>
-    <body class="page-login w100 flexbox-v">
+<body class="page-login w100 flexbox-v">
 
-        <div class="header-container ">
-            <header class="wrapper clearfix txtcenter">
-                <h1 class="title">Poc poc poc pocker face</h1>
-            </header>
+<div class="header-container ">
+  <header class="wrapper clearfix txtcenter">
+    <h1 class="title">Poc poc poc pocker face</h1>
+  </header>
+</div>
+
+<div class="main-container flexitem-fluid flexalign-center">
+  <div class="main wrapper clearfix txtcenter ">
+
+    <section class="loginform bloc pal ">
+      <h2>Connectez-vous</h2>
+
+      <form name="login" action="home.html" method="get" accept-charset="utf-8">
+        <div class="mbm">
+          <label for="identifiant" class="hide">Identifiant</label>
+          <input class="w100" id="identifiant" type="text" name="identifiant" placeholder="prenom.nom" required="required"/>
         </div>
-
-        <div class="main-container flexitem-fluid flexalign-center">
-            <div class="main wrapper clearfix txtcenter ">
-			
-				<section class="loginform bloc pal ">
-				<h2>Connectez-vous</h2>
-				<form name="login" action="home.html" method="get" accept-charset="utf-8">
-					<div class="mbm">
-						<label for="identifiant" class="hide">Identifiant</label>
-						<input class="w100" id="identifiant" type="text" name="identifiant" placeholder="prenom.nom" required="required" />
-					</div>
-					<div class="mbm">
-						<label for="password" class="hide">Password</label>
-						<input class="w100" id="password" type="password" name="password" placeholder="password" required="required" />
-					</div>
-					<div>
-						<input type="submit" value="Login" class="w100" onclick="return validateCredentials('#identifiant', '#password')"/>
-					</div>
-				</form>
-				</section>
-				
-            </div> <!-- #main -->
-        </div> <!-- #main-container -->
-
-        <div class="footer-container pam">
-            <footer class="wrapper">
-                 2015 Silverpeas Represente ! Tac tac
-            </footer>
+        <div class="mbm">
+          <label for="password" class="hide">Password</label>
+          <input class="w100" id="password" type="password" name="password" placeholder="password" required="required"/>
         </div>
-    </body>
+        <div>
+          <input type="submit" value="Login" class="w100" onclick="return validateCredentials('#identifiant', '#password')"/>
+        </div>
+      </form>
+    </section>
+
+  </div>
+  <!-- #main -->
+</div>
+<!-- #main-container -->
+
+<div class="footer-container pam">
+  <footer class="wrapper">
+    2015 Silverpeas Represente ! Tac tac
+  </footer>
+</div>
+</body>
 </html>

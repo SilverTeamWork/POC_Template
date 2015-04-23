@@ -19,7 +19,7 @@ var cache = new function() {
 }
 
 var authenticate = function(login, password) {
-  var url = 'http://localhost:8000/silverpeas/services/profile/users/0';
+  var url = 'http://localhost:8000/silverpeas/services/profile/users/me';
   return new Promise(function(resolve, reject) {
     var req = new XMLHttpRequest();
     req.open('GET', url, false);
