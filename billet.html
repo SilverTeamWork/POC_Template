@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<title>POC > Blog</title>
+<meta name="description" content=""/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<link rel="apple-touch-icon" href="apple-touch-icon.png" />
+<link rel="icon" href="favicon.ico" sizes="16x16" type="image/vnd.microsoft.icon">
+<link rel="stylesheet/less" type="text/css" href="css/knacss.less" />
+<!-- a voir si on utilise �a  <script src="js/vendor/modernizr-2.8.3-respond-1.4.2.min.js"></script>-->
+<script src="js/less.min.js"></script>
+<script>
+
+var menuState = 'show';
+
+function scrolled(){
+	var windowHeight = document.body.clientHeight,
+		currentScroll = document.body.scrollTop || document.documentElement.scrollTop;
+
+	document.getElementById("header").className = (currentScroll >= 273) ? "wrapper clearfix txtcenter fixed" : "wrapper clearfix txtcenter";
+	document.getElementById("aside-app-fixed").className = (currentScroll >= 273) ? "aside-app fixed" : "aside-app";
+}
+
+addEventListener("scroll", scrolled, false);
+
+function menuToggle(){
+	if(menuState=="show"){
+		document.getElementById('nav-gauche').className='aside-gauche minimize'; 
+		menuState = "hide";
+	}else {
+		document.getElementById('nav-gauche').className='aside-gauche';  
+		menuState = "show";
+	}
+	
+	return false;
+}
+</script>
+</head>
+<body class="page-home w100 flexbox-v">
+<div class="header-container">
+  <header id="header" class="wrapper clearfix txtcenter">
+    <h1 class="title"><img src="img/logo-header.png" alt="silverpeas" /></h1>
+    <nav>
+      <ul>
+        <li><a href="home.html">Home sweet home</a></li>
+        <li><a href="#">Administratif</a></li>
+        <li><a href="#">Commercial</a></li>
+        <li><a href="#">Communication</a></li>
+        <li class="selected"><a href="espace.html">Chez Silverpeas</a>
+          <ul>
+            <li><a href="#">Silverpeas v6</a></li>
+            <li><a href="blog.html">Blogs SP</a></li>
+            <li><a href="#">Documentation</a></li>
+            <li><a href="#">Logothèque</a></li>
+            <li><a href="#">Enquêtes</a></li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+  </header>
+</div>
+<div class="main-container flexitem-fluid flexbox-h">
+  <aside class="aside-gauche" id="nav-gauche"> <a class="icon-menu" href="#" title="Cacher ce menu que je ne saurais voir" onClick="menuToggle();">Menu</a>
+    <nav>
+      <ul>
+        <li><a href="#">Silverpeas v6</a></li>
+        <li><a href="blog.html">Blogs SP</a></li>
+        <li><a href="#">Documentation</a></li>
+        <li><a href="#">Logothèque</a></li>
+        <li><a href="#">Enquêtes</a></li>
+      </ul>
+    </nav>
+  </aside>
+  <div class="main wrapper flexitem-fluid application">
+    <section class="publication blog with-aside-app">
+      <nav class="breadcrumb"><a href="espace.html" class="space-breadcrump">Chez Silverpeas</a> <a href="blog.html" class="app-breadcrump blog">Blog SP</a> <a href="billet.html" class="publication-breadcrump blog">Réponse à appel d'offres : retour d'expérience</a></nav>
+      <header>
+        <h2 class="title">Réponse à appel d'offres : retour d'expérience</h2>
+        <p class="post-info"> LE_PLUGIN_NOTE <a href="#commentaires" class="nb-comment"><img src="/silverpeas/util/icons/talk2user.gif" alt="commentaire"/> 2</a> </p>
+      </header>
+      <aside class="aside-app" id="aside-app-fixed">  LE_PLUGIN_CALENDAR </aside>
+      <div class="content-from-wysiwyg"> Je récupère notre réponse chez l'imprimeur dans 3/4 d'heure et le dépose dans la foulée.<br>
+        Je voulais en profiter pour faire un petit bilan suite à mon investissement personnel sur cet AO.<br>
+        <br>
+        Cela faisait un moment que je voulais participer (presque) de A à Z à une réponse.<br>
+        Pour sentir les besoins, le formalisme attendu, les délais, le contenu de nos réponses.<br>
+        L'occasion était trop belle avec cet AO. C'était l'occasion idéale.<br>
+        <br>
+        Mon investissement personnel est de 40h (lecture, analyse, chiffrage, argumentaire, nettoyage de notre réponse).<br>
+        C'est plus que conséquent mais une bonne partie est de l'investissement.<br>
+        <br>
+        Nous avons maintenant un mémoire technique homogène et assez complet. Je   pense tout de même qu'il manque quelques captures d'écran bien   senties...<br>
+        Il utilise sept styles seulement. Nous devons donc repartir de ce modèle de document pour répondre aux prochains AOs.<br>
+        Il suffit d'afficher uniquement les styles appliqués pour ne pas être tenté d'en utiliser d'autres.<br>
+        <br>
+        Le plan est lui aussi cadré :<br>
+        <ol>
+          <li>Contexte, objectifs du projet et présentation de Silverpeas</li>
+          <li>Réponse point à point au cahier des charges</li>
+          <li>Pilotage du projet, qualité, prestations et livrables</li>
+          <li>Charges, planning, offre financière et atouts de notre offre</li>
+        </ol>
+        <br>
+        Pour les nouvelles offres, seule la partie 2 nécessite un réel   investissement dont un argumentaire. La phase de chiffrage est   évidemment essentielle.<br>
+        Cet investissement ne peut évidemment pas toujours être aussi important.   D'où l’intérêt de détecter et qualifier les AOs le plus tôt possible.<br>
+        Le résultat de la qualification doit déterminer l'investissement maximal   selon l'évaluation de nos chances et l'adéquation du projet avec le   métier de Silverpeas.<br>
+        <br>
+        Une bonne partie de l'argumentaire de cet AO devrait pouvoir être réutilisé afin de gagner du temps.<br>
+        Il faudrait trouver un moyen pour retrouver facilement des fragments d'argumentation passés pour les AOs à venir.<br>
+        Je vais réfléchir au meilleur moyen de faire cela.<br>
+        <br>
+        Je pense qu'il faudrait également revoir nos autres documents afin de les homogénéiser avec le mémoire technique.<br>s
+        Les références du DC2 doivent être mises à jour. Tenir à jour, une liste plus détaillée des projets sur 3 ans glissants.<br>
+        <br>
+        Je continue à croire que les prospects sont attentifs à une réponse adaptée et personnalisée à leurs besoins.<br>
+        Je continue à croire également que nous devons faire plus de qualité et moins de quantité. </div>
+        <aside class="commentaires" id="commentaires">
+        	<div class="commentaire flexbox-h add">
+            <label for="add-my-comment" class="w100">Ajouter un commentaire</label>
+            	<div class="commentaire-meta"><img src="img/aurore.allibe.png" class="avatar" alt=""></div> 
+            	<div class="talkbubble flexitem-fluid">
+                	<textarea id="add-my-comment" class="w100 text"></textarea>
+                    <div class="buttons pas txtcenter"><button class="submit">Valider</button></div>
+                </div>
+                
+            </div>
+        	<div class="commentaire flexbox-h">
+            	<p class="commentaire-info w100">
+                	<span class="commentaire-auteur">Skoua</span> a dit le <time datetime="2012-02-03">2012-02-03 18:48:57</time>
+                 </p>
+                 <div class="commentaire-meta"><img src="http://forum.alsacreations.com/avatars/small/19650-untitled-2.png" class="avatar" alt=""></div> 
+                 <div class="commentaire-content talkbubble flexitem-fluid"><p>Quelle est la différence concrète entre figure et aside ?<br/>Super article sinon.</p></div>
+        	</div>            
+   	  <div class="commentaire flexbox-h">
+            	<p class="commentaire-info w100">
+                	<span class="commentaire-auteur">Skoua</span> a dit le <time datetime="2012-02-03">2012-02-03 18:48:57</time>
+                 </p>
+      <div class="commentaire-meta"><img src="http://forum.alsacreations.com/avatars/small/19650-untitled-2.png" class="avatar" alt=""></div> 
+                 <div class="commentaire-content talkbubble flexitem-fluid"><p>A chaque fois que je vois une telle proposition je me pose la même   question, alors quitte à passer pour un couillon, autant que je sois   fixé : )<br>
+                     <br>
+J'ai un peu de mal avec cette utilisation de l’élément section qui : "est appelé pour regrouper le contenu principal."<br>
+<br>
+J'ai l'impression à la vu du découpage proposé et de la brève   description qu'il n'a d'autre rôle que celui d'un vulgaire conteneur. Un   espèce de four-tout pour ceux qui n'auraient pas droit au header, aside   ou footer... un nouveau div en quelque sorte.<br>
+<br>
+De ce que j'arrive à comprendre des reco du W3C, cet élément est censé   introduire une valeur sémantique que j'ai du mal à concevoir dans un tel   exemple.<br>
+                 </p>
+           </div>
+        	</div>
+        </aside>
+      <footer>
+        <p class="publication-detail"> <span class="publication">Publiée le
+          <time datetime="2014-11-19">19/11/2014 15:11</time>
+          <span class="auteur">par Lulu</span></span> <span class="sep"> - </span> <span class="modification">Modifié le
+          <time datetime="2014-11-19">22/11/2014 15:11</time>
+          <span class="auteur">par Ingrid</span></span> </p>
+      </footer>
+    </section>
+  </div>
+</div>
+<!-- #main-container -->
+<div class="footer-container">
+  <footer class="wrapper"> 2015 Silverpeas Represente ! Tac tac </footer>
+</div>
+</body>
+</html>
