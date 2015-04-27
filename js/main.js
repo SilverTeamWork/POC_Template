@@ -19,10 +19,10 @@ var cache = new function() {
 }
 
 var authenticate = function(login, password) {
-  var url = 'http://localhost:8000/silverpeas/services/profile/users/me';
+  var url = 'http://localhost:8000/silverpeas/services/authentication';
   return new Promise(function(resolve, reject) {
     var req = new XMLHttpRequest();
-    req.open('GET', url, false);
+    req.open('POST', url, false);
     req.setRequestHeader('Authorization', 'Basic ' + btoa(login + ':' + password));
     req.onload = function() {
       if (req.status == 200) {
