@@ -58,6 +58,7 @@ input[type="search"]::-webkit-search-results-decoration {
 }
 
 input[type=submit],
+button.submit,
 input[type=email],
 input[type=number],
 input[type=password],
@@ -129,7 +130,9 @@ input[type=checkbox]:focus {
 }
 
 input[type=submit],
-input[type=submit]:visited {
+button.submit,
+input[type=submit]:visited ,
+button.submit:visited{
 	appearance:button;
 	border: 1px solid #3079ed;
 	border-radius:@br-btn;
