@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<module rename-to="SilverpeasPoc">
+
+  <!-- Inherit the core Web Toolkit stuff.                        -->
+  <inherits name="com.google.gwt.user.User"/>
+  <inherits name="com.google.gwt.i18n.I18N"/>
+  <inherits name="com.google.gwt.http.HTTP"/>
+
+  <!-- Inherit the ERRAI stuff.                                   -->
+  <inherits name="org.jboss.errai.ioc.Container"/>
+  <inherits name="org.jboss.errai.bus.ErraiBus"/>
+  <inherits name="org.jboss.errai.enterprise.CDI"/>
+  <inherits name="org.jboss.errai.ui.UI"/>
+
+  <!-- Specify the paths for translatable code                    -->
+  <extend-property name="locale" values="fr,en,de"/>
+<inherits name="org.jboss.errai.ui.nav.Navigation"/>
+</module>
