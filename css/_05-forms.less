@@ -59,6 +59,7 @@ input[type="search"]::-webkit-search-results-decoration {
 
 input[type=submit],
 button.submit,
+.button,
 input[type=email],
 input[type=number],
 input[type=password],
@@ -68,6 +69,7 @@ input[type=url]  {
   appearance: none;
   display: inline-block;
   height: 36px;
+  line-height: 36px;
   padding: 0 8px;
   margin: 0;
   background: #fff;
@@ -131,8 +133,11 @@ input[type=checkbox]:focus {
 
 input[type=submit],
 button.submit,
+.button,
 input[type=submit]:visited ,
-button.submit:visited{
+button.submit:visited,
+.button:visited{
+	text-decoration:none;
 	appearance:button;
 	border: 1px solid #3079ed;
 	border-radius:@br-btn;
@@ -152,6 +157,19 @@ button.submit:visited{
 		background-image: -o-linear-gradient(top,@bgColor2-btn,@bgColor1-btn);
 		background-image: linear-gradient(top,@bgColor2-btn,@bgColor1-btn);
 	}
+}
+
+
+.button.select::after {
+	content:" ";
+	display:inline-block;
+	
+			width: 1em;
+			height: 1em;
+			background-image:url("../img/select.svg");
+			background-position: center center;
+			background-repeat: no-repeat;
+			background-size: 100%;
 }
 
 ::-webkit-input-placeholder {
