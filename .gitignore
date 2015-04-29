@@ -3,11 +3,15 @@
 *.ipr
 *.iml
 *.merge*
-catalog.xml
 target
+build
+.gradle
 .settings
 .classpath
 .project
 .idea
+.sonar-ide.properties
 nbactions.xml
 nb-configuration.xml
+nbactions.xml
+.errai
