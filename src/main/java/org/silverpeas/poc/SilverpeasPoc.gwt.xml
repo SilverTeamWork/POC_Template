@@ -6,13 +6,17 @@
   <inherits name="com.google.gwt.i18n.I18N"/>
   <inherits name="com.google.gwt.http.HTTP"/>
 
+  <inherits name='com.google.gwt.user.theme.clean.Clean'/>
+
   <!-- Inherit the ERRAI stuff.                                   -->
   <inherits name="org.jboss.errai.ioc.Container"/>
   <inherits name="org.jboss.errai.bus.ErraiBus"/>
   <inherits name="org.jboss.errai.enterprise.CDI"/>
   <inherits name="org.jboss.errai.ui.UI"/>
+  <inherits name="org.jboss.errai.ui.nav.Navigation"/>
 
   <!-- Specify the paths for translatable code                    -->
   <extend-property name="locale" values="fr,en,de"/>
-<inherits name="org.jboss.errai.ui.nav.Navigation"/>
+  <source path='api'/>
+  <source path='client'/>
 </module>

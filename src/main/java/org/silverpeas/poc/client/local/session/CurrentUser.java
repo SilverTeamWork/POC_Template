@@ -11,7 +11,9 @@ import static org.silverpeas.poc.api.web.components.common.Message.notifies;
  */
 public class CurrentUser {
 
-  public static boolean firstAccess = true;
+  private static final String USER_PROFILE_KEY = "user-profile";
+  private static final String USER_AUTH_TOKEN_KEY = "user-auth-token";
+
   public static User currentUser = null;
 
   public static boolean exists() {
@@ -19,31 +21,28 @@ public class CurrentUser {
   }
 
   public static User get() {
-    if (firstAccess) {
-      try {
-        currentUser =
-            JsonUtils.safeEval(Storage.getSessionStorageIfSupported().getItem("current-user"));
-      } catch (Exception e) {
-        notifies(e.getMessage()).error();
-      }
-      firstAccess = false;
+    try {
+      currentUser =
+          JsonUtils.safeEval(Storage.getLocalStorageIfSupported().getItem(USER_PROFILE_KEY));
+    } catch (Exception e) {
+      notifies(e.getMessage()).error();
     }
     return currentUser;
   }
 
   public static String token() {
-    return Storage.getSessionStorageIfSupported().getItem("current-user-token");
+    return Storage.getSessionStorageIfSupported().getItem(USER_AUTH_TOKEN_KEY);
   }
 
   public static void markAsDisconnected() {
     currentUser = null;
-    Storage.getSessionStorageIfSupported().setItem("current-user", null);
-    Storage.getSessionStorageIfSupported().setItem("current-user-token", null);
+    Storage.getLocalStorageIfSupported().setItem(USER_PROFILE_KEY, null);
+    Storage.getLocalStorageIfSupported().setItem(USER_AUTH_TOKEN_KEY, null);
   }
 
   public static void setConnected(User user, String token) {
-    Storage.getSessionStorageIfSupported().setItem("current-user", JsonUtils.stringify(user));
-    Storage.getSessionStorageIfSupported().setItem("current-user-token", token);
+    Storage.getLocalStorageIfSupported().setItem(USER_PROFILE_KEY, JsonUtils.stringify(user));
+    Storage.getLocalStorageIfSupported().setItem(USER_AUTH_TOKEN_KEY, token);
     currentUser = user;
   }
 }

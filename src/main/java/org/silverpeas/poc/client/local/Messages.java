@@ -1,43 +1,24 @@
 package org.silverpeas.poc.client.local;
 
 import com.google.gwt.i18n.client.LocalizableResource;
+import org.jboss.errai.ui.shared.api.annotations.TranslationKey;
 
 @LocalizableResource.DefaultLocale("fr")
 public interface Messages extends com.google.gwt.i18n.client.Messages {
 
+  @TranslationKey(defaultValue = "Are you sure about disconnecting yourself ?")
+  String DISCONNECTION_CONFIRM = "disconnection.confirm";
+
   @DefaultMessage("Please waiting...")
   String waiting();
 
-  @DefaultMessage("Enter your login here...")
-  String loginFieldHelp();
-
-  @DefaultMessage("Valid your credentials...")
-  String authenticationButton();
-
-  @DefaultMessage("Hello {0} !")
-  String tokenSuccess(String userName);
-
-  @DefaultMessage("''{0}'' is not a right login. Bastard !")
-  String credentialError(String token);
-
-  @DefaultMessage("Disconnect")
-  String disconnectButton();
-
-  @DefaultMessage("Generate chart")
-  String generateChart();
-
-  @DefaultMessage("No user")
-  String noUser();
-
-  @DefaultMessage("First name")
-  String firstName();
-
-  @DefaultMessage("Last name")
-  String lastName();
-
-  @DefaultMessage("Load users")
-  String loadUsers();
-
-  @DefaultMessage("OK")
+  @DefaultMessage("Ok")
   String ok();
+
+  @DefaultMessage("Yes")
+  String yes();
+
+  @DefaultMessage("No")
+  String no();
+
 }

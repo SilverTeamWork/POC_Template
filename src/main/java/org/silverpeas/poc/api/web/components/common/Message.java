@@ -1,13 +1,20 @@
 package org.silverpeas.poc.api.web.components.common;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.HasAlignment;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.InlineHTML;
+import com.google.gwt.user.client.ui.InlineLabel;
+import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import org.silverpeas.poc.api.Callback;
 
 import static org.silverpeas.poc.api.util.StringUtil.isDefined;
 import static org.silverpeas.poc.client.local.BundleProvider.msg;
@@ -26,14 +33,15 @@ public class Message {
     info, confirmation, warning, error
   }
 
-  private final String content;
+  private final IsWidget content;
   private String title = "";
+  private Callback callback;
 
   public static Message notifies(String content) {
-    return new Message(content);
+    return new Message(new InlineHTML(content));
   }
 
-  private Message(String content) {
+  private Message(IsWidget content) {
     this.content = content;
   }
 
@@ -50,9 +58,24 @@ public class Message {
     return display(TYPE.error);
   }
 
+
+  public DialogBox confirm(Callback callback) {
+    this.callback = callback;
+    return display(TYPE.confirmation);
+  }
+
   private DialogBox display(TYPE type) {
-    final DialogBox box = new DialogBox();
-    box.addStyleName("dialog-notify");
+    final DialogBox box = new DialogBox() {
+      @Override
+      protected void onPreviewNativeEvent(final Event.NativePreviewEvent event) {
+        super.onPreviewNativeEvent(event);
+        if (event.getTypeInt() == Event.ONKEYUP &&
+            event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ESCAPE) {
+          hide();
+        }
+      }
+    };
+//    box.addStyleName("dialog-notify");
     box.setGlassEnabled(true);
 
     final VerticalPanel panel = new VerticalPanel();
@@ -63,15 +86,13 @@ public class Message {
     }
 
     // Content
-    if (isDefined(content)) {
-      panel.add(new InlineHTML(content));
-      panel.add(emptyLabel);
-      panel.add(emptyLabel);
-    }
+    panel.add(content);
 
     switch (type) {
       case error:
       case info:
+        panel.add(emptyLabel);
+        panel.add(emptyLabel);
         final Button okButton = new Button(msg().ok(), new ClickHandler() {
           @Override
           public void onClick(final ClickEvent event) {
@@ -82,6 +103,26 @@ public class Message {
         panel.setCellHorizontalAlignment(okButton, HasAlignment.ALIGN_RIGHT);
         break;
       case confirmation:
+        panel.add(emptyLabel);
+        panel.add(emptyLabel);
+        final Button yesButton = new Button(msg().yes(), new ClickHandler() {
+          @Override
+          public void onClick(final ClickEvent event) {
+            callback.invoke();
+            box.hide();
+          }
+        });
+        final Button noButton = new Button(msg().no(), new ClickHandler() {
+          @Override
+          public void onClick(final ClickEvent event) {
+            box.hide();
+          }
+        });
+        HorizontalPanel buttonPanel = new HorizontalPanel();
+        buttonPanel.add(yesButton);
+        buttonPanel.add(noButton);
+        panel.add(buttonPanel);
+        panel.setCellHorizontalAlignment(buttonPanel, HasAlignment.ALIGN_RIGHT);
         break;
       case warning:
         break;

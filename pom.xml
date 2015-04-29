@@ -8,11 +8,12 @@
   <packaging>war</packaging>
   <properties>
     <as.version>8.2.0.Final</as.version>
-    <errai.dev.context>${project.artifactId}</errai.dev.context>
-    <errai.jboss.home>${project.build.directory}/wildfly-${as.version}</errai.jboss.home>
+    <errai.dev.context>poc</errai.dev.context>
+    <errai.jboss.home>${project.build.directory}/dependency/wildfly-${as.version}</errai.jboss.home>
     <errai.version>3.2.0-SNAPSHOT</errai.version>
     <gwt.debugPort>8001</gwt.debugPort>
     <gwt.version>2.7.0</gwt.version>
+    <gwt.webapp.root>src/main/webapp</gwt.webapp.root>
     <maven.compiler.source>1.7</maven.compiler.source>
     <maven.compiler.target>1.7</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -110,12 +111,12 @@
             <fileset>
               <directory>${basedir}</directory>
               <includes>
-                <include>src/main/webapp/WEB-INF/deploy/</include>
-                <include>src/main/webapp/WEB-INF/lib/</include>
-                <include>src/main/webapp/WEB-INF/classes/</include>
+                <include>${gwt.webapp.root}/WEB-INF/deploy/</include>
+                <include>${gwt.webapp.root}/WEB-INF/lib/</include>
+                <include>${gwt.webapp.root}/WEB-INF/classes/</include>
                 <include>**/gwt-unitCache/**</include>
                 <include>.errai/</include>
-                <include>src/main/webapp/SilverpeasPoc/</include>
+                <include>${gwt.webapp.root}/SilverpeasPoc/</include>
               </includes>
             </fileset>
           </filesets>
@@ -173,7 +174,7 @@
           <disableCastChecking>true</disableCastChecking>
           <runTarget>${errai.dev.context}/index.html</runTarget>
           <soyc>false</soyc>
-          <hostedWebapp>src/main/webapp</hostedWebapp>
+          <hostedWebapp>${gwt.webapp.root}</hostedWebapp>
           <extraJvmArgs>-Djava.io.tmpdir=E:\tmp\GWT -Xmx712m -XX:CompileThreshold=7000 -XX:MaxPermSize=128M -Derrai.jboss.home=${errai.jboss.home} -Derrai.dev.context=${errai.dev.context} -Derrai.jboss.javaagent.path=${settings.localRepository}/org/jboss/errai/errai-client-local-class-hider/${errai.version}/errai-client-local-class-hider-${errai.version}.jar</extraJvmArgs>
         </configuration>
       </plugin>
@@ -198,7 +199,7 @@
             <configuration>
               <packagingExcludes>**/javax/**/*.*,**/client/local/**/*.class</packagingExcludes>
               <outputFileNameMapping>@{artifactId}@-@{baseVersion}@@{dashClassifier?}@.@{extension}@</outputFileNameMapping>
-              <warSourceDirectory>src/main/webapp</warSourceDirectory>
+              <warSourceDirectory>${gwt.webapp.root}</warSourceDirectory>
             </configuration>
           </plugin>
         </plugins>
@@ -244,6 +245,7 @@
           <groupId>javax.annotation</groupId>
           <artifactId>jsr250-api</artifactId>
           <scope>provided</scope>
+          <version>1.0</version>
         </dependency>
         <dependency>
           <groupId>org.jboss.errai</groupId>
