@@ -1,3 +1,7 @@
+/**
+ * Cache management.
+ * @type {cache} the cache object used in Silverpeas.
+ */
 var cache = new function() {
   var sessionTokenKey = 'user-auth-token';
   var userProfileKey = 'user-profile';
@@ -18,6 +22,13 @@ var cache = new function() {
   }
 }
 
+/**
+ * Authenticates the user behind Silverpeas.
+ * @param login the user identifier.
+ * @param password the user password.
+ * @returns {Promise} a promise with as parameter either the user profile if the authentication
+ * succeeds or otherwise an error.
+ */
 var authenticate = function(login, password) {
   var url = 'http://localhost:8000/silverpeas/services/authentication';
   return new Promise(function(resolve, reject) {
@@ -44,6 +55,12 @@ var authenticate = function(login, password) {
   });
 }
 
+/**
+ * Gets the resource in JSON located at the specified URL.
+ * @param url the URL of a Web resource.
+ * @returns {Promise} a promise with as parameter the JSON representation of the requested
+ * resource, or otherwise an error.
+ */
 var get = function(url) {
   return new Promise(function(resolve, reject) {
     var req = new XMLHttpRequest();
@@ -65,18 +82,31 @@ var get = function(url) {
   });
 }
 
-function validateCredentials(idSelector, passwordSelector) {
+var reportError = function(message) {
+  document.querySelector('#error').textContent = message;
+}
+
+/**
+ * Logins to Silverpeas. The user is first authenticated. If the authentication succeeds, then the
+ * user is forwarded to the main page of Silverpeas.
+ * @param silverpeasUrl the URL of the Silverpeas main page.
+ * @param idSelector the selector of the HTML element containing the user identifier.
+ * @param passwordSelector the selector of the HTML element containing the user password.
+ */
+function loginToSilverpeas(loginFormSelector, idSelector, passwordSelector) {
   var login = document.querySelector(idSelector).value + '@domain0';
   var password = document.querySelector(passwordSelector).value;
   console.log('Login is ' + login + ' and password is ' + password);
-  return authenticate(login, password).then(function(user) {
+  authenticate(login, password).then(function(user) {
     cache.putSessionId(user.token);
     cache.putCurrentUser(user.profile);
-    return true;
+    console.log('Authentication Success');
+    document.querySelector(loginFormSelector).submit();
   }, function(error) {
-    alert(error);
-    return false;
+    console.log('Authentication Failure: ' + error);
+    reportError(error);
   });
+  return false;
 }
 
 
