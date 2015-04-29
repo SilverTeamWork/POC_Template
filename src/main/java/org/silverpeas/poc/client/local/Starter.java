@@ -3,6 +3,7 @@ package org.silverpeas.poc.client.local;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import org.jboss.errai.ui.nav.client.local.DefaultPage;
+import org.jboss.errai.ui.nav.client.local.Navigation;
 import org.jboss.errai.ui.nav.client.local.Page;
 import org.jboss.errai.ui.nav.client.local.TransitionTo;
 import org.silverpeas.poc.client.local.user.CurrentUser;
