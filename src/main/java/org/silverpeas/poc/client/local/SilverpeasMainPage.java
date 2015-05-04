@@ -1,5 +1,6 @@
 package org.silverpeas.poc.client.local;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.core.client.JsonUtils;
 import com.google.gwt.user.client.ui.Composite;
@@ -40,6 +41,11 @@ public class SilverpeasMainPage extends Composite {
       public void process(final HttpResponse response) {
         JsArray<Space> jsRootSpaces = JsonUtils.safeEval(response.getText());
         spaces.setItems(new JsArrayList<Space>(jsRootSpaces));
+      }
+    }).onError(new JsonResponse() {
+      @Override
+      public void process(final HttpResponse response) {
+        GWT.log("Error while getting root spaces: " + response.getStatusText());
       }
     }).get(new SpaceCriteria());
   }
