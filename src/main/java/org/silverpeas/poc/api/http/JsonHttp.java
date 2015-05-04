@@ -6,7 +6,7 @@ import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
 import org.silverpeas.poc.api.web.components.common.Waiting;
-import org.silverpeas.poc.client.local.session.CurrentUser;
+import org.silverpeas.poc.client.local.user.CurrentUser;
 
 import java.util.Map;
 

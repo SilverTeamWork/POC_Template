@@ -1,4 +1,4 @@
-package org.silverpeas.poc.client.local;
+package org.silverpeas.poc.client.local.util;
 
 import com.google.gwt.i18n.client.LocalizableResource;
 import org.jboss.errai.ui.shared.api.annotations.TranslationKey;

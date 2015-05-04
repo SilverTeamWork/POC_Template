@@ -1,4 +1,4 @@
-package org.silverpeas.poc.client.local.admin;
+package org.silverpeas.poc.client.local.user;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.view.client.ProvidesKey;

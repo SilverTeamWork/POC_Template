@@ -1,6 +1,5 @@
 package org.silverpeas.poc.api.web.components.common;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
@@ -10,14 +9,13 @@ import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.HasAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.InlineHTML;
-import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import org.silverpeas.poc.api.Callback;
 
 import static org.silverpeas.poc.api.util.StringUtil.isDefined;
-import static org.silverpeas.poc.client.local.BundleProvider.msg;
+import static org.silverpeas.poc.client.local.util.BundleProvider.msg;
 
 /**
  * @author Yohann Chastagnier

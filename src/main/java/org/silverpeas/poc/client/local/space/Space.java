@@ -1,4 +1,4 @@
-package org.silverpeas.poc.client.local.main;
+package org.silverpeas.poc.client.local.space;
 
 import com.google.gwt.core.client.JavaScriptObject;
 

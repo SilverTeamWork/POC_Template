@@ -1,4 +1,4 @@
-package org.silverpeas.poc.client.local;
+package org.silverpeas.poc.client.local.util;
 
 import com.google.gwt.core.client.GWT;
 

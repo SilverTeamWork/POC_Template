@@ -1,4 +1,4 @@
-package org.silverpeas.poc.client.local.admin;
+package org.silverpeas.poc.client.local.user;
 
 import org.silverpeas.poc.api.http.JsonGetCriteria;
 import org.silverpeas.poc.api.http.JsonHttpConfig;

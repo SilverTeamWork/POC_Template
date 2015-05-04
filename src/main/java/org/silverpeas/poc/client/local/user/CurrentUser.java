@@ -1,8 +1,7 @@
-package org.silverpeas.poc.client.local.session;
+package org.silverpeas.poc.client.local.user;
 
 import com.google.gwt.core.client.JsonUtils;
 import com.google.gwt.storage.client.Storage;
-import org.silverpeas.poc.client.local.admin.User;
 
 import static org.silverpeas.poc.api.web.components.common.Message.notifies;
 

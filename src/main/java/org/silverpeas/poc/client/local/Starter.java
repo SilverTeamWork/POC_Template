@@ -5,7 +5,7 @@ import com.google.gwt.user.client.ui.Composite;
 import org.jboss.errai.ui.nav.client.local.DefaultPage;
 import org.jboss.errai.ui.nav.client.local.Page;
 import org.jboss.errai.ui.nav.client.local.TransitionTo;
-import org.silverpeas.poc.client.local.session.CurrentUser;
+import org.silverpeas.poc.client.local.user.CurrentUser;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;

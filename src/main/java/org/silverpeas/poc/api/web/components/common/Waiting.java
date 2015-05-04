@@ -3,7 +3,7 @@ package org.silverpeas.poc.api.web.components.common;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PopupPanel;
 
-import static org.silverpeas.poc.client.local.BundleProvider.msg;
+import static org.silverpeas.poc.client.local.util.BundleProvider.msg;
 
 /**
  * @author Yohann Chastagnier

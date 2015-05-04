@@ -88,8 +88,8 @@ var reportError = function(message) {
 
 /**
  * Logins to Silverpeas. The user is first authenticated. If the authentication succeeds, then the
- * user is forwarded to the main page of Silverpeas.
- * @param silverpeasUrl the URL of the Silverpeas main page.
+ * user is forwarded to the space page of Silverpeas.
+ * @param silverpeasUrl the URL of the Silverpeas space page.
  * @param idSelector the selector of the HTML element containing the user identifier.
  * @param passwordSelector the selector of the HTML element containing the user password.
  */

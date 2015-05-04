@@ -1,4 +1,4 @@
-package org.silverpeas.poc.client.local.main;
+package org.silverpeas.poc.client.local.space;
 
 import org.silverpeas.poc.api.http.JsonGetCriteria;
 import org.silverpeas.poc.api.http.JsonHttpConfig;

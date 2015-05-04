@@ -12,9 +12,9 @@ import org.jboss.errai.ui.shared.api.annotations.Templated;
 import org.silverpeas.poc.api.http.HttpResponse;
 import org.silverpeas.poc.api.http.JsonHttp;
 import org.silverpeas.poc.api.http.JsonResponse;
-import org.silverpeas.poc.client.local.main.Space;
-import org.silverpeas.poc.client.local.main.SpaceCriteria;
-import org.silverpeas.poc.client.local.main.SpaceWidget;
+import org.silverpeas.poc.client.local.space.Space;
+import org.silverpeas.poc.client.local.space.SpaceCriteria;
+import org.silverpeas.poc.client.local.space.SpaceWidget;
 import org.turbogwt.core.collections.JsArrayList;
 
 import javax.annotation.PostConstruct;
