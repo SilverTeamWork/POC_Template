@@ -17,7 +17,7 @@ import javax.inject.Inject;
 public class Starter extends Composite {
 
   @Inject
-  private TransitionTo<PageTemplateExample> homepage;
+  private TransitionTo<SilverpeasMainPage> homepage;
 
   @PostConstruct
   public void redirect() {

@@ -31,7 +31,7 @@ public class CurrentUser {
   }
 
   public static String token() {
-    return Storage.getSessionStorageIfSupported().getItem(USER_AUTH_TOKEN_KEY);
+    return Storage.getLocalStorageIfSupported().getItem(USER_AUTH_TOKEN_KEY);
   }
 
   public static void markAsDisconnected() {

@@ -15,6 +15,8 @@
   <inherits name="org.jboss.errai.ui.UI"/>
   <inherits name="org.jboss.errai.ui.nav.Navigation"/>
 
+  <inherits name="org.turbogwt.core.collections.Collections"/>
+
   <!-- Specify the paths for translatable code                    -->
   <extend-property name="locale" values="fr,en,de"/>
   <source path='api'/>
