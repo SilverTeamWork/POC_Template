@@ -1,18 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+<project
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+    xmlns="http://maven.apache.org/POM/4.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.silverpeas.poc</groupId>
   <artifactId>gwt-errai</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <packaging>war</packaging>
+  <name>Silverpeas 6.0 - POC - GWT / ERRAI</name>
   <properties>
     <as.version>8.2.0.Final</as.version>
+    <gwt.version>2.7.0</gwt.version>
+    <errai.version>3.2.0-SNAPSHOT</errai.version>
+    <turbogwt.version>0.4.0</turbogwt.version>
+
     <errai.dev.context>poc</errai.dev.context>
     <errai.jboss.home>${project.build.directory}/dependency/wildfly-${as.version}</errai.jboss.home>
-    <errai.version>3.2.0-SNAPSHOT</errai.version>
     <gwt.debugPort>8001</gwt.debugPort>
-    <gwt.version>2.7.0</gwt.version>
     <gwt.webapp.root>src/main/webapp</gwt.webapp.root>
     <maven.compiler.source>1.7</maven.compiler.source>
     <maven.compiler.target>1.7</maven.compiler.target>
@@ -102,11 +107,12 @@
     <dependency>
       <groupId>org.turbogwt.core</groupId>
       <artifactId>turbogwt-core</artifactId>
-      <version>0.4.0</version>
+      <version>${turbogwt.version}</version>
     </dependency>
   </dependencies>
   <build>
-    <outputDirectory>${project.build.directory}/${project.build.finalName}/WEB-INF/classes</outputDirectory>
+    <outputDirectory>${project.build.directory}/${project.build.finalName}/WEB-INF/classes
+    </outputDirectory>
     <finalName>${project.artifactId}-${project.version}</finalName>
     <plugins>
       <plugin>
@@ -131,6 +137,13 @@
                 <include>.errai/</include>
                 <include>${gwt.webapp.root}/SilverpeasPoc/</include>
               </includes>
+            </fileset>
+            <fileset>
+              <directory>${temp.directory}</directory>
+              <includes>
+                <include>**/**</include>
+              </includes>
+              <followSymlinks>false</followSymlinks>
             </fileset>
           </filesets>
         </configuration>
@@ -188,7 +201,8 @@
           <runTarget>${errai.dev.context}/index.html</runTarget>
           <soyc>false</soyc>
           <hostedWebapp>${gwt.webapp.root}</hostedWebapp>
-          <extraJvmArgs>-Djava.io.tmpdir=${temp.directory} -Xmx712m -XX:CompileThreshold=7000 -XX:MaxPermSize=128M -Derrai.jboss.home=${errai.jboss.home} -Derrai.dev.context=${errai.dev.context} -Derrai.jboss.javaagent.path=${settings.localRepository}/org/jboss/errai/errai-client-local-class-hider/${errai.version}/errai-client-local-class-hider-${errai.version}.jar</extraJvmArgs>
+          <extraJvmArgs>-Djava.io.tmpdir=${temp.directory} -Xmx712m -XX:CompileThreshold=7000 -XX:MaxPermSize=128M -Derrai.jboss.home=${errai.jboss.home} -Derrai.dev.context=${errai.dev.context} -Derrai.jboss.javaagent.path=${settings.localRepository}/org/jboss/errai/errai-client-local-class-hider/${errai.version}/errai-client-local-class-hider-${errai.version}.jar
+          </extraJvmArgs>
         </configuration>
       </plugin>
     </plugins>
@@ -211,7 +225,9 @@
             <version>2.2</version>
             <configuration>
               <packagingExcludes>**/javax/**/*.*,**/client/local/**/*.class</packagingExcludes>
-              <outputFileNameMapping>@{artifactId}@-@{baseVersion}@@{dashClassifier?}@.@{extension}@</outputFileNameMapping>
+              <outputFileNameMapping>
+                @{artifactId}@-@{baseVersion}@@{dashClassifier?}@.@{extension}@
+              </outputFileNameMapping>
               <warSourceDirectory>${gwt.webapp.root}</warSourceDirectory>
             </configuration>
           </plugin>

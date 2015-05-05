@@ -1,7 +1,7 @@
 {
   "App.test.key": "Le test i18n a fonctionné !",
   "App.disconnect": "Se déconnecter",
-  "Disconnection.confirm": "Êtes vous sûr de vouloir vous déconnecter ?",
-  "Disconnection.yes": "Oui",
-  "Disconnection.no": "Non"
+  "disconnection.confirm": "Êtes vous sûr de vouloir vous déconnecter, {0} ?",
+  "disconnection.yes": "Oui",
+  "disconnection.no": "Non"
 }

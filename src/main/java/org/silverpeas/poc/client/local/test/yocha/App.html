@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<div>
+  <h1>My EntryPoint</h1>
+
+  <div data-field="root">
+    <div id="header"></div>
+    <label>
+      <span data-i18n-key="test.key">My New Data Field</span>:
+      <input type="text" data-field="myField" style="width: 250px">
+    </label>
+
+    <button data-i18n-key="disconnect" data-field="myButton">Click Me</button>
+
+    <a data-field="myHome">homepage</a>
+
+    <!-- Template Content Here -->
+    <div id="content"></div>
+  </div>
+</div>
+
+<!-- USER ITEM TEMPLATE -->
+<div id="user-list-container">
+  <ul id="users">
+    <li id="user">
+      <span id="name"></span>
+      <span> / </span>
+      <span id="accessLevel"></span>
+    </li>
+  </ul>
+</div>

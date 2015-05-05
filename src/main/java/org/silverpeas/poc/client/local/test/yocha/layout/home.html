@@ -13,7 +13,7 @@
   <script src="../../../../../../../webapp/js/main.js"></script>
 </head>
 <body class="page-home w100 flexbox-v">
-<div data-field="layout-header-part" class="header-container">
+<div class="header-container">
   <script>
     var header = document.getElementById("header");
 
@@ -29,10 +29,10 @@
     addEventListener("scroll", scrolled, false);
   </script>
   <header id="header" class="wrapper clearfix txtcenter">
-    <h1 class="title"><img src="img/logo-header.png" alt="silverpeas"/></h1>
+    <h1 class="title"><img src="/img/logo-header.png" alt="silverpeas"/></h1>
     <nav>
-      <ul>
-        <li class="selected"><a href="home.html">Home sweet home</a></li>
+      <ul data-field="users">
+        <li class="user selected"><a href="home.html" class="name">Home sweet home</a></li>
         <li><a href="#">Administratif</a></li>
         <li><a href="#">Commercial</a></li>
         <li><a href="#">Communication</a></li>

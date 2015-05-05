@@ -35,6 +35,10 @@ public class Message {
   private String title = "";
   private Callback callback;
 
+  public static Message notifies(IsWidget content) {
+    return new Message(content);
+  }
+
   public static Message notifies(String content) {
     return new Message(new InlineHTML(content));
   }

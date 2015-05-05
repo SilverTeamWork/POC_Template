@@ -18,6 +18,7 @@ import org.silverpeas.poc.client.local.space.Space;
 import org.silverpeas.poc.client.local.space.SpaceCriteria;
 import org.silverpeas.poc.client.local.space.SpaceSelection;
 import org.silverpeas.poc.client.local.space.SpaceWidget;
+import org.silverpeas.poc.client.local.util.BundleProvider;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.event.Observes;
@@ -30,7 +31,7 @@ import java.util.List;
  */
 @Page(path = "home")
 @Templated("SilverpeasMainPage.html")
-@Bundle("messages.json")
+@Bundle(BundleProvider.JSON_MESSAGES)
 @EntryPoint
 public class SilverpeasMainPage extends Composite {
 

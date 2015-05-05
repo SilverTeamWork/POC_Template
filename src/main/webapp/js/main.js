@@ -20,6 +20,10 @@ var cache = new function() {
   this.getCurrentUser = function() {
     return JSON.parse(localStorage.getItem(userProfileKey));
   }
+
+  this.clear = function() {
+    localStorage.clear();
+  }
 }
 
 /**
@@ -104,6 +108,7 @@ function loginToSilverpeas(loginFormSelector, idSelector, passwordSelector) {
     document.querySelector(loginFormSelector).submit();
   }, function(error) {
     console.log('Authentication Failure: ' + error);
+    cache.clear();
     reportError(error);
   });
   return false;
