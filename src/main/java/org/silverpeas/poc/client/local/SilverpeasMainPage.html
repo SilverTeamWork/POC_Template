@@ -3,7 +3,14 @@
     <h1 class="title"><img src="img/logo-header.png" alt="silverpeas" /></h1>
     <nav>
       <ul data-field="spaces">
-        <li data-field="space-item"><a data-field="spaceLabel" href="home.html">Home sweet home</a></li>
+        <li data-field="spaces-item"><a data-field="spaces-item-label" href="home.html">Home sweet home</a>
+          <ul data-field="spaceContents">
+            <li data-field="spaceContents-item"><a data-field="spaceContents-item-label" href="blog.html">Blogs SP</a></li>
+            <li><a href="#">Documentation</a></li>
+            <li><a href="#">Logothèque</a></li>
+            <li><a href="#">Enquêtes</a></li>
+          </ul>
+        </li>
         <li><a href="#">Administratif</a></li>
         <li><a href="#">Commercial</a></li>
         <li><a href="#">Communication</a></li>
@@ -22,10 +29,10 @@
 </div>
 <div class="main-container flexitem-fluid flexbox-h">
   <aside class="aside-gauche" id="nav-gauche">
-    <a class="icon-menu" href="#" title="Cacher ce menu que je ne saurais voir" onClick="menuToggle();">Menu</a>
+    <a data-field="menuToggle" class="icon-menu" href="#" title="Cacher ce menu que je ne saurais voir">Menu</a>
     <nav>
-      <ul>
-        <li><a href="#">Silverpeas v6</a></li>
+      <ul data-field="spaceMenu">
+        <li data-field="spaceContents-item"><a data-field="spaceContents-item-label" href="#">Silverpeas v6</a></li>
         <li><a href="blog.html">Blogs SP</a></li>
         <li><a href="#">Documentation</a></li>
         <li><a href="#">Logothèque</a></li>

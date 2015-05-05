@@ -5,6 +5,7 @@ import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
+import com.google.gwt.user.client.Window;
 import org.silverpeas.poc.api.web.components.common.Waiting;
 import org.silverpeas.poc.client.local.user.CurrentUser;
 
@@ -48,14 +49,14 @@ public class JsonHttp {
   public HttpRequest get(JsonGetCriteria criteria) {
     JsonHttpConfig jsonHttpConfig = criteria.configureJsonGetHttp();
     return performRequest(
-        new RequestBuilder(RequestBuilder.GET, JSON_DATA_SERVER + jsonHttpConfig.getUrl()),
+        new RequestBuilder(RequestBuilder.GET, normalizeUri(jsonHttpConfig.getUrl())),
         jsonHttpConfig);
   }
 
   public HttpRequest post(JsonPostCriteria criteria) {
     JsonHttpConfig jsonHttpConfig = criteria.configureJsonPostHttp();
     return performRequest(
-        new RequestBuilder(RequestBuilder.POST, JSON_DATA_SERVER + jsonHttpConfig.getUrl()),
+        new RequestBuilder(RequestBuilder.POST, normalizeUri(jsonHttpConfig.getUrl())),
         jsonHttpConfig);
   }
 
@@ -101,5 +102,12 @@ public class JsonHttp {
       hideWaiting();
       return null;
     }
+  }
+
+  private String normalizeUri(String uri) {
+    if (!uri.toLowerCase().startsWith("http")) {
+      uri = JSON_DATA_SERVER + uri;
+    }
+    return uri;
   }
 }

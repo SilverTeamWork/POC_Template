@@ -21,15 +21,11 @@ public class Starter extends Composite {
 
   @PostConstruct
   public void redirect() {
-    if (CurrentUser.exists()) {
+    if (CurrentUser.exists() ) {
       homepage.go();
     } else {
       CurrentUser.markAsDisconnected();
       Window.Location.assign("/login.html");
     }
-  }
-
-  public static void go() {
-    Window.Location.assign("/index.html");
   }
 }

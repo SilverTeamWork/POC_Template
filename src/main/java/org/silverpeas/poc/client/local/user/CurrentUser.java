@@ -1,7 +1,17 @@
 package org.silverpeas.poc.client.local.user;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.JsArray;
 import com.google.gwt.core.client.JsonUtils;
 import com.google.gwt.storage.client.Storage;
+import org.silverpeas.poc.api.http.HttpResponse;
+import org.silverpeas.poc.api.http.JsonHttp;
+import org.silverpeas.poc.api.http.JsonResponse;
+import org.silverpeas.poc.client.local.space.Space;
+import org.silverpeas.poc.client.local.space.SpaceCriteria;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.silverpeas.poc.api.web.components.common.Message.notifies;
 
