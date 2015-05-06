@@ -60,9 +60,6 @@ public class SpaceWidget extends Composite implements HasModel<Space> {
     this.space = model;
     this.spaceLabel.setText(this.space.getLabel());
     this.spaceLabel.setHref("#");
-    if (this.space.isCurrent()) {
-      addStyleName("selected");
-    }
     this.spaceLabel.addClickHandler(new ClickHandler() {
       @Override
       public void onClick(final ClickEvent event) {
@@ -102,6 +99,14 @@ public class SpaceWidget extends Composite implements HasModel<Space> {
               spaceContent.add(app);
             }
             spaceContents.setItems(spaceContent);
+            getModel().setContent(spaceContent);
+            // once we loaded all the space data, we fire an event in the case the space is the
+            // current one.
+            if (getModel().isCurrent()) {
+              addStyleName("selected");
+              spaceSelected.fire(new SpaceSelection(getModel()));
+            }
+            spaceSelected.fire(new SpaceSelection(getModel()));
           }
         }).onError(new JsonResponse() {
           @Override

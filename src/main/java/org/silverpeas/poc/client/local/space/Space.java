@@ -2,6 +2,8 @@ package org.silverpeas.poc.client.local.space;
 
 import com.google.gwt.core.client.JavaScriptObject;
 
+import java.util.List;
+
 /**
  * @author miguel
  */
@@ -44,5 +46,13 @@ public class Space extends SpaceContent {
 
   public final native boolean isEqual(final Space anotherSpace) /*-{
     return anotherSpace != null && this.id.equals(anotherSpace.id);
+  }-*/;
+
+  public final native void setContent(final List<SpaceContent> content) /*-{
+    this.content = content;
+  }-*/;
+
+  public final native List<SpaceContent> getContent() /*-{
+    return this.content;
   }-*/;
 }
