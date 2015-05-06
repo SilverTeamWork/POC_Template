@@ -27,6 +27,7 @@ import org.silverpeas.poc.client.local.breadcrumb.BreadCrumbItem;
 import org.silverpeas.poc.client.local.breadcrumb.BreadCrumbWidget;
 import org.silverpeas.poc.client.local.space.Space;
 import org.silverpeas.poc.client.local.space.SpaceContent;
+import org.silverpeas.poc.client.local.space.SpaceContentListWidget;
 import org.silverpeas.poc.client.local.space.SpaceContentWidget;
 import org.silverpeas.poc.client.local.space.SpaceCriteria;
 import org.silverpeas.poc.client.local.space.SpaceSelection;
@@ -43,7 +44,7 @@ import java.util.List;
  * @author miguel
  */
 @Page(path = "home")
-@Templated("SilverpeasMainPage.html")
+@Templated
 @Bundle(BundleProvider.JSON_MESSAGES)
 @EntryPoint
 public class SilverpeasMainPage extends Composite {
@@ -54,9 +55,8 @@ public class SilverpeasMainPage extends Composite {
   private ListWidget<Space, SpaceWidget> spaces;
 
   @Inject
-  @DataField
-  @UnOrderedList
-  private ListWidget<SpaceContent, SpaceContentWidget> spaceMenu;
+  @DataField("menu-content")
+  private SpaceContentListWidget spaceMenu;
 
   @Inject
   @DataField("breadcrumb-content")
@@ -114,7 +114,7 @@ public class SilverpeasMainPage extends Composite {
     }).get(new SpaceCriteria());
   }
 
-  public void onnSpaceSelection(@Observes SpaceSelection spaceSelection) {
+  public void onSpaceSelection(@Observes SpaceSelection spaceSelection) {
     selectedSpace = spaceSelection.getSelectedSpace();
     GWT.log("Space selected: " + selectedSpace.getLabel());
     spaceMenu.setItems(selectedSpace.getContent());

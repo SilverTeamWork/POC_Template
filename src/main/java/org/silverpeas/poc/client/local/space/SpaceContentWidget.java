@@ -11,12 +11,12 @@ import javax.inject.Inject;
 /**
  * @author miguel
  */
-@Templated("../SilverpeasMainPage.html#spaceContents-item")
+@Templated("SpaceContentListWidget.html#space-content-item")
 public class SpaceContentWidget extends Composite implements HasModel<SpaceContent> {
   private SpaceContent content;
 
   @Inject
-  @DataField("spaceContents-item-label")
+  @DataField("space-content-item-label")
   private Anchor spaceLabel;
 
   /**

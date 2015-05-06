@@ -35,9 +35,8 @@ public class SpaceWidget extends Composite implements HasModel<Space> {
   private Anchor spaceLabel;
 
   @Inject
-  @DataField
-  @UnOrderedList
-  private ListWidget<SpaceContent, SpaceContentWidget> spaceContents;
+  @DataField("spaces-item-content")
+  private SpaceContentListWidget spaceContents;
 
   @Inject
   private Event<SpaceSelection> spaceSelected;
