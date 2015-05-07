@@ -1,14 +1,14 @@
 package org.silverpeas.poc.client.local.test.yocha;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.TextBox;
+import org.jboss.errai.ioc.client.api.AfterInitialization;
 import org.jboss.errai.ui.nav.client.local.PageShown;
-import org.jboss.errai.ui.nav.client.local.PageState;
+import org.jboss.errai.ui.nav.client.local.TransitionAnchor;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.EventHandler;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
@@ -20,7 +20,7 @@ import org.silverpeas.poc.api.util.I18n;
 import org.silverpeas.poc.api.web.components.common.Message;
 import org.silverpeas.poc.client.local.Starter;
 import org.silverpeas.poc.client.local.test.yocha.admin.UserListWidget;
-import org.silverpeas.poc.client.local.test.yocha.layout.Header;
+import org.silverpeas.poc.client.local.test.yocha.ui.YochaHomePage;
 import org.silverpeas.poc.client.local.user.CurrentUser;
 import org.silverpeas.poc.client.local.user.User;
 import org.silverpeas.poc.client.local.user.UserCriteria;
@@ -43,18 +43,11 @@ public class TemplateExample extends Composite {
 
   @Inject
   @DataField
-  private Anchor myHome;
-
-  @Inject
-  @DataField
-  private Header header;
+  private TransitionAnchor<YochaHomePage> reload;
 
   @Inject
   @DataField("content")
   private UserListWidget userList;
-
-  @PageState
-  private String exampleId;
 
   @EventHandler("myButton")
   void onClickMyButton(ClickEvent event) {
@@ -68,14 +61,7 @@ public class TemplateExample extends Composite {
         });
   }
 
-  @EventHandler("myHome")
-  void onClickMyHome(ClickEvent event) {
-    // Prevents from technical GWT error... (Because of @ApplicationScoped on Header class)
-    header.removeFromParent();
-    Starter.home();
-  }
-
-  @PageShown
+  @AfterInitialization
   private void initialize() {
     myField.setText(CurrentUser.get().getName() + " à " +
         DateTimeFormat.getFormat(DateTimeFormat.PredefinedFormat.HOUR24_MINUTE_SECOND)
@@ -91,14 +77,12 @@ public class TemplateExample extends Composite {
           }
         });
         userList.getUsers().setItems(users);
-        if ((header.i % 2) == 0) {
+        if (((new Date().getTime()) % 2) == 0) {
           userList.setWidth("500px");
         } else {
           userList.setWidth("200px");
         }
       }
     }).get(UserCriteria.init());
-
-    GWT.log("@ApplicationScoped - Header i=" + (header.i++));
   }
 }

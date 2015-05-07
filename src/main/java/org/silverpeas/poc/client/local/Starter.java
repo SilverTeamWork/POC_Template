@@ -12,9 +12,14 @@ import org.jboss.errai.ui.nav.client.local.TransitionTo;
 import org.jboss.errai.ui.nav.client.local.UniquePageRole;
 import org.jboss.errai.ui.nav.client.local.pushstate.PushStateUtil;
 import org.jboss.errai.ui.shared.api.annotations.Bundle;
+import org.silverpeas.poc.api.Callback;
+import org.silverpeas.poc.api.http.HttpResponse;
+import org.silverpeas.poc.api.http.JsonHttp;
+import org.silverpeas.poc.api.http.JsonResponse;
 import org.silverpeas.poc.api.ioc.BeanManager;
 import org.silverpeas.poc.api.util.I18n;
 import org.silverpeas.poc.api.util.UrlManager;
+import org.silverpeas.poc.api.web.components.common.Message;
 import org.silverpeas.poc.client.local.user.CurrentUser;
 import org.silverpeas.poc.client.local.util.BundleProvider;
 import org.silverpeas.poc.client.local.util.Messages;
@@ -46,7 +51,20 @@ public class Starter extends Composite {
   private void setup() {
     PushStateUtil.enablePushState(true);
     Navigation.setAppContext("");
+    JsonHttp.setUnauthorizedCallback(new JsonResponse() {
+      @Override
+      public void process(final HttpResponse response) {
+        CurrentUser.markAsDisconnected();
+        Message.notifies(I18n.format(Messages.DISCONNECTION_TOKEN_EXPIRED)).info(new Callback() {
+          @Override
+          public void invoke() {
+            Starter.home();
+          }
+        });
+      }
+    });
     setErrorPageHandler();
+    GWT.log("Silverpeas configured successfully !");
     dispatch();
   }
 

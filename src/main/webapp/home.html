@@ -5,21 +5,18 @@
   <title>POC > Accueil</title>
   <meta name="description" content=""/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <link rel="apple-touch-icon" href="../../../../../../../webapp/apple-touch-icon.png"/>
-  <link rel="icon" href="../../../../../../../webapp/favicon.ico" sizes="16x16" type="image/vnd.microsoft.icon">
-  <link rel="stylesheet/less" type="text/css" href="../../../../../../../webapp/css/knacss.less"/>
+  <link rel="apple-touch-icon" href="apple-touch-icon.png"/>
+  <link rel="icon" href="favicon.ico" sizes="16x16" type="image/vnd.microsoft.icon">
+  <link rel="stylesheet/less" type="text/css" href="css/knacss.less"/>
   <!-- a voir si on utilise �a  <script src="js/vendor/modernizr-2.8.3-respond-1.4.2.min.js"></script>-->
-  <script src="../../../../../../../webapp/js/less.min.js"></script>
-  <script src="../../../../../../../webapp/js/main.js"></script>
-</head>
-<body class="page-home w100 flexbox-v">
-<div class="header-container">
+  <script src="js/less.min.js"></script>
+  <script src="js/main.js"></script>
   <script>
     var header = document.getElementById("header");
 
     function scrolled() {
       var windowHeight = document.body.clientHeight, currentScroll = document.body.scrollTop ||
-          document.documentElement.scrollTop;
+              document.documentElement.scrollTop;
 
       document.getElementById("header").className =
           (currentScroll >= 273) ? "wrapper clearfix txtcenter fixed" :
@@ -28,18 +25,21 @@
 
     addEventListener("scroll", scrolled, false);
   </script>
+</head>
+<body class="page-home w100 flexbox-v">
+<div class="header-container">
   <header id="header" class="wrapper clearfix txtcenter">
-    <h1 class="title"><img src="/img/logo-header.png" alt="silverpeas"/></h1>
+    <h1 class="title"><img src="img/logo-header.png" alt="silverpeas"/></h1>
     <nav>
-      <ul data-field="users">
-        <li class="user selected"><a href="home.html" class="name">Home sweet home</a></li>
+      <ul>
+        <li class="selected"><a href="home.html">Home sweet home</a></li>
         <li><a href="#">Administratif</a></li>
         <li><a href="#">Commercial</a></li>
         <li><a href="#">Communication</a></li>
-        <li><a href="../../../../../../../webapp/espace.html">Chez Silverpeas</a>
+        <li><a href="espace.html">Chez Silverpeas</a>
           <ul>
             <li><a href="#">Silverpeas v6</a></li>
-            <li><a href="../../../../../../../webapp/blog.html">Blogs SP</a></li>
+            <li><a href="blog.html">Blogs SP</a></li>
             <li><a href="#">Documentation</a></li>
             <li><a href="#">Logothèque</a></li>
             <li><a href="#">Enquêtes</a></li>

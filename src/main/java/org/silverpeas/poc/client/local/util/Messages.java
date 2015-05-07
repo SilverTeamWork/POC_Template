@@ -13,6 +13,9 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
   @TranslationKey(defaultValue = "Current connected user: ")
   String CURRENT_CONNECTED_USER_LOG = "user.current.connected.log";
 
+  @TranslationKey(defaultValue = "Your session has expired. <br> You will be redirected to the login page.")
+  String DISCONNECTION_TOKEN_EXPIRED = "disconnection.token.expired";
+
   @TranslationKey(defaultValue = "Are you sure about disconnecting yourself ?")
   String DISCONNECTION_CONFIRM = "disconnection.confirm";
 

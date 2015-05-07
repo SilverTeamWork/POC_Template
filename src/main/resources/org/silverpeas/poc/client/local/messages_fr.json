@@ -1,6 +1,7 @@
 {
   "App.test.key": "Le test i18n a fonctionné !",
   "App.disconnect": "Se déconnecter",
+  "disconnection.token.expired": "Votre session n'est plus valide. <br/> Vous allez être redirigé vers la page de login.",
   "disconnection.confirm": "Êtes vous sûr de vouloir vous déconnecter, {0} ?",
   "disconnection.yes": "Oui",
   "disconnection.no": "Non",

@@ -10,6 +10,8 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import org.jboss.errai.ui.client.widget.ListWidget;
 import org.jboss.errai.ui.client.widget.UnOrderedList;
@@ -44,6 +46,8 @@ public class SilverpeasMainTemplate extends Composite {
   public final static String MAIN_HTML_TEMPLATE =
       "/org/silverpeas/poc/client/local/SilverpeasMainTemplate.html";
 
+  public final static String MAIN_HTML_TEMPLATE_CONTENT_CONTAINER = "main-content";
+
   @Inject
   @DataField
   @UnOrderedList
@@ -64,14 +68,15 @@ public class SilverpeasMainTemplate extends Composite {
   @DataField
   private Element mainTitle = DOM.createSpan();
 
-  @DataField("main-content")
+  @DataField(MAIN_HTML_TEMPLATE_CONTENT_CONTAINER)
   private HTMLPanel contentContainer = new HTMLPanel("");
 
   private Space selectedSpace = null;
   private boolean menuIsShowed = true;
 
   @PageShowing
-  public void init() {
+  public void pageShowing() {
+    GWT.log("SilverpeasMainTemplate.pageShowing()");
     loadRootSpaces();
     menuToggle.addClickHandler(new ClickHandler() {
       @Override

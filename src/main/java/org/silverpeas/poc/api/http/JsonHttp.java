@@ -18,10 +18,16 @@ public class JsonHttp {
 
   private static final String JSON_DATA_SERVER = "http://localhost:8000/silverpeas/services/";
 
+  private static JsonResponse unauthorizedCallback;
+
   private final JsonResponse successCallback;
   private JsonResponse errorCallback;
   private String dataToSend = null;
   private boolean showWaiting = true;
+
+  public static void setUnauthorizedCallback(JsonResponse unauthorizedCallback) {
+    JsonHttp.unauthorizedCallback = unauthorizedCallback;
+  }
 
   public static JsonHttp onSuccess(JsonResponse callback) {
     return new JsonHttp(callback);
@@ -85,8 +91,17 @@ public class JsonHttp {
             HttpResponse httpResponse = new HttpResponse(response);
             if (httpResponse.getStatusCode() == Response.SC_OK) {
               successCallback.process(httpResponse);
-            } else if (errorCallback != null) {
-              errorCallback.process(httpResponse);
+            } else {
+              try {
+                if (errorCallback != null) {
+                  errorCallback.process(httpResponse);
+                }
+              } finally {
+                if (httpResponse.getStatusCode() == Response.SC_UNAUTHORIZED &&
+                    unauthorizedCallback != null) {
+                  unauthorizedCallback.process(httpResponse);
+                }
+              }
             }
           } finally {
             hideWaiting();

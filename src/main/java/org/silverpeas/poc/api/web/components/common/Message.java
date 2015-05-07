@@ -6,6 +6,7 @@ import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HasAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.InlineHTML;
@@ -33,14 +34,14 @@ public class Message {
 
   private final IsWidget content;
   private String title = "";
-  private Callback callback;
+  private Callback[] callbacks;
 
   public static Message notifies(IsWidget content) {
     return new Message(content);
   }
 
   public static Message notifies(String content) {
-    return new Message(new InlineHTML(content));
+    return new Message(new HTMLPanel(content));
   }
 
   private Message(IsWidget content) {
@@ -52,17 +53,18 @@ public class Message {
     return this;
   }
 
-  public DialogBox info() {
+  public DialogBox info(Callback... callbacks) {
+    this.callbacks = callbacks;
     return display(TYPE.info);
   }
 
-  public DialogBox error() {
+  public DialogBox error(Callback... callbacks) {
+    this.callbacks = callbacks;
     return display(TYPE.error);
   }
 
-
-  public DialogBox confirm(Callback callback) {
-    this.callback = callback;
+  public DialogBox confirm(Callback... callbacks) {
+    this.callbacks = callbacks;
     return display(TYPE.confirmation);
   }
 
@@ -93,38 +95,38 @@ public class Message {
     switch (type) {
       case error:
       case info:
-        panel.add(emptyLabel);
-        panel.add(emptyLabel);
-        final Button okButton = new Button(msg().ok(), new ClickHandler() {
-          @Override
-          public void onClick(final ClickEvent event) {
-            box.hide();
-          }
-        });
-        panel.add(okButton);
-        panel.setCellHorizontalAlignment(okButton, HasAlignment.ALIGN_RIGHT);
-        break;
       case confirmation:
         panel.add(emptyLabel);
         panel.add(emptyLabel);
-        final Button yesButton = new Button(msg().yes(), new ClickHandler() {
+        ClickHandler clickHandler = new ClickHandler() {
           @Override
           public void onClick(final ClickEvent event) {
-            callback.invoke();
+            if (callbacks != null) {
+              for (Callback callback : callbacks) {
+                callback.invoke();
+              }
+            }
             box.hide();
           }
-        });
-        final Button noButton = new Button(msg().no(), new ClickHandler() {
-          @Override
-          public void onClick(final ClickEvent event) {
-            box.hide();
-          }
-        });
-        HorizontalPanel buttonPanel = new HorizontalPanel();
-        buttonPanel.add(yesButton);
-        buttonPanel.add(noButton);
-        panel.add(buttonPanel);
-        panel.setCellHorizontalAlignment(buttonPanel, HasAlignment.ALIGN_RIGHT);
+        };
+        if (type != TYPE.confirmation) {
+          final Button okButton = new Button(msg().ok(), clickHandler);
+          panel.add(okButton);
+          panel.setCellHorizontalAlignment(okButton, HasAlignment.ALIGN_RIGHT);
+        } else {
+          final Button yesButton = new Button(msg().yes(), clickHandler);
+          final Button noButton = new Button(msg().no(), new ClickHandler() {
+            @Override
+            public void onClick(final ClickEvent event) {
+              box.hide();
+            }
+          });
+          HorizontalPanel buttonPanel = new HorizontalPanel();
+          buttonPanel.add(yesButton);
+          buttonPanel.add(noButton);
+          panel.add(buttonPanel);
+          panel.setCellHorizontalAlignment(buttonPanel, HasAlignment.ALIGN_RIGHT);
+        }
         break;
       case warning:
         break;
