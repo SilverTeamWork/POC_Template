@@ -3,5 +3,10 @@
   "App.disconnect": "Se déconnecter",
   "disconnection.confirm": "Êtes vous sûr de vouloir vous déconnecter, {0} ?",
   "disconnection.yes": "Oui",
-  "disconnection.no": "Non"
+  "disconnection.no": "Non",
+  "publish.date": "Publié le",
+  "common.by": "par",
+  "update.date": "Modifié le",
+  "date.format": "dd/MM/yyyy",
+  "datetime.format": "dd/MM/yyyy hh:mm"
 }

@@ -16,6 +16,21 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
   @TranslationKey(defaultValue = "Are you sure about disconnecting yourself ?")
   String DISCONNECTION_CONFIRM = "disconnection.confirm";
 
+  @TranslationKey(defaultValue = "Published")
+  String PUBLISH_DATE_LABEL = "publish.date";
+
+  @TranslationKey(defaultValue = "by")
+  String COMMON_BY = "common.by";
+
+  @TranslationKey(defaultValue = "Updated")
+  String UPDATE_DATE_LABEL = "update.date";
+
+  @TranslationKey(defaultValue = "MM/dd/yyyy")
+  String DATE_FORMAT = "date.format";
+
+  @TranslationKey(defaultValue = "MM/dd/yyyy hh:mm")
+  String DATETIME_FORMAT = "datetime.format";
+
   /**
    * GWT i18n framework
    */
