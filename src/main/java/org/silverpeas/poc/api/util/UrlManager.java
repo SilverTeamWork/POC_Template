@@ -9,20 +9,21 @@ import com.google.gwt.user.client.Window;
 public class UrlManager {
 
   /**
-   * Gets the full server URL for the given path.
-   * @param path the path from which the full server URL must be computed.
-   * @return the full server url.
+   * Gets the server URL of the resource at the given path.
+   * @param path the path from which the server URL must be computed.
+   * @return the server URL of the resource at the given path.
    */
-  public static String fullUrl(String path) {
+  public static String getServerUrl(String path) {
     return Window.Location.createUrlBuilder().setPath(path).buildString();
   }
 
   /**
-   * Replaces the browser window location.href by the given path.
+   * Replaces the browser window location.href by the given path.<br/>
+   * (The URL refers to a plain HTML page (unmanaged GWT page) in the server)
    * @param path the path to replace.
    */
-  public static void goTo(String path) {
-    GWT.log(fullUrl(path));
-    Window.Location.assign(fullUrl(path));
+  public static void goToPlainPage(String path) {
+    GWT.log(getServerUrl(path));
+    Window.Location.assign(getServerUrl(path));
   }
 }

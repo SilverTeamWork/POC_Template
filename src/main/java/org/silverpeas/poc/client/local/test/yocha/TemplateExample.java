@@ -1,15 +1,12 @@
 package org.silverpeas.poc.client.local.test.yocha;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.JsArray;
-import com.google.gwt.core.client.JsonUtils;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.TextBox;
-import org.jboss.errai.ui.nav.client.local.Page;
 import org.jboss.errai.ui.nav.client.local.PageShown;
 import org.jboss.errai.ui.nav.client.local.PageState;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
@@ -19,6 +16,7 @@ import org.silverpeas.poc.api.Callback;
 import org.silverpeas.poc.api.http.HttpResponse;
 import org.silverpeas.poc.api.http.JsonHttp;
 import org.silverpeas.poc.api.http.JsonResponse;
+import org.silverpeas.poc.api.util.I18n;
 import org.silverpeas.poc.api.web.components.common.Message;
 import org.silverpeas.poc.client.local.Starter;
 import org.silverpeas.poc.client.local.test.yocha.admin.UserListWidget;
@@ -26,17 +24,14 @@ import org.silverpeas.poc.client.local.test.yocha.layout.Header;
 import org.silverpeas.poc.client.local.user.CurrentUser;
 import org.silverpeas.poc.client.local.user.User;
 import org.silverpeas.poc.client.local.user.UserCriteria;
-import org.silverpeas.poc.api.util.I18n;
 import org.silverpeas.poc.client.local.util.Messages;
-import org.turbogwt.core.collections.JsArrayList;
 
-import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import java.util.Date;
+import java.util.List;
 
-@Page(path = "example/{exampleId}")
 @Templated("App.html#root")
-public class PageTemplateExample extends Composite {
+public class TemplateExample extends Composite {
 
   @Inject
   @DataField
@@ -63,8 +58,7 @@ public class PageTemplateExample extends Composite {
 
   @EventHandler("myButton")
   void onClickMyButton(ClickEvent event) {
-    Message.notifies(
-        I18n.format(Messages.DISCONNECTION_CONFIRM, CurrentUser.get().getName()))
+    Message.notifies(I18n.format(Messages.DISCONNECTION_CONFIRM, CurrentUser.get().getName()))
         .confirm(new Callback() {
           @Override
           public void invoke() {
@@ -90,8 +84,13 @@ public class PageTemplateExample extends Composite {
     JsonHttp.onSuccess(new JsonResponse() {
       @Override
       public void process(final HttpResponse response) {
-        JsArray<User> users = JsonUtils.safeEval(response.getText());
-        userList.getUsers().setItems(new JsArrayList<User>(users));
+        List<User> users = response.parseJsonEntities(new HttpResponse.JsonArrayLine<User>() {
+          @Override
+          public void perform(final int index, final User entity) {
+            entity.setTags("Tag_" + index);
+          }
+        });
+        userList.getUsers().setItems(users);
         if ((header.i % 2) == 0) {
           userList.setWidth("500px");
         } else {

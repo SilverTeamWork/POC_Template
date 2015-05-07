@@ -1,29 +1,24 @@
 package org.silverpeas.poc.client.local;
 
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Multimap;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Composite;
+import org.jboss.errai.ioc.client.api.AfterInitialization;
+import org.jboss.errai.ioc.client.api.EntryPoint;
 import org.jboss.errai.ui.nav.client.local.DefaultNavigationErrorHandler;
 import org.jboss.errai.ui.nav.client.local.DefaultPage;
 import org.jboss.errai.ui.nav.client.local.Navigation;
 import org.jboss.errai.ui.nav.client.local.Page;
-import org.jboss.errai.ui.nav.client.local.PageRole;
 import org.jboss.errai.ui.nav.client.local.TransitionTo;
 import org.jboss.errai.ui.nav.client.local.UniquePageRole;
-import org.jboss.errai.ui.nav.client.local.api.PageNavigationErrorHandler;
-import org.jboss.errai.ui.nav.client.local.api.PageNotFoundException;
 import org.jboss.errai.ui.nav.client.local.pushstate.PushStateUtil;
 import org.jboss.errai.ui.shared.api.annotations.Bundle;
 import org.silverpeas.poc.api.ioc.BeanManager;
-import org.silverpeas.poc.api.util.UrlManager;
-import org.silverpeas.poc.client.local.test.yocha.PageTemplateExample;
-import org.silverpeas.poc.client.local.user.CurrentUser;
 import org.silverpeas.poc.api.util.I18n;
+import org.silverpeas.poc.api.util.UrlManager;
+import org.silverpeas.poc.client.local.user.CurrentUser;
 import org.silverpeas.poc.client.local.util.BundleProvider;
 import org.silverpeas.poc.client.local.util.Messages;
 
-import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
@@ -36,7 +31,7 @@ import javax.inject.Inject;
  * application.
  * @author Yohann Chastagnier
  */
-@ApplicationScoped
+@EntryPoint
 @Page(role = DefaultPage.class)
 @Bundle(BundleProvider.JSON_TRANSLATIONS)
 public class Starter extends Composite {
@@ -45,14 +40,14 @@ public class Starter extends Composite {
   private Navigation navigation;
 
   @Inject
-  private TransitionTo<SilverpeasMainPage> homepage;
+  private TransitionTo<HomePage> homepage;
 
-  @PostConstruct
+  @AfterInitialization
   private void setup() {
-    PushStateUtil.enablePushState(false);
+    PushStateUtil.enablePushState(true);
     Navigation.setAppContext("");
     setErrorPageHandler();
-    redirect();
+    dispatch();
   }
 
   /**
@@ -64,21 +59,21 @@ public class Starter extends Composite {
    * </ul>
    * It is called just after the instantiation of the class.
    */
-  private void redirect() {
-    if (CurrentUser.exists() ) {
+  private void dispatch() {
+    if (CurrentUser.exists()) {
       GWT.log(I18n.format(Messages.CURRENT_CONNECTED_USER_LOG, CurrentUser.get().getName()));
       homepage.go();
     } else {
-      UrlManager.goTo("login.html");
+      UrlManager.goToPlainPage("login.html");
     }
   }
 
   /**
    * Handle the navigation to the home page.
-   * @see #redirect()
+   * @see #dispatch()
    */
   public static void home() {
-    BeanManager.getInstanceOf(Starter.class).redirect();
+    BeanManager.getInstanceOf(Starter.class).dispatch();
   }
 
   /**

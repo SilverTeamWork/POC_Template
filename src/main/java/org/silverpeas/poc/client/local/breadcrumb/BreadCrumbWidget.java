@@ -11,7 +11,7 @@ import javax.inject.Inject;
 /**
  * @author miguel
  */
-@Templated("../SilverpeasMainPage.html#breadcrumb-content")
+@Templated("../SilverpeasMainTemplate.html#breadcrumb-content")
 public class BreadCrumbWidget extends Composite implements HasModel<BreadCrumb> {
 
   @Inject

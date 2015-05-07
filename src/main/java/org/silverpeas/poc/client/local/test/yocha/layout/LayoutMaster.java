@@ -4,8 +4,10 @@ import com.google.gwt.user.client.ui.Composite;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
 
+import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
+@Dependent
 @Templated("layout-master.html#layout-master")
 public class LayoutMaster extends Composite {
 

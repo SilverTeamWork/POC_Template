@@ -25,7 +25,7 @@ import java.util.List;
 /**
  * @author miguel
  */
-@Templated("../SilverpeasMainPage.html#spaces-item")
+@Templated("../SilverpeasMainTemplate.html#spaces-item")
 public class SpaceWidget extends Composite implements HasModel<Space> {
 
   private Space space;
@@ -105,7 +105,6 @@ public class SpaceWidget extends Composite implements HasModel<Space> {
               addStyleName("selected");
               spaceSelected.fire(new SpaceSelection(getModel()));
             }
-            spaceSelected.fire(new SpaceSelection(getModel()));
           }
         }).onError(new JsonResponse() {
           @Override

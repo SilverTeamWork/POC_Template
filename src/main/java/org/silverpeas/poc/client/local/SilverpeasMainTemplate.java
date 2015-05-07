@@ -3,20 +3,17 @@ package org.silverpeas.poc.client.local;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.core.client.JsonUtils;
-import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.HeadingElement;
-import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
-import org.jboss.errai.ioc.client.api.EntryPoint;
+import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.SimplePanel;
 import org.jboss.errai.ui.client.widget.ListWidget;
 import org.jboss.errai.ui.client.widget.UnOrderedList;
-import org.jboss.errai.ui.nav.client.local.Page;
-import org.jboss.errai.ui.shared.api.annotations.Bundle;
+import org.jboss.errai.ui.nav.client.local.PageShowing;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
 import org.silverpeas.poc.api.http.HttpResponse;
@@ -26,28 +23,26 @@ import org.silverpeas.poc.client.local.breadcrumb.BreadCrumb;
 import org.silverpeas.poc.client.local.breadcrumb.BreadCrumbItem;
 import org.silverpeas.poc.client.local.breadcrumb.BreadCrumbWidget;
 import org.silverpeas.poc.client.local.space.Space;
-import org.silverpeas.poc.client.local.space.SpaceContent;
 import org.silverpeas.poc.client.local.space.SpaceContentListWidget;
-import org.silverpeas.poc.client.local.space.SpaceContentWidget;
 import org.silverpeas.poc.client.local.space.SpaceCriteria;
 import org.silverpeas.poc.client.local.space.SpaceSelection;
 import org.silverpeas.poc.client.local.space.SpaceWidget;
-import org.silverpeas.poc.client.local.util.BundleProvider;
 
-import javax.annotation.PostConstruct;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.silverpeas.poc.client.local.SilverpeasMainTemplate.MAIN_HTML_TEMPLATE;
+
 /**
  * @author miguel
  */
-@Page(path = "home")
-@Templated
-@Bundle(BundleProvider.JSON_MESSAGES)
-@EntryPoint
-public class SilverpeasMainPage extends Composite {
+@Templated(MAIN_HTML_TEMPLATE)
+public class SilverpeasMainTemplate extends Composite {
+
+  public final static String MAIN_HTML_TEMPLATE =
+      "/org/silverpeas/poc/client/local/SilverpeasMainTemplate.html";
 
   @Inject
   @DataField
@@ -69,10 +64,13 @@ public class SilverpeasMainPage extends Composite {
   @DataField
   private Element mainTitle = DOM.createSpan();
 
+  @DataField("main-content")
+  private HTMLPanel contentContainer = new HTMLPanel("");
+
   private Space selectedSpace = null;
   private boolean menuIsShowed = true;
 
-  @PostConstruct
+  @PageShowing
   public void init() {
     loadRootSpaces();
     menuToggle.addClickHandler(new ClickHandler() {
@@ -122,5 +120,9 @@ public class SilverpeasMainPage extends Composite {
     breadCrumbModel.getItems().add(new BreadCrumbItem(selectedSpace.getLabel(), selectedSpace));
     breadcrumb.setModel(breadCrumbModel);
     mainTitle.setInnerText(selectedSpace.getLabel());
+  }
+
+  public HTMLPanel getContentContainer() {
+    return contentContainer;
   }
 }

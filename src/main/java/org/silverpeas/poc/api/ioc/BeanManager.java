@@ -12,7 +12,7 @@ import javax.inject.Singleton;
  * This class permits to get from IOC an instance of bean annotated with one of the following
  * annotations:
  * <ul>
- * <li>{@link ApplicationScoped}, {@link Singleton} or {@link EntryPoint}: the bean will be
+ * <li>{@link EntryPoint}, {@link Singleton} or {@link ApplicationScoped}: the bean will be
  * available during all the application life time.</li>
  * <li>{@link Dependent}: a new instance is created each time a bean instance is requested</li>
  * </ul>

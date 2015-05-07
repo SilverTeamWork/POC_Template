@@ -8,7 +8,6 @@ import com.google.gwt.view.client.ProvidesKey;
  */
 public class User extends JavaScriptObject {
 
-
   /**
    * The key provider that provides the unique ID of a user.
    */
@@ -36,6 +35,14 @@ public class User extends JavaScriptObject {
   }-*/;
 
   public final native String getAccessLevel() /*-{
+    return this.accessLevel;
+  }-*/;
+
+  public final native void setTags(String tags) /*-{
+    this.tags = tags;
+  }-*/;
+
+  public final native String getTags() /*-{
     return this.accessLevel;
   }-*/;
 
