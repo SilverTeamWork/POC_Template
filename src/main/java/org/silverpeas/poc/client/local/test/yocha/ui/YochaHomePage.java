@@ -25,6 +25,9 @@ import static org.silverpeas.poc.client.local.SilverpeasMainTemplate.MAIN_HTML_T
 @Bundle(BundleProvider.JSON_MESSAGES)
 public class YochaHomePage extends SilverpeasMainTemplate {
 
+  @DataField(MAIN_HTML_TEMPLATE_CONTENT_CONTAINER)
+  private VerticalPanel content = new VerticalPanel();
+
   @Inject
   private TransitionAnchor<HomePage> nextPage;
 
@@ -39,9 +42,7 @@ public class YochaHomePage extends SilverpeasMainTemplate {
   @Override
   public void pageShowing() {
     super.pageShowing();
-    VerticalPanel panel = new VerticalPanel();
-    panel.add(example);
-    panel.add(nextPage);
-    getContentContainer().add(panel);
+    content.add(example);
+    content.add(nextPage);
   }
 }

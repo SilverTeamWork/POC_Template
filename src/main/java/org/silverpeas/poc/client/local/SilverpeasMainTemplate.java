@@ -18,6 +18,7 @@ import org.silverpeas.poc.client.local.header.HeaderWidget;
 import org.silverpeas.poc.client.local.space.Space;
 import org.silverpeas.poc.client.local.space.SpaceContentListWidget;
 import org.silverpeas.poc.client.local.space.SpaceSelection;
+import org.silverpeas.poc.client.local.widget.SilverpeasHtmlPanel;
 
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
@@ -54,8 +55,9 @@ public class SilverpeasMainTemplate extends Composite {
   @DataField
   private Element mainTitle = DOM.createSpan();
 
+  @Inject
   @DataField(MAIN_HTML_TEMPLATE_CONTENT_CONTAINER)
-  private HTMLPanel contentContainer = new HTMLPanel("");
+  private SilverpeasHtmlPanel contentContainer;
 
   private Space selectedSpace = null;
   private boolean menuIsShowed = true;
@@ -85,7 +87,7 @@ public class SilverpeasMainTemplate extends Composite {
     mainTitle.setInnerText(selectedSpace.getLabel());
   }
 
-  public HTMLPanel getContentContainer() {
+  public SilverpeasHtmlPanel getContentContainer() {
     return contentContainer;
   }
 }
