@@ -1,7 +1,5 @@
 package org.silverpeas.poc.client.local.space;
 
-import com.google.gwt.core.client.JavaScriptObject;
-
 import java.util.List;
 
 /**

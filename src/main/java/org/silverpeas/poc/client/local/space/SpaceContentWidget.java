@@ -1,5 +1,6 @@
 package org.silverpeas.poc.client.local.space;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import org.jboss.errai.ui.client.widget.HasModel;
@@ -11,7 +12,7 @@ import javax.inject.Inject;
 /**
  * @author miguel
  */
-@Templated("SpaceContentListWidget.html#space-content-item")
+@Templated("SpaceWidget.html#space-content-item")
 public class SpaceContentWidget extends Composite implements HasModel<SpaceContent> {
   private SpaceContent content;
 
@@ -34,6 +35,7 @@ public class SpaceContentWidget extends Composite implements HasModel<SpaceConte
    */
   @Override
   public void setModel(final SpaceContent model) {
+    GWT.log(getClass().getSimpleName() + ": setModel");
     this.content = model;
     this.spaceLabel.setText(this.content.getLabel());
     this.spaceLabel.setHref("#");

@@ -1,45 +1,38 @@
 package org.silverpeas.poc.client.local.space;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.JsArray;
-import com.google.gwt.core.client.JsonUtils;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import org.jboss.errai.ui.client.widget.HasModel;
-import org.jboss.errai.ui.client.widget.ListWidget;
-import org.jboss.errai.ui.client.widget.UnOrderedList;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
-import org.silverpeas.poc.api.http.HttpResponse;
-import org.silverpeas.poc.api.http.JsonHttp;
-import org.silverpeas.poc.api.http.JsonResponse;
 
 import javax.enterprise.event.Event;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author miguel
  */
-@Templated("../SilverpeasMainTemplate.html#spaces-item")
+@Templated
 public class SpaceWidget extends Composite implements HasModel<Space> {
 
   private Space space;
 
   @Inject
-  @DataField("spaces-item-label")
+  @DataField("space-item-label")
   private Anchor spaceLabel;
 
   @Inject
-  @DataField("spaces-item-content")
+  @DataField("space-item-content")
   private SpaceContentListWidget spaceContents;
 
   @Inject
   private Event<SpaceSelection> spaceSelected;
+
+  @Inject
+  private SpaceLoader spaceLoader;
 
   /**
    * Returns the model instance associated with this widget.
@@ -79,46 +72,12 @@ public class SpaceWidget extends Composite implements HasModel<Space> {
   }
 
   private void loadSpaceContent(final Space currentSpace) {
-    JsonHttp.onSuccess(new JsonResponse() {
-      @Override
-      public void process(final HttpResponse response) {
-        JsArray<Space> jsSpaces = JsonUtils.safeEval(response.getText());
-        final List<SpaceContent> spaceContent = new ArrayList<>(jsSpaces.length());
-        for (int i = 0; i < jsSpaces.length(); i++) {
-          Space space = jsSpaces.get(i);
-          spaceContent.add(space.getRank(), space);
-        }
+    spaceLoader.loadSpaceContent(currentSpace);
+  }
 
-        JsonHttp.onSuccess(new JsonResponse() {
-          @Override
-          public void process(final HttpResponse response) {
-            JsArray<SilverpeasApplication> jsApps = JsonUtils.safeEval(response.getText());
-            for (int i = 0; i < jsApps.length(); i++) {
-              SilverpeasApplication app = jsApps.get(i);
-              spaceContent.add(app);
-            }
-            spaceContents.setItems(spaceContent);
-            getModel().setContent(spaceContent);
-            // once we loaded all the space data, we fire an event in the case the space is the
-            // current one.
-            if (getModel().isCurrent()) {
-              addStyleName("selected");
-              spaceSelected.fire(new SpaceSelection(getModel()));
-            }
-          }
-        }).onError(new JsonResponse() {
-          @Override
-          public void process(final HttpResponse response) {
-            GWT.log("Error while getting root spaces: " + response.getStatusText());
-          }
-        }).get(new SpaceCriteria().forUrl(currentSpace.getComponentsUri()));
-
-      }
-    }).onError(new JsonResponse() {
-      @Override
-      public void process(final HttpResponse response) {
-        GWT.log("Error while getting root spaces: " + response.getStatusText());
-      }
-    }).get(new SpaceCriteria().forUrl(currentSpace.getSpacesUri()));
+  protected void onSpaceContentLoaded(@Observes SpaceContentLoaded spaceContentLoaded) {
+    if (spaceContentLoaded.getSpaceWithLoadedContent() == getModel()) {
+      spaceContents.setModel(spaceContentLoaded.getSpaceWithLoadedContent());
+    }
   }
 }
