@@ -18,6 +18,10 @@ public class Space extends SpaceContent {
     return this.componentsURI;
   }-*/;
 
+  public final native String getId() /*-{
+    return this.id;
+  }-*/;
+
   public final native int getLevel() /*-{
     return this.level;
   }-*/;

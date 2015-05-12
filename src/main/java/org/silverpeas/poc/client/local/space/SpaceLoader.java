@@ -1,11 +1,11 @@
 package org.silverpeas.poc.client.local.space;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.core.client.JsonUtils;
 import org.silverpeas.poc.api.http.HttpResponse;
 import org.silverpeas.poc.api.http.JsonHttp;
 import org.silverpeas.poc.api.http.JsonResponse;
+import org.silverpeas.poc.api.util.Log;
 
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
@@ -46,7 +46,7 @@ public class SpaceLoader {
     }).onError(new JsonResponse() {
       @Override
       public void process(final HttpResponse response) {
-        GWT.log("Error while getting root spaces: " + response.getStatusText());
+        Log.dev("Error while getting root spaces: " + response.getStatusText());
       }
     }).get(new SpaceCriteria());
   }
@@ -80,16 +80,16 @@ public class SpaceLoader {
         }).onError(new JsonResponse() {
           @Override
           public void process(final HttpResponse response) {
-            GWT.log("Error while getting root spaces: " + response.getStatusText());
+            Log.dev("Error while getting root spaces: " + response.getStatusText());
           }
-        }).get(new SpaceCriteria().forUrl(space.getComponentsUri()));
+        }).get(SpaceCriteria.fromUrl(space.getComponentsUri()));
 
       }
     }).onError(new JsonResponse() {
       @Override
       public void process(final HttpResponse response) {
-        GWT.log("Error while getting space content: " + response.getStatusText());
+        Log.dev("Error while getting space content: " + response.getStatusText());
       }
-    }).get(new SpaceCriteria().forUrl(space.getSpacesUri()));
+    }).get(SpaceCriteria.fromUrl(space.getSpacesUri()));
   }
 }

@@ -1,6 +1,5 @@
 package org.silverpeas.poc.client.local;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Composite;
 import org.jboss.errai.ioc.client.api.AfterInitialization;
 import org.jboss.errai.ioc.client.api.EntryPoint;
@@ -18,6 +17,7 @@ import org.silverpeas.poc.api.http.JsonHttp;
 import org.silverpeas.poc.api.http.JsonResponse;
 import org.silverpeas.poc.api.ioc.BeanManager;
 import org.silverpeas.poc.api.util.I18n;
+import org.silverpeas.poc.api.util.Log;
 import org.silverpeas.poc.api.util.UrlManager;
 import org.silverpeas.poc.api.web.components.common.Message;
 import org.silverpeas.poc.client.local.user.CurrentUser;
@@ -64,7 +64,7 @@ public class Starter extends Composite {
       }
     });
     setErrorPageHandler();
-    GWT.log("Silverpeas configured successfully !");
+    Log.dev("Silverpeas configured successfully !");
     dispatch();
   }
 
@@ -79,7 +79,7 @@ public class Starter extends Composite {
    */
   private void dispatch() {
     if (CurrentUser.exists()) {
-      GWT.log(I18n.format(Messages.CURRENT_CONNECTED_USER_LOG, CurrentUser.get().getName()));
+      Log.dev(I18n.format(Messages.CURRENT_CONNECTED_USER_LOG, CurrentUser.get().getName()));
       homepage.go();
     } else {
       UrlManager.goToPlainPage("login.html");
@@ -101,23 +101,23 @@ public class Starter extends Composite {
     navigation.setErrorHandler(new DefaultNavigationErrorHandler(navigation) {
       @Override
       public void handleInvalidPageNameError(final Exception exception, final String pageName) {
-        GWT.log(exception.getMessage());
-        GWT.log("PageName: " + pageName);
+        Log.dev(exception.getMessage());
+        Log.dev("PageName: " + pageName);
         super.handleInvalidPageNameError(exception, pageName);
       }
 
       @Override
       public void handleError(final Exception exception,
           final Class<? extends UniquePageRole> pageRole) {
-        GWT.log(exception.getMessage());
-        GWT.log("PageRole: " + pageRole.getSimpleName());
+        Log.dev(exception.getMessage());
+        Log.dev("PageRole: " + pageRole.getSimpleName());
         super.handleError(exception, pageRole);
       }
 
       @Override
       public void handleInvalidURLError(final Exception exception, final String urlPath) {
-        GWT.log(exception.getMessage());
-        GWT.log("UrlPath: " + urlPath);
+        Log.dev(exception.getMessage());
+        Log.dev("UrlPath: " + urlPath);
         super.handleInvalidURLError(exception, urlPath);
       }
     });

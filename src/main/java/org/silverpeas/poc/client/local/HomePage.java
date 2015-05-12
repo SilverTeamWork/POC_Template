@@ -25,7 +25,7 @@ public class HomePage extends SilverpeasMainTemplate {
 
   @AfterInitialization
   private void setup() {
-    nextPage.setText("---------------------------------> Allez vers YochaHomePage");
+    nextPage.setText("Allez vers YochaHomePage depuis HomePage");
   }
 
   @Override

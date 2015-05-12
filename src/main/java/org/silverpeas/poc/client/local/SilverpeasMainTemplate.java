@@ -1,18 +1,19 @@
 package org.silverpeas.poc.client.local;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.Widget;
+import org.jboss.errai.ioc.client.api.AfterInitialization;
+import org.jboss.errai.ioc.client.api.EntryPoint;
 import org.jboss.errai.ui.nav.client.local.PageShowing;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
-import org.silverpeas.poc.client.local.breadcrumb.BreadCrumb;
-import org.silverpeas.poc.client.local.breadcrumb.BreadCrumbItem;
+import org.silverpeas.poc.api.util.Log;
+import org.silverpeas.poc.client.local.breadcrumb.BreadCrumbSpaceItem;
 import org.silverpeas.poc.client.local.breadcrumb.BreadCrumbWidget;
 import org.silverpeas.poc.client.local.header.HeaderWidget;
 import org.silverpeas.poc.client.local.space.Space;
@@ -20,8 +21,11 @@ import org.silverpeas.poc.client.local.space.SpaceContentListWidget;
 import org.silverpeas.poc.client.local.space.SpaceSelection;
 import org.silverpeas.poc.client.local.widget.SilverpeasHtmlPanel;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.silverpeas.poc.client.local.SilverpeasMainTemplate.MAIN_HTML_TEMPLATE;
 
@@ -59,11 +63,23 @@ public class SilverpeasMainTemplate extends Composite {
   @DataField(MAIN_HTML_TEMPLATE_CONTENT_CONTAINER)
   private SilverpeasHtmlPanel contentContainer;
 
-  private Space selectedSpace = null;
   private boolean menuIsShowed = true;
 
+  @AfterInitialization
+  private void removeApplicationScopedWidgets() {
+    Log.dev(this.getClass().getName() + ".beforeDisplaying() call");
+    // Remove parent of application scoped elements
+    for (Widget applicationScopedWidget : getApplicationScopedWidgets()) {
+      if (applicationScopedWidget != null) {
+        applicationScopedWidget.removeFromParent();
+        Log.dev(this.getClass().getName() + ".beforeDisplaying() call - remove " +
+            applicationScopedWidget.getElement().getId());
+      }
+    }
+  }
+
   @PageShowing
-  public void pageShowing() {
+  private void init() {
     menuToggle.addClickHandler(new ClickHandler() {
       @Override
       public void onClick(final ClickEvent event) {
@@ -75,16 +91,34 @@ public class SilverpeasMainTemplate extends Composite {
         }
       }
     });
+    pageShowing();
+    breadcrumb.refresh();
+  }
+
+  /**
+   * Gets the list of widget annotated with {@link ApplicationScoped} or {@link EntryPoint}.
+   * If a widget is not null, then it is removed from the DOM before to be again injected in the
+   * DOM.
+   */
+  public List<Widget> getApplicationScopedWidgets() {
+    List<Widget> widgets = new ArrayList<>();
+    widgets.add(breadcrumb);
+    return widgets;
+  }
+
+  /**
+   * This method is called after all injections are successfully performed.
+   */
+  public void pageShowing() {
   }
 
   public void onSpaceSelection(@Observes SpaceSelection spaceSelection) {
-    selectedSpace = spaceSelection.getSelectedSpace();
-    GWT.log("Space selected: " + selectedSpace.getLabel());
+    final Space selectedSpace = spaceSelection.getSelectedSpace();
+    Log.dev("Space selected: " + selectedSpace.getLabel());
     spaceMenu.setModel(selectedSpace);
-    BreadCrumb breadCrumbModel = new BreadCrumb();
-    breadCrumbModel.getItems().add(new BreadCrumbItem(selectedSpace.getLabel(), selectedSpace));
-    breadcrumb.setModel(breadCrumbModel);
+    breadcrumb.getModel().setItem(new BreadCrumbSpaceItem(selectedSpace));
     mainTitle.setInnerText(selectedSpace.getLabel());
+    breadcrumb.refresh();
   }
 
   public SilverpeasHtmlPanel getContentContainer() {

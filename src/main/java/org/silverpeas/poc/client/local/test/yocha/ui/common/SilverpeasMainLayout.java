@@ -1,11 +1,11 @@
 package org.silverpeas.poc.client.local.test.yocha.ui.common;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import org.jboss.errai.ui.nav.client.local.PageShowing;
 import org.jboss.errai.ui.nav.client.local.PageShown;
+import org.silverpeas.poc.api.util.Log;
 import org.silverpeas.poc.client.local.SilverpeasMainTemplate;
 
 import javax.inject.Inject;
@@ -23,12 +23,12 @@ public class SilverpeasMainLayout extends Composite {
 
   @PageShowing
   public void pageShowing() {
-    GWT.log("pageShowing(): " + getContentContainer());
+    Log.dev("pageShowing(): " + getContentContainer());
   }
 
   @PageShown
   private void pageShown() {
-    GWT.log("pageShown(): " + getContentContainer());
+    Log.dev("pageShown(): " + getContentContainer());
     RootPanel.get().add(this);
   }
 

@@ -18,6 +18,7 @@ import org.silverpeas.poc.api.http.HttpResponse;
 import org.silverpeas.poc.api.http.JsonHttp;
 import org.silverpeas.poc.api.http.JsonResponse;
 import org.silverpeas.poc.api.util.I18n;
+import org.silverpeas.poc.api.util.Log;
 import org.silverpeas.poc.client.local.util.Messages;
 
 import javax.inject.Inject;
@@ -83,27 +84,27 @@ public class PostWidget extends Composite implements HasModel<Post> {
     this.postContent.setHTML(post.getContent());
     Date jsDateEvent = new Date(Long.parseLong("" + post.getDateEvent()));
     /*
-    GWT.log("dateEvent = " + post.getDateEvent());
-    GWT.log("today = " + new Date());
-    GWT.log("Date(dateEvent) = " + new Date(Long.parseLong("" + post.getDateEvent())));
-    GWT.log("currentTimeMillis = " + System.currentTimeMillis());
-    GWT.log("today(currentTimeMillis) = " + new Date(System.currentTimeMillis()));
-    GWT.log("" +
+    Log.dev("dateEvent = " + post.getDateEvent());
+    Log.dev("today = " + new Date());
+    Log.dev("Date(dateEvent) = " + new Date(Long.parseLong("" + post.getDateEvent())));
+    Log.dev("currentTimeMillis = " + System.currentTimeMillis());
+    Log.dev("today(currentTimeMillis) = " + new Date(System.currentTimeMillis()));
+    Log.dev("" +
         DateTimeFormat.getFormat(DateTimeFormat.PredefinedFormat.DATE_FULL).format(jsDateEvent));
-    GWT.log("" +
+    Log.dev("" +
         DateTimeFormat.getFormat(DateTimeFormat.PredefinedFormat.DATE_LONG).format(jsDateEvent));
-    GWT.log("" +
+    Log.dev("" +
         DateTimeFormat.getFormat(DateTimeFormat.PredefinedFormat.DATE_MEDIUM).format(jsDateEvent));
-    GWT.log("" +
+    Log.dev("" +
         DateTimeFormat.getFormat(DateTimeFormat.PredefinedFormat.DATE_SHORT).format(jsDateEvent));
-    GWT.log("custom format =" +
+    Log.dev("custom format =" +
         DateTimeFormat.getFormat("dd/MM/yyyy").format(jsDateEvent));
     */
-    GWT.log("custom format " + I18n.format(Messages.DATE_FORMAT) + " =" +
+    Log.dev("custom format " + I18n.format(Messages.DATE_FORMAT) + " =" +
         DateTimeFormat.getFormat(I18n.format(Messages.DATE_FORMAT)).format(jsDateEvent));
 
     this.postComment.setText(post.getNbComments());
-    GWT.log("create by=" + I18n.format(Messages.COMMON_BY) + " " + post.getCreator());
+    Log.dev("create by=" + I18n.format(Messages.COMMON_BY) + " " + post.getCreator());
     this.postAuthor.setText(I18n.format(Messages.COMMON_BY) + " " + post.getCreator());
     this.postUpdater.setText(I18n.format(Messages.COMMON_BY) + " " + post.getUpdater());
     Date jsCreateDate = new Date(Long.parseLong("" + post.getCreateDate()));
@@ -128,7 +129,7 @@ public class PostWidget extends Composite implements HasModel<Post> {
   }
 
   private void loadPost() {
-    GWT.log("blogId = " + blogId + " and postId = " + postId);
+    Log.dev("blogId = " + blogId + " and postId = " + postId);
     JsonHttp.onSuccess(new JsonResponse() {
       @Override
       public void process(final HttpResponse response) {
@@ -138,7 +139,7 @@ public class PostWidget extends Composite implements HasModel<Post> {
     }).onError(new JsonResponse() {
       @Override
       public void process(final HttpResponse response) {
-        GWT.log("Error while getting blog post: " + response.getStatusText());
+        Log.dev("Error while getting blog post: " + response.getStatusText());
       }
     }).get(PostCriteria.fromIds(getBlogId(), getPostId()));
   }

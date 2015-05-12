@@ -23,7 +23,7 @@ public class UrlManager {
    * @param path the path to replace.
    */
   public static void goToPlainPage(String path) {
-    GWT.log(getServerUrl(path));
+    Log.dev(getServerUrl(path));
     Window.Location.assign(getServerUrl(path));
   }
 }

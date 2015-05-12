@@ -20,7 +20,7 @@ import static org.silverpeas.poc.client.local.SilverpeasMainTemplate.MAIN_HTML_T
 /**
  * @author Yohann Chastagnier
  */
-@Page(path = "tata/yochahome.html")
+@Page(path = "tata/home.html")
 @Templated(MAIN_HTML_TEMPLATE)
 @Bundle(BundleProvider.JSON_MESSAGES)
 public class YochaHomePage extends SilverpeasMainTemplate {
