@@ -1,4 +1,4 @@
-package org.silverpeas.poc.client.local;
+package org.silverpeas.poc.client.local.template;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -15,10 +15,9 @@ import org.jboss.errai.ui.shared.api.annotations.Templated;
 import org.silverpeas.poc.api.util.Log;
 import org.silverpeas.poc.client.local.breadcrumb.BreadCrumbSpaceItem;
 import org.silverpeas.poc.client.local.breadcrumb.BreadCrumbWidget;
-import org.silverpeas.poc.client.local.header.HeaderWidget;
 import org.silverpeas.poc.client.local.space.Space;
 import org.silverpeas.poc.client.local.space.SpaceContentListWidget;
-import org.silverpeas.poc.client.local.space.SpaceSelection;
+import org.silverpeas.poc.client.local.space.event.SpaceSelection;
 import org.silverpeas.poc.client.local.widget.SilverpeasHtmlPanel;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -27,23 +26,14 @@ import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.silverpeas.poc.client.local.SilverpeasMainTemplate.MAIN_HTML_TEMPLATE;
+import static org.silverpeas.poc.client.local.template.SilverpeasMainTemplate
+    .MAIN_HTML_TEMPLATE_CONTENT_CONTAINER;
 
 /**
  * @author miguel
  */
-@Templated(MAIN_HTML_TEMPLATE)
-public class SilverpeasMainTemplate extends Composite {
-
-  public final static String MAIN_HTML_TEMPLATE =
-      "/org/silverpeas/poc/client/local/SilverpeasMainTemplate.html";
-
-  public final static String MAIN_HTML_TEMPLATE_CONTENT_CONTAINER = "main-content";
-
-  @Inject
-  @DataField("header-container")
-  private HeaderWidget header;
-
+@Templated
+public class SpaceMainPanel extends Composite {
   @Inject
   @DataField("menu-content")
   private SpaceContentListWidget spaceMenu;

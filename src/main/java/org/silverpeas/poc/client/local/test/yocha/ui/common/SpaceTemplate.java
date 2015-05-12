@@ -6,14 +6,14 @@ import com.google.gwt.user.client.ui.RootPanel;
 import org.jboss.errai.ui.nav.client.local.PageShowing;
 import org.jboss.errai.ui.nav.client.local.PageShown;
 import org.silverpeas.poc.api.util.Log;
-import org.silverpeas.poc.client.local.SilverpeasMainTemplate;
+import org.silverpeas.poc.client.local.template.SilverpeasMainTemplate;
 
 import javax.inject.Inject;
 
 /**
  * @author Yohann Chastagnier
  */
-public class SilverpeasMainLayout extends Composite {
+public class SpaceTemplate extends Composite {
 
   public static final String DOCK_LAYOUT =
       "/org/silverpeas/poc/client/local/test/yocha/ui/common/dock.html";
@@ -37,6 +37,6 @@ public class SilverpeasMainLayout extends Composite {
    * @return the content element container.
    */
   public HTMLPanel getContentContainer() {
-    return null;//mainPage.getContentContainer();
+    return mainPage.getContentContainer();
   }
 }

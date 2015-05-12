@@ -6,6 +6,8 @@ import org.silverpeas.poc.api.http.HttpResponse;
 import org.silverpeas.poc.api.http.JsonHttp;
 import org.silverpeas.poc.api.http.JsonResponse;
 import org.silverpeas.poc.api.util.Log;
+import org.silverpeas.poc.client.local.space.event.SpaceContentLoaded;
+import org.silverpeas.poc.client.local.space.event.SpaceLoaded;
 
 import javax.enterprise.event.Event;
 import javax.inject.Inject;

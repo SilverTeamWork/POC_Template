@@ -11,6 +11,8 @@ import org.silverpeas.poc.api.util.Deferred;
 import org.silverpeas.poc.api.util.Log;
 
 /**
+ * An item in a breadcrumb. The item represents a node in the navigation level of the user in the
+ * current page. It can be a space, a Silverpeas application or a resource of the application.
  * @author miguel
  */
 public abstract class BreadCrumbItem {

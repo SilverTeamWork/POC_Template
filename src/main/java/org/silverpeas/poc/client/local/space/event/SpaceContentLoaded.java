@@ -1,6 +1,7 @@
-package org.silverpeas.poc.client.local.space;
+package org.silverpeas.poc.client.local.space.event;
 
 import org.jboss.errai.common.client.api.annotations.LocalEvent;
+import org.silverpeas.poc.client.local.space.Space;
 
 /**
  * @author miguel

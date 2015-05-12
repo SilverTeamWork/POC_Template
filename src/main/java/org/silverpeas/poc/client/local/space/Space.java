@@ -57,4 +57,8 @@ public class Space extends SpaceContent {
   public final native List<SpaceContent> getContent() /*-{
     return this.content;
   }-*/;
+
+  public final native boolean isHome() /*-{
+    return this.home;
+  }-*/;
 }

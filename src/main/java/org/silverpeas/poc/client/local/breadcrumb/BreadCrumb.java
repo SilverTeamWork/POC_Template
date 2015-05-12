@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * The breadcrumb model used by the dedicated widget.
  * @author miguel
  */
 public class BreadCrumb {

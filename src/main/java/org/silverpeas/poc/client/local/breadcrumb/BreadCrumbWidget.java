@@ -18,6 +18,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 /**
+ * A widget to render a breadcrumb indicating the navigation level of the user in the current page.
  * @author miguel
  */
 @ApplicationScoped

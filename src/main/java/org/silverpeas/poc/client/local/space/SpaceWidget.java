@@ -5,8 +5,11 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import org.jboss.errai.ui.client.widget.HasModel;
+import org.jboss.errai.ui.nav.client.local.TransitionAnchor;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
+import org.silverpeas.poc.client.local.space.event.SpaceContentLoaded;
+import org.silverpeas.poc.client.local.space.event.SpaceSelection;
 
 import javax.enterprise.event.Event;
 import javax.enterprise.event.Observes;
@@ -51,7 +54,11 @@ public class SpaceWidget extends Composite implements HasModel<Space> {
   public void setModel(final Space model) {
     this.space = model;
     this.spaceLabel.setText(this.space.getLabel());
-    this.spaceLabel.setHref("#");
+    if (this.space.isHome()) {
+      this.spaceLabel.setHref("/home.html");
+    } else {
+      this.spaceLabel.setHref("/space.html");
+    }
     this.spaceLabel.addClickHandler(new ClickHandler() {
       @Override
       public void onClick(final ClickEvent event) {
