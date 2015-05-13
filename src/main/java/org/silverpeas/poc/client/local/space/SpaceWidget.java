@@ -1,11 +1,13 @@
 package org.silverpeas.poc.client.local.space;
 
+import com.google.common.collect.ImmutableListMultimap;
+import com.google.common.collect.ListMultimap;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import org.jboss.errai.ui.client.widget.HasModel;
-import org.jboss.errai.ui.nav.client.local.TransitionAnchor;
+import org.jboss.errai.ui.nav.client.local.HistoryTokenFactory;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
 import org.silverpeas.poc.client.local.space.event.SpaceContentLoaded;
@@ -37,6 +39,9 @@ public class SpaceWidget extends Composite implements HasModel<Space> {
   @Inject
   private SpaceLoader spaceLoader;
 
+  @Inject
+  private HistoryTokenFactory urlFactory;
+
   /**
    * Returns the model instance associated with this widget.
    * @return the model instance, or null if no instance is associated with this widget.
@@ -55,9 +60,13 @@ public class SpaceWidget extends Composite implements HasModel<Space> {
     this.space = model;
     this.spaceLabel.setText(this.space.getLabel());
     if (this.space.isHome()) {
-      this.spaceLabel.setHref("/home.html");
+      ListMultimap<String, String> state = ImmutableListMultimap.of();
+      this.spaceLabel.setHref("#" + urlFactory.createHistoryToken("HomePage", state).toString());
     } else {
-      this.spaceLabel.setHref("/space.html");
+      final ListMultimap<String, String> state =
+          ImmutableListMultimap.of("spaceId", this.space.getId());
+      this.spaceLabel.setHref(
+          "#" + urlFactory.createHistoryToken("SpaceHomePage", state).toString());
     }
     this.spaceLabel.addClickHandler(new ClickHandler() {
       @Override

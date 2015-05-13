@@ -1,10 +1,12 @@
 package org.silverpeas.poc.client.local.header;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JsonUtils;
 import com.google.gwt.user.client.ui.Composite;
 import org.jboss.errai.ioc.client.api.AfterInitialization;
 import org.jboss.errai.ui.client.widget.ListWidget;
 import org.jboss.errai.ui.client.widget.UnOrderedList;
+import org.jboss.errai.ui.nav.client.local.PageShown;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
 import org.silverpeas.poc.client.local.space.Space;
@@ -14,9 +16,13 @@ import org.silverpeas.poc.client.local.space.event.SpaceContentLoaded;
 import org.silverpeas.poc.client.local.space.event.SpaceLoaded;
 import org.silverpeas.poc.client.local.space.event.SpaceSelection;
 
+import javax.annotation.PostConstruct;
+import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Event;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
+import javax.inject.Singleton;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -46,16 +52,17 @@ public class HeaderWidget extends Composite {
   }
 
   protected void onRootSpacesLoaded(@Observes SpaceLoaded spaceLoaded) {
-    addVirtualHomeSpace(spaceLoaded.getLoadedSpaces());
-    if (!spaceLoaded.getLoadedSpaces().isEmpty()) {
-      selectedSpace = spaceLoaded.getLoadedSpaces().get(0);
+    List<Space> rootSpaces = new ArrayList<>(spaceLoaded.getLoadedSpaces());
+    addVirtualHomeSpace(rootSpaces);
+    if (!rootSpaces.isEmpty()) {
+      selectedSpace = rootSpaces.get(0);
       selectedSpace.setAsCurrent();
     }
-    spaces.setItems(spaceLoaded.getLoadedSpaces());
+    spaces.setItems(rootSpaces);
   }
 
   private void addVirtualHomeSpace(final List<Space> spaces) {
-    Space homeSpace = JsonUtils.safeEval("{\"label\":\"Home sweet home\"," +
+    Space homeSpace = JsonUtils.safeEval("{\"label\":\"Toto sweet home\"," +
             "\"spacesURI\":\"http://localhost:8000/silverpeas/services/spaces/1/spaces\"," +
             "\"componentsURI\":\"http://localhost:8000/silverpeas/services/spaces/1/spaces\"," +
             "\"level\":0," +

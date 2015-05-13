@@ -35,7 +35,6 @@ public class SpaceContentWidget extends Composite implements HasModel<SpaceConte
    */
   @Override
   public void setModel(final SpaceContent model) {
-    Log.dev(getClass().getSimpleName() + ": setModel");
     this.content = model;
     this.spaceLabel.setText(this.content.getLabel());
     this.spaceLabel.setHref("#");
