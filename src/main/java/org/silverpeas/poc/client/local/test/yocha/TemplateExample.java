@@ -2,12 +2,10 @@ package org.silverpeas.poc.client.local.test.yocha;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.i18n.client.DateTimeFormat;
-import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.TextBox;
 import org.jboss.errai.ioc.client.api.AfterInitialization;
-import org.jboss.errai.ui.nav.client.local.PageShown;
 import org.jboss.errai.ui.nav.client.local.TransitionAnchor;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.EventHandler;
@@ -18,7 +16,7 @@ import org.silverpeas.poc.api.http.JsonHttp;
 import org.silverpeas.poc.api.http.JsonResponse;
 import org.silverpeas.poc.api.util.I18n;
 import org.silverpeas.poc.api.web.components.common.Message;
-import org.silverpeas.poc.client.local.Starter;
+import org.silverpeas.poc.client.local.Dispatcher;
 import org.silverpeas.poc.client.local.test.yocha.admin.UserListWidget;
 import org.silverpeas.poc.client.local.test.yocha.ui.YochaHomePage;
 import org.silverpeas.poc.client.local.user.CurrentUser;
@@ -56,7 +54,7 @@ public class TemplateExample extends Composite {
           @Override
           public void invoke() {
             CurrentUser.markAsDisconnected();
-            Starter.home();
+            Dispatcher.home();
           }
         });
   }

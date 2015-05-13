@@ -2,26 +2,19 @@ package org.silverpeas.poc.client.local;
 
 import com.google.gwt.user.client.ui.Composite;
 import org.jboss.errai.ioc.client.api.AfterInitialization;
-import org.jboss.errai.ioc.client.api.EntryPoint;
 import org.jboss.errai.ui.nav.client.local.DefaultNavigationErrorHandler;
 import org.jboss.errai.ui.nav.client.local.DefaultPage;
 import org.jboss.errai.ui.nav.client.local.Navigation;
 import org.jboss.errai.ui.nav.client.local.Page;
-import org.jboss.errai.ui.nav.client.local.TransitionTo;
 import org.jboss.errai.ui.nav.client.local.UniquePageRole;
-import org.jboss.errai.ui.nav.client.local.pushstate.PushStateUtil;
-import org.jboss.errai.ui.shared.api.annotations.Bundle;
 import org.silverpeas.poc.api.Callback;
 import org.silverpeas.poc.api.http.HttpResponse;
 import org.silverpeas.poc.api.http.JsonHttp;
 import org.silverpeas.poc.api.http.JsonResponse;
-import org.silverpeas.poc.api.ioc.BeanManager;
 import org.silverpeas.poc.api.util.I18n;
 import org.silverpeas.poc.api.util.Log;
-import org.silverpeas.poc.api.util.UrlManager;
 import org.silverpeas.poc.api.web.components.common.Message;
 import org.silverpeas.poc.client.local.user.CurrentUser;
-import org.silverpeas.poc.client.local.util.BundleProvider;
 import org.silverpeas.poc.client.local.util.Messages;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -36,21 +29,14 @@ import javax.inject.Inject;
  * application.
  * @author Yohann Chastagnier
  */
-@EntryPoint
-@Page(role = DefaultPage.class)
-@Bundle(BundleProvider.JSON_TRANSLATIONS)
+@ApplicationScoped
 public class Starter extends Composite {
 
   @Inject
   private Navigation navigation;
 
-  @Inject
-  private TransitionTo<HomePage> homepage;
-
   @AfterInitialization
   private void setup() {
-    PushStateUtil.enablePushState(true);
-    Navigation.setAppContext("");
     JsonHttp.setUnauthorizedCallback(new JsonResponse() {
       @Override
       public void process(final HttpResponse response) {
@@ -58,40 +44,13 @@ public class Starter extends Composite {
         Message.notifies(I18n.format(Messages.DISCONNECTION_TOKEN_EXPIRED)).info(new Callback() {
           @Override
           public void invoke() {
-            Starter.home();
+            Dispatcher.home();
           }
         });
       }
     });
     setErrorPageHandler();
     Log.dev("Silverpeas configured successfully !");
-    dispatch();
-  }
-
-  /**
-   * This method handles the navigation to the first page to display:
-   * <ul>
-   * <li>The login page if no user exists into the local storage</li>
-   * <li>The homepage of Silverpeas application if a user is already authenticated and registered
-   * inti local storage</li>
-   * </ul>
-   * It is called just after the instantiation of the class.
-   */
-  private void dispatch() {
-    if (CurrentUser.exists()) {
-      Log.dev(I18n.format(Messages.CURRENT_CONNECTED_USER_LOG, CurrentUser.get().getName()));
-      homepage.go();
-    } else {
-      UrlManager.goToPlainPage("login.html");
-    }
-  }
-
-  /**
-   * Handle the navigation to the home page.
-   * @see #dispatch()
-   */
-  public static void home() {
-    BeanManager.getInstanceOf(Starter.class).dispatch();
   }
 
   /**

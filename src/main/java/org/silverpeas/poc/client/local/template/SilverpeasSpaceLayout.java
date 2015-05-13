@@ -5,11 +5,8 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Anchor;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.Panel;
 import org.jboss.errai.ioc.client.api.AfterInitialization;
-import org.jboss.errai.ioc.client.api.EntryPoint;
-import org.jboss.errai.ui.nav.client.local.PageShowing;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
 import org.silverpeas.poc.api.util.Log;
@@ -23,17 +20,20 @@ import org.silverpeas.poc.client.local.widget.SilverpeasHtmlPanel;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.List;
 
-import static org.silverpeas.poc.client.local.template.SilverpeasMainTemplate
+import static org.silverpeas.poc.client.local.template.SilverpeasMainLayout
     .MAIN_HTML_TEMPLATE_CONTENT_CONTAINER;
 
 /**
  * @author miguel
  */
+@ApplicationScoped
 @Templated
-public class SpaceMainPanel extends Composite {
+public class SilverpeasSpaceLayout extends SilverpeasComposite {
+
+  @Inject
+  private SilverpeasMainLayout mainLayout;
+
   @Inject
   @DataField("menu-content")
   private SpaceContentListWidget spaceMenu;
@@ -50,23 +50,10 @@ public class SpaceMainPanel extends Composite {
   private Element mainTitle = DOM.createSpan();
 
   @Inject
-  @DataField(MAIN_HTML_TEMPLATE_CONTENT_CONTAINER)
-  private SilverpeasHtmlPanel contentContainer;
+  @DataField("main-content")
+  private SilverpeasHtmlPanel contentPanel;
 
   private boolean menuIsShowed = true;
-
-  /*@AfterInitialization
-  private void removeApplicationScopedWidgets() {
-    Log.dev(this.getClass().getName() + ".beforeDisplaying() call");
-    // Remove parent of application scoped elements
-    for (Widget applicationScopedWidget : getApplicationScopedWidgets()) {
-      if (applicationScopedWidget != null) {
-        applicationScopedWidget.removeFromParent();
-        Log.dev(this.getClass().getName() + ".beforeDisplaying() call - remove " +
-            applicationScopedWidget.getElement().getId());
-      }
-    }
-  }*/
 
   @AfterInitialization
   private void init() {
@@ -84,17 +71,6 @@ public class SpaceMainPanel extends Composite {
     breadcrumb.refresh();
   }
 
-  /**
-   * Gets the list of widget annotated with {@link ApplicationScoped} or {@link EntryPoint}.
-   * If a widget is not null, then it is removed from the DOM before to be again injected in the
-   * DOM.
-   */
-  public List<Widget> getApplicationScopedWidgets() {
-    List<Widget> widgets = new ArrayList<>();
-    widgets.add(breadcrumb);
-    return widgets;
-  }
-
   public void onSpaceSelection(@Observes SpaceSelection spaceSelection) {
     final Space selectedSpace = spaceSelection.getSelectedSpace();
     Log.dev("Space selected: " + selectedSpace.getLabel());
@@ -104,7 +80,17 @@ public class SpaceMainPanel extends Composite {
     breadcrumb.refresh();
   }
 
-  public SilverpeasHtmlPanel getContentContainer() {
-    return contentContainer;
+  @Override
+  public Panel getContentPanel() {
+    return contentPanel;
+  }
+
+  @Override
+  protected SilverpeasComposite getCompositeParent() {
+    return mainLayout;
+  }
+
+  @Override
+  public void onPageShowing() {
   }
 }

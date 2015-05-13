@@ -1,4 +1,4 @@
-package org.silverpeas.poc.client.local.blog;
+package org.silverpeas.poc.client.local.blog.post;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JsonUtils;
@@ -19,6 +19,8 @@ import org.silverpeas.poc.api.http.JsonHttp;
 import org.silverpeas.poc.api.http.JsonResponse;
 import org.silverpeas.poc.api.util.I18n;
 import org.silverpeas.poc.api.util.Log;
+import org.silverpeas.poc.client.local.blog.Post;
+import org.silverpeas.poc.client.local.blog.PostCriteria;
 import org.silverpeas.poc.client.local.util.Messages;
 
 import javax.inject.Inject;

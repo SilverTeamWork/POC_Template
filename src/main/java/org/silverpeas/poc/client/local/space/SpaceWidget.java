@@ -1,19 +1,12 @@
 package org.silverpeas.poc.client.local.space;
 
-import com.google.common.collect.ImmutableListMultimap;
-import com.google.common.collect.ListMultimap;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import org.jboss.errai.ui.client.widget.HasModel;
-import org.jboss.errai.ui.nav.client.local.HistoryTokenFactory;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
 import org.silverpeas.poc.client.local.space.event.SpaceContentLoaded;
 import org.silverpeas.poc.client.local.space.event.SpaceSelection;
 
-import javax.enterprise.event.Event;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 
@@ -27,20 +20,14 @@ public class SpaceWidget extends Composite implements HasModel<Space> {
 
   @Inject
   @DataField("space-item-label")
-  private Anchor spaceLabel;
+  private SpaceTransitionAnchor spaceAnchor;
 
   @Inject
   @DataField("space-item-content")
   private SpaceContentListWidget spaceContents;
 
   @Inject
-  private Event<SpaceSelection> spaceSelected;
-
-  @Inject
   private SpaceLoader spaceLoader;
-
-  @Inject
-  private HistoryTokenFactory urlFactory;
 
   /**
    * Returns the model instance associated with this widget.
@@ -58,22 +45,7 @@ public class SpaceWidget extends Composite implements HasModel<Space> {
   @Override
   public void setModel(final Space model) {
     this.space = model;
-    this.spaceLabel.setText(this.space.getLabel());
-    if (this.space.isHome()) {
-      ListMultimap<String, String> state = ImmutableListMultimap.of();
-      this.spaceLabel.setHref("#" + urlFactory.createHistoryToken("HomePage", state).toString());
-    } else {
-      final ListMultimap<String, String> state =
-          ImmutableListMultimap.of("spaceId", this.space.getId());
-      this.spaceLabel.setHref(
-          "#" + urlFactory.createHistoryToken("SpaceHomePage", state).toString());
-    }
-    this.spaceLabel.addClickHandler(new ClickHandler() {
-      @Override
-      public void onClick(final ClickEvent event) {
-        spaceSelected.fire(new SpaceSelection(getModel()));
-      }
-    });
+    this.spaceAnchor.setSpace(this.space);
     loadSpaceContent(getModel());
   }
 
