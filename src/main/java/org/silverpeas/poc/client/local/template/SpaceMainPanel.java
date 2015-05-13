@@ -55,7 +55,7 @@ public class SpaceMainPanel extends Composite {
 
   private boolean menuIsShowed = true;
 
-  @AfterInitialization
+  /*@AfterInitialization
   private void removeApplicationScopedWidgets() {
     Log.dev(this.getClass().getName() + ".beforeDisplaying() call");
     // Remove parent of application scoped elements
@@ -66,9 +66,9 @@ public class SpaceMainPanel extends Composite {
             applicationScopedWidget.getElement().getId());
       }
     }
-  }
+  }*/
 
-  @PageShowing
+  @AfterInitialization
   private void init() {
     menuToggle.addClickHandler(new ClickHandler() {
       @Override
@@ -81,7 +81,6 @@ public class SpaceMainPanel extends Composite {
         }
       }
     });
-    pageShowing();
     breadcrumb.refresh();
   }
 
@@ -94,12 +93,6 @@ public class SpaceMainPanel extends Composite {
     List<Widget> widgets = new ArrayList<>();
     widgets.add(breadcrumb);
     return widgets;
-  }
-
-  /**
-   * This method is called after all injections are successfully performed.
-   */
-  public void pageShowing() {
   }
 
   public void onSpaceSelection(@Observes SpaceSelection spaceSelection) {
