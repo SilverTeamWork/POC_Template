@@ -1,11 +1,9 @@
 package org.silverpeas.poc.client.local.breadcrumb;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
-import org.jboss.errai.ui.client.widget.HasModel;
 import org.jboss.errai.ui.nav.client.local.Navigation;
 import org.jboss.errai.ui.nav.client.local.TransitionAnchor;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
@@ -69,12 +67,16 @@ public class BreadCrumbWidget extends Composite {
       Anchor anchor = new Anchor(item.getLabel());
       anchor.setStyleName(item.getStyleClass());
       anchor.setHref("#");
-      anchor.addClickHandler(new ClickHandler() {
-        @Override
-        public void onClick(final ClickEvent event) {
-          breadCrumb.backTo(item);
-        }
-      });
+      if (item == breadCrumb.getItems().get(breadCrumb.getItems().size() - 1)) {
+        anchor.setEnabled(false);
+      } else {
+        anchor.addClickHandler(new ClickHandler() {
+          @Override
+          public void onClick(final ClickEvent event) {
+            breadCrumb.backTo(item);
+          }
+        });
+      }
       content.add(anchor);
     }
   }

@@ -2,6 +2,7 @@ package org.silverpeas.poc.client.local.breadcrumb;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
+import com.google.gwt.user.client.ui.IsWidget;
 import org.jboss.errai.ui.nav.client.local.Navigation;
 import org.jboss.errai.ui.nav.client.local.TransitionTo;
 import org.silverpeas.poc.api.Callback;
@@ -17,20 +18,15 @@ import org.silverpeas.poc.api.util.Log;
  */
 public abstract class BreadCrumbItem {
 
-  private TransitionTo targetPage;
-
-  void setCurrentPage() {
-    this.targetPage =
-        TransitionProvider.getTransitionTo(getNavigation().getCurrentPage().contentType());
-  }
+  protected abstract <P extends IsWidget> TransitionTo<P> getTargetPage();
 
   public abstract String getLabel();
 
   public abstract String getStyleClass();
 
   private TransitionTo getTransitionToPage() {
-    if (targetPage != null) {
-      return targetPage;
+    if (getTargetPage() != null) {
+      return getTargetPage();
     }
     return TransitionProvider.getTransitionTo(getNavigation().getCurrentPage().contentType());
   }

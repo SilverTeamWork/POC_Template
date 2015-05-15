@@ -27,7 +27,6 @@ public class BreadCrumb {
    * @param item the breadcrumb item to add.
    */
   public void addItem(BreadCrumbItem item) {
-    item.setCurrentPage();
     items.add(item);
   }
 
