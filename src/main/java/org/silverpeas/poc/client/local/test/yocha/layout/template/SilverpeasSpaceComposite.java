@@ -9,7 +9,6 @@ import com.google.gwt.user.client.ui.Panel;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
 import org.silverpeas.poc.api.util.Log;
-import org.silverpeas.poc.client.local.breadcrumb.BreadCrumbSpaceItem;
 import org.silverpeas.poc.client.local.breadcrumb.BreadCrumbWidget;
 import org.silverpeas.poc.client.local.space.Space;
 import org.silverpeas.poc.client.local.space.SpaceContentListWidget;
@@ -58,16 +57,13 @@ public class SilverpeasSpaceComposite extends SilverpeasComposite {
         }
       }
     });
-    breadcrumb.refresh();
   }
 
   public void onSpaceSelection(@Observes SpaceSelection spaceSelection) {
     final Space selectedSpace = spaceSelection.getSelectedSpace();
     Log.dev("Space selected: " + selectedSpace.getLabel());
-    spaceMenu.setModel(selectedSpace);
-    breadcrumb.getModel().setItem(new BreadCrumbSpaceItem(selectedSpace));
     mainTitle.setInnerText(selectedSpace.getLabel());
-    breadcrumb.refresh();
+    spaceMenu.setModel(selectedSpace);
   }
 
   @Override

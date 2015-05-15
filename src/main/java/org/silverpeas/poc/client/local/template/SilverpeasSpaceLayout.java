@@ -10,7 +10,6 @@ import org.jboss.errai.ioc.client.api.AfterInitialization;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
 import org.silverpeas.poc.api.util.Log;
-import org.silverpeas.poc.client.local.breadcrumb.BreadCrumbSpaceItem;
 import org.silverpeas.poc.client.local.breadcrumb.BreadCrumbWidget;
 import org.silverpeas.poc.client.local.space.Space;
 import org.silverpeas.poc.client.local.space.SpaceContentListWidget;
@@ -20,9 +19,6 @@ import org.silverpeas.poc.client.local.widget.SilverpeasHtmlPanel;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
-
-import static org.silverpeas.poc.client.local.template.SilverpeasMainLayout
-    .MAIN_HTML_TEMPLATE_CONTENT_CONTAINER;
 
 /**
  * @author miguel
@@ -68,16 +64,13 @@ public class SilverpeasSpaceLayout extends SilverpeasComposite {
         }
       }
     });
-    breadcrumb.refresh();
   }
 
   public void onSpaceSelection(@Observes SpaceSelection spaceSelection) {
     final Space selectedSpace = spaceSelection.getSelectedSpace();
     Log.dev("Space selected: " + selectedSpace.getLabel());
     spaceMenu.setModel(selectedSpace);
-    breadcrumb.getModel().setItem(new BreadCrumbSpaceItem(selectedSpace));
     mainTitle.setInnerText(selectedSpace.getLabel());
-    breadcrumb.refresh();
   }
 
   @Override

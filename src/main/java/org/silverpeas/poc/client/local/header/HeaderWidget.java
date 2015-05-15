@@ -15,6 +15,7 @@ import org.silverpeas.poc.client.local.space.SpaceWidget;
 import org.silverpeas.poc.client.local.space.event.SpaceContentLoaded;
 import org.silverpeas.poc.client.local.space.event.SpaceLoaded;
 import org.silverpeas.poc.client.local.space.event.SpaceSelection;
+import org.silverpeas.poc.client.local.util.HomeSpaceProvider;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
@@ -62,15 +63,7 @@ public class HeaderWidget extends Composite {
   }
 
   private void addVirtualHomeSpace(final List<Space> spaces) {
-    Space homeSpace = JsonUtils.safeEval("{\"label\":\"Toto sweet home\"," +
-            "\"spacesURI\":\"http://localhost:8000/silverpeas/services/spaces/1/spaces\"," +
-            "\"componentsURI\":\"http://localhost:8000/silverpeas/services/spaces/1/spaces\"," +
-            "\"level\":0," +
-            "\"rank\": 0," +
-            "\"id\":-1," +
-            "\"home\": true," +
-            " \"content\":[]}");
-    spaces.add(0, homeSpace);
+    spaces.add(0, HomeSpaceProvider.getHomeSpace());
   }
 
   protected void onRootSpaceContentLoaded(@Observes SpaceContentLoaded spaceContentLoaded) {

@@ -11,6 +11,10 @@ public abstract class SpaceContent extends JavaScriptObject {
   protected SpaceContent() {
   }
 
+  public final native String getParentUri() /*-{
+    return this.parentURI;
+  }-*/;
+
   public final native String getLabel() /*-{
     return this.label;
   }-*/;

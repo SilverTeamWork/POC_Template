@@ -3,6 +3,7 @@ package org.silverpeas.poc.client.local.breadcrumb;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import com.google.gwt.user.client.ui.IsWidget;
+import org.jboss.errai.ui.nav.client.local.HistoryTokenFactory;
 import org.jboss.errai.ui.nav.client.local.Navigation;
 import org.jboss.errai.ui.nav.client.local.TransitionTo;
 import org.silverpeas.poc.api.Callback;
@@ -10,6 +11,9 @@ import org.silverpeas.poc.api.ioc.BeanManager;
 import org.silverpeas.poc.api.navigation.TransitionProvider;
 import org.silverpeas.poc.api.util.Deferred;
 import org.silverpeas.poc.api.util.Log;
+import org.silverpeas.poc.client.local.template.SilverpeasPageComposite;
+
+import javax.inject.Inject;
 
 /**
  * An item in a breadcrumb. The item represents a node in the navigation level of the user in the
@@ -18,29 +22,33 @@ import org.silverpeas.poc.api.util.Log;
  */
 public abstract class BreadCrumbItem {
 
-  protected abstract <P extends IsWidget> TransitionTo<P> getTargetPage();
+  private boolean enabled = true;
 
   public abstract String getLabel();
 
   public abstract String getStyleClass();
 
-  private TransitionTo getTransitionToPage() {
-    if (getTargetPage() != null) {
-      return getTargetPage();
-    }
-    return TransitionProvider.getTransitionTo(getNavigation().getCurrentPage().contentType());
+  public boolean isEnabled() {
+    return enabled;
   }
 
-  public final void go() {
-    Multimap<String, String> parameters = ArrayListMultimap.create();
-    applyParameters(parameters);
-    final TransitionTo transition = getTransitionToPage();
-    Log.dev(BreadCrumbItem.class.getSimpleName() + " - go() - target: " + transition.toPageType() +
-        " with parameters: " + parameters);
-    transition.go(parameters);
+  public void setEnabled(final boolean enabled) {
+    this.enabled = enabled;
   }
 
-  protected abstract void applyParameters(Multimap<String, String> parameters);
+  /**
+   * Goes the page referred by this breadcrumb item.
+   */
+  protected final void go() {
+    fireEvent();
+    getNavigation().goTo(getTargetPage(), getTransitionParameters());
+  }
+
+  protected abstract Class<? extends SilverpeasPageComposite> getTargetPage();
+
+  protected abstract Multimap<String, String> getTransitionParameters();
+
+  protected abstract void fireEvent();
 
   protected Navigation getNavigation() {
     return BeanManager.getInstanceOf(Navigation.class);

@@ -1,11 +1,16 @@
 package org.silverpeas.poc.client.local.breadcrumb;
 
+import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
-import com.google.gwt.user.client.ui.IsWidget;
-import org.jboss.errai.ui.nav.client.local.TransitionTo;
-import org.silverpeas.poc.api.navigation.TransitionProvider;
+import org.silverpeas.poc.api.ioc.BeanManager;
+import org.silverpeas.poc.client.local.HomePage;
 import org.silverpeas.poc.client.local.SpaceHomePage;
 import org.silverpeas.poc.client.local.space.Space;
+import org.silverpeas.poc.client.local.space.event.SpaceSelection;
+import org.silverpeas.poc.client.local.template.SilverpeasPageComposite;
+import org.silverpeas.poc.client.local.util.EventsProvider;
+
+import javax.enterprise.event.Event;
 
 /**
  * @author miguel
@@ -18,10 +23,9 @@ public class BreadCrumbSpaceItem extends BreadCrumbItem {
     this.space = space;
   }
 
-
   @Override
-  protected TransitionTo<SpaceHomePage> getTargetPage() {
-    return TransitionProvider.getTransitionTo(SpaceHomePage.class);
+  protected Class<? extends SilverpeasPageComposite> getTargetPage() {
+    return (space.isHome() ? HomePage.class : SpaceHomePage.class);
   }
 
   @Override
@@ -31,11 +35,20 @@ public class BreadCrumbSpaceItem extends BreadCrumbItem {
 
   @Override
   public String getStyleClass() {
-    return "space-breadcrump";
+    return (space.isHome() ? "home-breadcrump" : "space-breadcrump");
   }
 
   @Override
-  protected void applyParameters(final Multimap<String, String> parameters) {
-    parameters.put("spaceId", space.getId());
+  protected Multimap<String, String> getTransitionParameters() {
+    return (space.isHome() ? ImmutableMultimap.<String, String>of() :
+        ImmutableMultimap.of("spaceId", space.getId()));
   }
+
+  @Override
+  protected void fireEvent() {
+    EventsProvider eventsProvider = BeanManager.getInstanceOf(EventsProvider.class);
+    Event<SpaceSelection> event = eventsProvider.getSpaceSelectionEvent();
+    event.fire(new SpaceSelection(space));
+  }
+
 }

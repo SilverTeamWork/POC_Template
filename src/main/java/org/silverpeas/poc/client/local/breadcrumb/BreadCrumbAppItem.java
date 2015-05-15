@@ -1,8 +1,8 @@
 package org.silverpeas.poc.client.local.breadcrumb;
 
+import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
-import com.google.gwt.user.client.ui.IsWidget;
-import org.jboss.errai.ui.nav.client.local.TransitionTo;
+import org.silverpeas.poc.client.local.template.SilverpeasPageComposite;
 
 /**
  * @author miguel
@@ -10,7 +10,7 @@ import org.jboss.errai.ui.nav.client.local.TransitionTo;
 public class BreadCrumbAppItem extends BreadCrumbItem {
 
   @Override
-  protected <P extends IsWidget> TransitionTo<P> getTargetPage() {
+  protected Class<? extends SilverpeasPageComposite> getTargetPage() {
     return null;
   }
 
@@ -25,7 +25,13 @@ public class BreadCrumbAppItem extends BreadCrumbItem {
   }
 
   @Override
-  protected void applyParameters(final Multimap<String, String> parameters) {
+  protected Multimap<String, String> getTransitionParameters() {
+    return ImmutableMultimap.of();
+  }
+
+  @Override
+  protected void fireEvent() {
 
   }
+
 }
