@@ -56,15 +56,16 @@ public class SpaceLoader {
 
   /**
    * Loads the content of the specified space and fires an event once the content is loaded.
-   * @param space the space for which its content has to be loaded.
+   * @param rootSpace the space for which its content has to be loaded.
    */
-  public void loadSpaceContent(final Space space) {
+  public void loadSpaceContent(final Space rootSpace) {
     JsonHttp.onSuccess(new JsonResponse() {
       @Override
       public void process(final HttpResponse response) {
         List<Space> spaces = response.parseJsonEntities();
         final List<SpaceContent> spaceContent = new ArrayList<>(spaces.size());
         for (Space space : spaces) {
+          space.setParent(rootSpace);
           spaceContent.add(space.getRank(), space);
         }
 
@@ -75,18 +76,19 @@ public class SpaceLoader {
                 response.parseJsonEntities(new HttpResponse.JsonArrayLine<ApplicationInstance>() {
                   @Override
                   public void perform(final int index, final ApplicationInstance instance) {
+                    instance.setParent(rootSpace);
                     spaceContent.add(instance);
                   }
                 });
-            space.setContent(spaceContent);
-            spaceContentLoaded.fire(new SpaceContentLoaded(space));
+            rootSpace.setContent(spaceContent);
+            spaceContentLoaded.fire(new SpaceContentLoaded(rootSpace));
           }
         }).onError(new JsonResponse() {
           @Override
           public void process(final HttpResponse response) {
             Log.dev("Error while getting root spaces: " + response.getStatusText());
           }
-        }).get(SpaceCriteria.fromUrl(space.getComponentsUri()));
+        }).get(SpaceCriteria.fromUrl(rootSpace.getComponentsUri()));
 
       }
     }).onError(new JsonResponse() {
@@ -94,6 +96,6 @@ public class SpaceLoader {
       public void process(final HttpResponse response) {
         Log.dev("Error while getting space content: " + response.getStatusText());
       }
-    }).get(SpaceCriteria.fromUrl(space.getSpacesUri()));
+    }).get(SpaceCriteria.fromUrl(rootSpace.getSpacesUri()));
   }
 }

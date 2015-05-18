@@ -2,21 +2,23 @@ package org.silverpeas.poc.client.local.breadcrumb;
 
 import com.google.gwt.user.client.ui.Composite;
 import org.jboss.errai.ioc.client.api.AfterInitialization;
-import org.jboss.errai.ui.client.widget.HasModel;
-import org.jboss.errai.ui.client.widget.ListWidget;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
+import org.silverpeas.poc.client.local.application.ApplicationInstance;
+import org.silverpeas.poc.client.local.application.ApplicationInstanceSelection;
 import org.silverpeas.poc.client.local.space.Space;
 import org.silverpeas.poc.client.local.space.event.SpaceSelection;
 import org.silverpeas.poc.client.local.util.HomeSpaceProvider;
 import org.silverpeas.poc.client.local.widget.SilverpeasHtmlPanel;
 
-import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
+import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 
 /**
  * A widget to render a breadcrumb indicating the navigation level of the user in the current page.
@@ -30,6 +32,9 @@ public class BreadCrumbWidget extends Composite {
   @DataField
   private SilverpeasHtmlPanel content;
 
+  @Inject
+  private Instance<BreadCrumbTransitionAnchor> breadCrumbItemAnchorProvider;
+
   private List<BreadCrumbItem> items = new ArrayList<>();
 
   @AfterInitialization
@@ -42,8 +47,26 @@ public class BreadCrumbWidget extends Composite {
     Space selectedSpace = spaceSelection.getSelectedSpace();
     if (!selectedSpace.isHome()) {
       init();
-      items.add(new BreadCrumbSpaceItem(spaceSelection.getSelectedSpace()));
+      items.add(new BreadCrumbSpaceItem(selectedSpace));
     }
+  }
+
+  public void onApplicationInstanceSelection(
+      @Observes ApplicationInstanceSelection instanceSelection) {
+    ApplicationInstance selectedInstance = instanceSelection.getSelectedInstance();
+    if (!items.isEmpty()) {
+      ListIterator<BreadCrumbItem> listIterator = items.listIterator(items.size());
+      while (listIterator.hasPrevious()) {
+        BreadCrumbItem breadCrumbItem = listIterator.previous();
+        if (!(breadCrumbItem instanceof BreadCrumbSpaceItem)) {
+          listIterator.remove();
+        }
+        if (breadCrumbItem instanceof BreadCrumbAppItem) {
+          break;
+        }
+      }
+    }
+    items.add(new BreadCrumbAppItem(selectedInstance));
   }
 
   /**
@@ -56,9 +79,11 @@ public class BreadCrumbWidget extends Composite {
   @Override
   protected void doAttachChildren() {
     content.clear();
-    items.get(items.size() - 1).setEnabled(false);
-    for (BreadCrumbItem item: items) {
-      BreadCrumbItemWidget widget = new BreadCrumbItemWidget();
+    Iterator<BreadCrumbItem> itemIt = items.iterator();
+    while (itemIt.hasNext()) {
+      BreadCrumbItem item = itemIt.next();
+      item.setEnabled(itemIt.hasNext());
+      BreadCrumbTransitionAnchor widget = breadCrumbItemAnchorProvider.get();
       widget.setModel(item);
       content.add(widget);
     }

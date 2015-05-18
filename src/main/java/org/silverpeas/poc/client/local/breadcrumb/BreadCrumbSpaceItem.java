@@ -24,8 +24,8 @@ public class BreadCrumbSpaceItem extends BreadCrumbItem {
   }
 
   @Override
-  protected Class<? extends SilverpeasPageComposite> getTargetPage() {
-    return (space.isHome() ? HomePage.class : SpaceHomePage.class);
+  protected String getTargetPageName() {
+    return (space.isHome() ? HomePage.class : SpaceHomePage.class).getSimpleName();
   }
 
   @Override

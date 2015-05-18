@@ -3,7 +3,6 @@ package org.silverpeas.poc.client.local.space;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.gwt.event.dom.client.ClickHandler;
 import org.silverpeas.poc.api.navigation.SilverpeasTransitionAnchor;
-import org.silverpeas.poc.api.util.Log;
 import org.silverpeas.poc.api.util.StringUtil;
 import org.silverpeas.poc.client.local.application.ApplicationInstance;
 import org.silverpeas.poc.client.local.application.ApplicationInstanceSelection;
@@ -31,6 +30,11 @@ public class SpaceContentTransitionAnchor extends SilverpeasTransitionAnchor
   @Override
   public void onClickEvent() {
     if (spaceContent instanceof ApplicationInstance) {
+      // The parent space event of the application must be fired in the aim of all dependent
+      // space treatments will be performed
+      eventsProvider.getSpaceSelectionEvent()
+          .fire(new SpaceSelection(((ApplicationInstance) this.spaceContent).getParent()));
+      // Application event
       eventsProvider.getApplicationInstanceSelectionEvent()
           .fire(new ApplicationInstanceSelection((ApplicationInstance) this.spaceContent));
     } else {

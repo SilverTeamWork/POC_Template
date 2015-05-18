@@ -1,9 +1,6 @@
 package org.silverpeas.poc.client.local.breadcrumb;
 
 import com.google.common.collect.Multimap;
-import org.jboss.errai.ui.nav.client.local.Navigation;
-import org.silverpeas.poc.api.ioc.BeanManager;
-import org.silverpeas.poc.client.local.template.SilverpeasPageComposite;
 
 /**
  * An item in a breadcrumb. The item represents a node in the navigation level of the user in the
@@ -26,21 +23,9 @@ public abstract class BreadCrumbItem {
     this.enabled = enabled;
   }
 
-  /**
-   * Goes the page referred by this breadcrumb item.
-   */
-  protected final void go() {
-    fireEvent();
-    getNavigation().goTo(getTargetPage(), getTransitionParameters());
-  }
-
-  protected abstract Class<? extends SilverpeasPageComposite> getTargetPage();
+  protected abstract String getTargetPageName();
 
   protected abstract Multimap<String, String> getTransitionParameters();
 
   protected abstract void fireEvent();
-
-  protected Navigation getNavigation() {
-    return BeanManager.getInstanceOf(Navigation.class);
-  }
 }

@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * @author miguel
  */
-public class Space extends SpaceContent {
+public class Space extends SpaceContent<Space> {
 
   protected Space() {
   }

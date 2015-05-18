@@ -1,12 +1,11 @@
 package org.silverpeas.poc.client.local.space;
 
 import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.json.client.JSONObject;
 
 /**
  * @author miguel
  */
-public abstract class SpaceContent extends JavaScriptObject {
+public abstract class SpaceContent<PARENT> extends JavaScriptObject {
 
   protected SpaceContent() {
   }
@@ -33,5 +32,13 @@ public abstract class SpaceContent extends JavaScriptObject {
 
   public final native int getRank() /*-{
     return this.rank;
+  }-*/;
+
+  public final native PARENT getParent() /*-{
+    return this.parent;
+  }-*/;
+
+  public final native void setParent(PARENT parent) /*-{
+    return this.parent = parent;
   }-*/;
 }
