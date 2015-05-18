@@ -19,7 +19,19 @@ public abstract class SpaceContent extends JavaScriptObject {
     return this.label;
   }-*/;
 
+  public final native String getDescription() /*-{
+    return this.description;
+  }-*/;
+
   public final native String getUri() /*-{
     return this.uri;
+  }-*/;
+
+  public final native String getId() /*-{
+    return this.id;
+  }-*/;
+
+  public final native int getRank() /*-{
+    return this.rank;
   }-*/;
 }

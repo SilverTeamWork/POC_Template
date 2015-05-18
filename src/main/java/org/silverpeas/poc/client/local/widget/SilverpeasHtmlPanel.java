@@ -7,7 +7,15 @@ import com.google.gwt.user.client.ui.HTMLPanel;
  */
 public class SilverpeasHtmlPanel extends HTMLPanel {
 
+  public enum TYPE {
+    DIV, H1, H2, H3, P, ASIDE
+  }
+
   public SilverpeasHtmlPanel() {
-    super("");
+    this(TYPE.DIV);
+  }
+
+  public SilverpeasHtmlPanel(final TYPE type) {
+    super(type.name().toLowerCase(), "");
   }
 }

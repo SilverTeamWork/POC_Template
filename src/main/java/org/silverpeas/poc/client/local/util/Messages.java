@@ -13,7 +13,8 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
   @TranslationKey(defaultValue = "Current connected user: ")
   String CURRENT_CONNECTED_USER_LOG = "user.current.connected.log";
 
-  @TranslationKey(defaultValue = "Your session has expired. <br> You will be redirected to the login page.")
+  @TranslationKey(defaultValue = "Your session has expired. <br> You will be redirected to the " +
+      "login page.")
   String DISCONNECTION_TOKEN_EXPIRED = "disconnection.token.expired";
 
   @TranslationKey(defaultValue = "Are you sure about disconnecting yourself ?")
@@ -33,6 +34,12 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
 
   @TranslationKey(defaultValue = "MM/dd/yyyy hh:mm")
   String DATETIME_FORMAT = "datetime.format";
+
+  @TranslationKey(defaultValue = "Subscribe")
+  public static final String SUBSCRIBE_LABEL = "subscribe.label";
+
+  @TranslationKey(defaultValue = "Application responsibles")
+  public static final String APPLICATION_RESPONSIBLE_LABEL = "application.responsible.label";
 
   /**
    * GWT i18n framework

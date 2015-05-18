@@ -6,11 +6,11 @@ import org.jboss.errai.ui.nav.client.local.TransitionAnchor;
 import org.jboss.errai.ui.shared.api.annotations.Bundle;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
-import org.silverpeas.poc.client.local.test.yocha.TemplateExample;
-import org.silverpeas.poc.client.local.template.SilverpeasPageComposite;
-import org.silverpeas.poc.client.local.test.yocha.layout.page.YochaTwoHomePage;
-import org.silverpeas.poc.client.local.test.yocha.layout.template.SilverpeasMainComposite;
 import org.silverpeas.poc.client.local.template.SilverpeasComposite;
+import org.silverpeas.poc.client.local.template.SilverpeasMainLayout;
+import org.silverpeas.poc.client.local.template.SilverpeasPageComposite;
+import org.silverpeas.poc.client.local.test.yocha.TemplateExample;
+import org.silverpeas.poc.client.local.test.yocha.layout.page.YochaTwoHomePage;
 import org.silverpeas.poc.client.local.util.BundleProvider;
 import org.silverpeas.poc.client.local.widget.SilverpeasHtmlPanel;
 
@@ -25,7 +25,7 @@ import javax.inject.Inject;
 public class YochaHomePage extends SilverpeasPageComposite {
 
   @Inject
-  private SilverpeasMainComposite mainTemplateComposite;
+  private SilverpeasMainLayout mainTemplateComposite;
 
   @Inject
   @DataField("home-content")

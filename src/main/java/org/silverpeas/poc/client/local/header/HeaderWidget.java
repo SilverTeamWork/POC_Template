@@ -9,6 +9,7 @@ import org.jboss.errai.ui.client.widget.UnOrderedList;
 import org.jboss.errai.ui.nav.client.local.PageShown;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
+import org.silverpeas.poc.api.util.Log;
 import org.silverpeas.poc.client.local.space.Space;
 import org.silverpeas.poc.client.local.space.SpaceLoader;
 import org.silverpeas.poc.client.local.space.SpaceWidget;

@@ -18,14 +18,14 @@ import javax.inject.Inject;
 @Templated
 public class SilverpeasMainLayout extends SilverpeasComposite {
 
-  public final static String MAIN_HTML_TEMPLATE_CONTENT_CONTAINER = "main-content";
+  public final static String DOCK_TEMPLATE = "/org/silverpeas/poc/client/local/template/dock.html";
 
   @Inject
   @DataField("header-container")
   private HeaderWidget header;
 
   @Inject
-  @DataField(MAIN_HTML_TEMPLATE_CONTENT_CONTAINER)
+  @DataField("main-content")
   private SilverpeasHtmlPanel contentPanel;
 
   @Override

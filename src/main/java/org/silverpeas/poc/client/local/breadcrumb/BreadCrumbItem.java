@@ -1,19 +1,9 @@
 package org.silverpeas.poc.client.local.breadcrumb;
 
-import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
-import com.google.gwt.user.client.ui.IsWidget;
-import org.jboss.errai.ui.nav.client.local.HistoryTokenFactory;
 import org.jboss.errai.ui.nav.client.local.Navigation;
-import org.jboss.errai.ui.nav.client.local.TransitionTo;
-import org.silverpeas.poc.api.Callback;
 import org.silverpeas.poc.api.ioc.BeanManager;
-import org.silverpeas.poc.api.navigation.TransitionProvider;
-import org.silverpeas.poc.api.util.Deferred;
-import org.silverpeas.poc.api.util.Log;
 import org.silverpeas.poc.client.local.template.SilverpeasPageComposite;
-
-import javax.inject.Inject;
 
 /**
  * An item in a breadcrumb. The item represents a node in the navigation level of the user in the

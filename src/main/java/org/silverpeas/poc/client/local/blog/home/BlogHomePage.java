@@ -6,41 +6,41 @@ import org.jboss.errai.ui.nav.client.local.PageState;
 import org.jboss.errai.ui.shared.api.annotations.Bundle;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
-import org.silverpeas.poc.client.local.template.SilverpeasPageComposite;
-import org.silverpeas.poc.client.local.test.yocha.layout.template.SilverpeasApplicationComposite;
+import org.silverpeas.poc.client.local.template.SilverpeasApplicationLayout;
 import org.silverpeas.poc.client.local.template.SilverpeasComposite;
+import org.silverpeas.poc.client.local.template.SilverpeasPageComposite;
 import org.silverpeas.poc.client.local.util.BundleProvider;
+import org.silverpeas.poc.client.local.widget.SilverpeasHtmlPanel;
 
 import javax.inject.Inject;
 
-import static org.silverpeas.poc.client.local.test.yocha.layout.template.SilverpeasMainComposite
-    .DOCK_TEMPLATE;
+import static org.silverpeas.poc.client.local.template.SilverpeasMainLayout.DOCK_TEMPLATE;
 
 /**
  * @author Yohann Chastagnier
  */
-@Page(path = "poc/blog/{blogId}/home.html")
+@Page(path = "blog/{instanceId}")
 @Templated(DOCK_TEMPLATE)
 @Bundle(BundleProvider.JSON_MESSAGES)
 public class BlogHomePage extends SilverpeasPageComposite {
 
   @Inject
-  private SilverpeasApplicationComposite applicationTemplateComposite;
+  private SilverpeasApplicationLayout applicationLayout;
 
   @PageState
-  private String blogId;
+  private String instanceId;
 
   @Inject
   @DataField("dock-container")
-  private Label dockContainer;
+  private SilverpeasHtmlPanel dockContainer;
 
   @Override
   protected SilverpeasComposite getCompositeParent() {
-    return applicationTemplateComposite;
+    return applicationLayout;
   }
 
   @Override
   public void onPageShowing() {
-    dockContainer.setText(blogId);
+    dockContainer.add(new Label(instanceId));
   }
 }

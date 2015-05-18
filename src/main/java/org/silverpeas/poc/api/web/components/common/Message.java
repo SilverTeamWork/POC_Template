@@ -9,7 +9,6 @@ import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HasAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -79,7 +78,7 @@ public class Message {
         }
       }
     };
-//    box.addStyleName("dialog-notify");
+    box.addStyleName(type.name());
     box.setGlassEnabled(true);
 
     final VerticalPanel panel = new VerticalPanel();

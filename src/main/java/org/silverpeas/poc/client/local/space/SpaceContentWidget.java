@@ -1,11 +1,9 @@
 package org.silverpeas.poc.client.local.space;
 
-import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import org.jboss.errai.ui.client.widget.HasModel;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
-import org.silverpeas.poc.api.util.Log;
 
 import javax.inject.Inject;
 
@@ -18,7 +16,7 @@ public class SpaceContentWidget extends Composite implements HasModel<SpaceConte
 
   @Inject
   @DataField("space-content-item-label")
-  private Anchor spaceLabel;
+  private SpaceContentTransitionAnchor spaceContentAnchor;
 
   /**
    * Returns the model instance associated with this widget.
@@ -36,7 +34,6 @@ public class SpaceContentWidget extends Composite implements HasModel<SpaceConte
   @Override
   public void setModel(final SpaceContent model) {
     this.content = model;
-    this.spaceLabel.setText(this.content.getLabel());
-    this.spaceLabel.setHref("#");
+    this.spaceContentAnchor.setSpaceContent(this.content);
   }
 }

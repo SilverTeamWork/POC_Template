@@ -1,5 +1,6 @@
 package org.silverpeas.poc.client.local.util;
 
+import org.silverpeas.poc.client.local.application.ApplicationInstanceSelection;
 import org.silverpeas.poc.client.local.space.event.SpaceContentLoaded;
 import org.silverpeas.poc.client.local.space.event.SpaceLoaded;
 import org.silverpeas.poc.client.local.space.event.SpaceSelection;
@@ -22,6 +23,9 @@ public class EventsProvider {
   @Inject
   private Event<SpaceContentLoaded> spaceContentLoadedEvent;
 
+  @Inject
+  private Event<ApplicationInstanceSelection> applicationInstanceSelectionEvent;
+
   public Event<SpaceSelection> getSpaceSelectionEvent() {
     return spaceSelectionEvent;
   }
@@ -32,5 +36,9 @@ public class EventsProvider {
 
   public Event<SpaceContentLoaded> getSpaceContentLoadedEvent() {
     return spaceContentLoadedEvent;
+  }
+
+  public Event<ApplicationInstanceSelection> getApplicationInstanceSelectionEvent() {
+    return applicationInstanceSelectionEvent;
   }
 }

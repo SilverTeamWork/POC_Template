@@ -6,6 +6,7 @@ import org.silverpeas.poc.api.http.HttpResponse;
 import org.silverpeas.poc.api.http.JsonHttp;
 import org.silverpeas.poc.api.http.JsonResponse;
 import org.silverpeas.poc.api.util.Log;
+import org.silverpeas.poc.client.local.application.ApplicationInstance;
 import org.silverpeas.poc.client.local.space.event.SpaceContentLoaded;
 import org.silverpeas.poc.client.local.space.event.SpaceLoaded;
 
@@ -61,21 +62,22 @@ public class SpaceLoader {
     JsonHttp.onSuccess(new JsonResponse() {
       @Override
       public void process(final HttpResponse response) {
-        JsArray<Space> jsSpaces = JsonUtils.safeEval(response.getText());
-        final List<SpaceContent> spaceContent = new ArrayList<>(jsSpaces.length());
-        for (int i = 0; i < jsSpaces.length(); i++) {
-          Space jsSpace = jsSpaces.get(i);
-          spaceContent.add(jsSpace.getRank(), jsSpace);
+        List<Space> spaces = response.parseJsonEntities();
+        final List<SpaceContent> spaceContent = new ArrayList<>(spaces.size());
+        for (Space space : spaces) {
+          spaceContent.add(space.getRank(), space);
         }
 
         JsonHttp.onSuccess(new JsonResponse() {
           @Override
           public void process(final HttpResponse response) {
-            JsArray<SilverpeasApplication> jsApps = JsonUtils.safeEval(response.getText());
-            for (int i = 0; i < jsApps.length(); i++) {
-              SilverpeasApplication jsApp = jsApps.get(i);
-              spaceContent.add(jsApp);
-            }
+            List<ApplicationInstance> instances =
+                response.parseJsonEntities(new HttpResponse.JsonArrayLine<ApplicationInstance>() {
+                  @Override
+                  public void perform(final int index, final ApplicationInstance instance) {
+                    spaceContent.add(instance);
+                  }
+                });
             space.setContent(spaceContent);
             spaceContentLoaded.fire(new SpaceContentLoaded(space));
           }
