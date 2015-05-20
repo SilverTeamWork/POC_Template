@@ -1,6 +1,5 @@
 package org.silverpeas.poc.client.local.blog.home;
 
-import com.google.gwt.core.client.JsonUtils;
 import org.jboss.errai.ui.nav.client.local.Page;
 import org.jboss.errai.ui.shared.api.annotations.Bundle;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
@@ -8,12 +7,11 @@ import org.jboss.errai.ui.shared.api.annotations.Templated;
 import org.silverpeas.poc.api.http.HttpResponse;
 import org.silverpeas.poc.api.http.JsonHttp;
 import org.silverpeas.poc.api.http.JsonResponse;
+import org.silverpeas.poc.client.local.application.ApplicationInstance;
 import org.silverpeas.poc.client.local.blog.Post;
 import org.silverpeas.poc.client.local.blog.PostCriteria;
 import org.silverpeas.poc.client.local.blog.post.PostItemWidget;
-import org.silverpeas.poc.client.local.template.SilverpeasApplicationLayout;
-import org.silverpeas.poc.client.local.template.SilverpeasComposite;
-import org.silverpeas.poc.client.local.template.SilverpeasPageComposite;
+import org.silverpeas.poc.client.local.blog.template.BlogPageComposite;
 import org.silverpeas.poc.client.local.util.BundleProvider;
 
 import javax.inject.Inject;
@@ -21,16 +19,10 @@ import javax.inject.Inject;
 /**
  * @author Yohann Chastagnier
  */
-@Page(path = "blog/{blogId}")
+@Page(path = "blog/{instanceId}")
 @Templated
 @Bundle(BundleProvider.JSON_MESSAGES)
 public class BlogHomePage extends BlogPageComposite {
-
-  @Inject
-  private SilverpeasApplicationLayout applicationLayout;
-
-  @PageState
-  private String blogId;
 
   @Inject
   @DataField
@@ -38,19 +30,15 @@ public class BlogHomePage extends BlogPageComposite {
 
   @Override
   public void onApplicationInstanceLoaded(ApplicationInstance instance) {
-    dockContainer.add(new Label(StringUtil
-        .format("{0} / {1} / {2}", instance.getLabel(), instance.getComponentName(),
-            instance.getId())));
-  }
-
-  @Override
-  public void onPageShowing() {
+//    dockContainer.add(new Label(StringUtil
+//        .format("{0} / {1} / {2}", instance.getLabel(), instance.getComponentName(),
+//            instance.getId())));
     JsonHttp.onSuccess(new JsonResponse() {
       @Override
       public void process(final HttpResponse response) {
-        Post fetchedPost = JsonUtils.safeEval(response.getText());
+        Post fetchedPost = response.parseJsonEntity();
         post.setModel(fetchedPost);
       }
-    }).get(PostCriteria.fromIds(blogId, "2"));
+    }).get(PostCriteria.fromIds(instance.getId(), "2"));
   }
 }

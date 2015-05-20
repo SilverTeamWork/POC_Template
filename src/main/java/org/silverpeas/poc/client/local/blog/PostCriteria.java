@@ -26,7 +26,7 @@ public class PostCriteria implements JsonGetCriteria {
 
   @Override
   public JsonHttpConfig configureJsonGetHttp() {
-    StringBuilder url = new StringBuilder("blogs/" + blogId + "/posts/" + postId);
+    StringBuilder url = new StringBuilder("blogs/blog" + blogId + "/posts/" + postId);
     JsonHttpConfig jsonHttpConfig = JsonHttpConfig.fromUrl(url);
     return jsonHttpConfig;
   }
