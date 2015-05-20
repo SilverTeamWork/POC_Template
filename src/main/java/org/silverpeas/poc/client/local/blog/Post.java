@@ -3,9 +3,8 @@ package org.silverpeas.poc.client.local.blog;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.view.client.ProvidesKey;
 
-import java.util.Date;
-
 /**
+ * Warning: GWT simulates long type with a double type in js.
  * @author ebonnet
  */
 public class Post extends JavaScriptObject {
@@ -44,7 +43,7 @@ public class Post extends JavaScriptObject {
     return this.content;
   }-*/;
 
-  public final native Date getDateEvent() /*-{
+  public final native double getDateEvent() /*-{
     return this.dateEvent;
   }-*/;
 
@@ -52,7 +51,7 @@ public class Post extends JavaScriptObject {
     return this.nbComments;
   }-*/;
 
-  public final native Date getCreateDate() /*-{
+  public final native double getCreateDate() /*-{
     return this.createDate;
   }-*/;
 
@@ -60,7 +59,7 @@ public class Post extends JavaScriptObject {
     return this.creator;
   }-*/;
 
-  public final native Date getUpdateDate() /*-{
+  public final native double getUpdateDate() /*-{
     return this.updateDate;
   }-*/;
 

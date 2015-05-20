@@ -1,3 +1,14 @@
 {
-  "user.current.connected.log": "Utilsateur courant connecté : {0}"
+  "user.current.connected.log": "Utilsateur courant connecté : {0}",
+  "RatingWidget.labels": "Mauvais,Passable,Assez bien,Bien,Très bien",
+  "RatingWidget.votes": "avis",
+  "RatingWidget.vote.delete": "Supprimer mon avis",
+  "RatingWidget.vote.ok": "Votre avis a bien été enregistré !",
+  "RatingWidget.vote.delete.ok": "Votre avis a bien été supprimé.",
+  "RatingWidget.vote.yours": "Votre avis&nbsp;:",
+  "RatingWidget.vote.yours.none": "Vous n'avez pas encore donné votre avis.",
+  "publication.publishedIn": "Publié le {0}",
+  "publication.publishedBy": "par {0}",
+  "publication.modifiedIn": "Mise à jour le {0}",
+  "publication.modifiedBy": "par {0}"
 }

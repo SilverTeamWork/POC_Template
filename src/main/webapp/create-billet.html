@@ -1,46 +1,49 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="utf-8" />
-<title>POC > Blog</title>
-<meta name="description" content=""/>
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
-<link rel="apple-touch-icon" href="apple-touch-icon.png" />
-<link rel="icon" href="favicon.ico" sizes="16x16" type="image/vnd.microsoft.icon">
-<link rel="stylesheet/less" type="text/css" href="css/knacss.less" />
-<!-- a voir si on utilise �a  <script src="js/vendor/modernizr-2.8.3-respond-1.4.2.min.js"></script>-->
-<script src="js/less.min.js"></script>
-<script>
+  <meta charset="utf-8"/>
+  <title>POC > Blog</title>
+  <meta name="description" content=""/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <link rel="apple-touch-icon" href="apple-touch-icon.png"/>
+  <link rel="icon" href="favicon.ico" sizes="16x16" type="image/vnd.microsoft.icon">
+  <link rel="stylesheet/less" type="text/css" href="css/knacss.less"/>
+  <!-- a voir si on utilise �a  <script src="js/vendor/modernizr-2.8.3-respond-1.4.2.min.js"></script>-->
+  <script src="js/less.min.js"></script>
+  <script>
 
-var menuState = 'show';
+    var menuState = 'show';
 
-function scrolled(){
-	var windowHeight = document.body.clientHeight,
-		currentScroll = document.body.scrollTop || document.documentElement.scrollTop;
+    function scrolled() {
+      var windowHeight = document.body.clientHeight, currentScroll = document.body.scrollTop ||
+              document.documentElement.scrollTop;
 
-	document.getElementById("header").className = (currentScroll >= 273) ? "wrapper clearfix txtcenter fixed" : "wrapper clearfix txtcenter";
-	document.getElementById("aside-app-fixed").className = (currentScroll >= 273) ? "aside-app fixed" : "aside-app";
-}
+      document.getElementById("header").className =
+          (currentScroll >= 273) ? "wrapper clearfix txtcenter fixed" :
+              "wrapper clearfix txtcenter";
+      document.getElementById("aside-app-fixed").className =
+          (currentScroll >= 273) ? "aside-app fixed" : "aside-app";
+    }
 
-addEventListener("scroll", scrolled, false);
+    addEventListener("scroll", scrolled, false);
 
-function menuToggle(){
-	if(menuState=="show"){
-		document.getElementById('nav-gauche').className='aside-gauche minimize'; 
-		menuState = "hide";
-	}else {
-		document.getElementById('nav-gauche').className='aside-gauche';  
-		menuState = "show";
-	}
-	
-	return false;
-}
-</script>
+    function menuToggle() {
+      if (menuState == "show") {
+        document.getElementById('nav-gauche').className = 'aside-gauche minimize';
+        menuState = "hide";
+      } else {
+        document.getElementById('nav-gauche').className = 'aside-gauche';
+        menuState = "show";
+      }
+
+      return false;
+    }
+  </script>
 </head>
 <body class="page-home w100 flexbox-v">
 <div class="header-container">
   <header id="header" class="wrapper clearfix txtcenter">
-    <h1 class="title"><img src="img/logo-header.png" alt="silverpeas" /></h1>
+    <h1 class="title"><img src="img/logo-header.png" alt="silverpeas"/></h1>
     <nav>
       <ul>
         <li><a href="home.html">Home sweet home</a></li>
@@ -61,7 +64,8 @@ function menuToggle(){
   </header>
 </div>
 <div class="main-container flexitem-fluid flexbox-h">
-  <aside class="aside-gauche" id="nav-gauche"> <a class="icon-menu" href="#" title="Cacher ce menu que je ne saurais voir" onClick="menuToggle();">Menu</a>
+  <aside class="aside-gauche" id="nav-gauche">
+    <a class="icon-menu" href="#" title="Cacher ce menu que je ne saurais voir" onClick="menuToggle();">Menu</a>
     <nav>
       <ul>
         <li><a href="#">Silverpeas v6</a></li>
@@ -75,25 +79,33 @@ function menuToggle(){
   <div class="main wrapper flexitem-fluid application">
     <section class="publication blog with-aside-app">
       <nav class="breadcrumb">
-      							<div class="content"><a class="home-breadcrump" href="home.html">Home</a> <a href="espace.html" class="space-breadcrump">Chez Silverpeas</a> <a href="blog.html" class="app-breadcrump blog">Blog SP</a> <a href="billet.html" class="publication-breadcrump blog">Réponse à appel d'offres : retour d'expérience</a></div>
-      							<div class="back"><a title="retour à la page précédente" href="blog.html">Retour à la page précédente</a></div>
-       </nav>
+        <div class="content"><a class="home-breadcrump" href="home.html">Home</a>
+          <a href="espace.html" class="space-breadcrump">Chez Silverpeas</a>
+          <a href="blog.html" class="app-breadcrump blog">Blog SP</a>
+          <a href="billet.html" class="publication-breadcrump blog">Réponse à appel d'offres :
+            retour d'expérience</a></div>
+        <div class="back"><a title="retour à la page précédente" href="blog.html">Retour à la page
+          précédente</a></div>
+      </nav>
       <header>
         <h2 class="title">Création d'un billet</h2>
       </header>
       <form name="login" action="create-billet.html" method="get" accept-charset="utf-8">
-      	<div class="mbm"><label class="w20" for="titre">Titre</label> <input type="text" name="titre" id="titre" placeholder="Titre" required="required" /></div>
-    	<div class="mbm"><label class="w20" for="date-event">Date de l'évènement</label> <input type="date" name="date-event" id="date-event" placeholder="jj/mm/aaaa" /></div>
-    	<div class="mbm"><label class="w20" for="content">Texte</label> <textarea cols="50" name="content" id="content" required="required"></textarea></div>
-       	<div class="mbm"><input type="submit" value="Créer" onClick=""/></div>
+        <div class="mbm"><label class="w20" for="titre">Titre</label>
+          <input type="text" name="titre" id="titre" placeholder="Titre" required="required"/></div>
+        <div class="mbm"><label class="w20" for="date-event">Date de l'évènement</label>
+          <input type="date" name="date-event" id="date-event" placeholder="jj/mm/aaaa"/></div>
+        <div class="mbm"><label class="w20" for="content">Texte</label>
+          <textarea cols="50" name="content" id="content" required="required"></textarea></div>
+        <div class="mbm"><input type="submit" value="Créer" onClick=""/></div>
       </form>
-      
+
     </section>
   </div>
 </div>
 <!-- #main-container -->
 <div class="footer-container">
-  <footer class="wrapper"> 2015 Silverpeas Represente ! Tac tac </footer>
+  <footer class="wrapper"> 2015 Silverpeas Represente ! Tac tac</footer>
 </div>
 </body>
 </html>

@@ -1,2 +1,14 @@
 {
+  "user.current.connected.log": "Current connected user: {0}",
+  "RatingWidget.labels": "Bad,Fair,Fairly well,Well,Great",
+  "RatingWidget.votes": "rating(s)",
+  "RatingWidget.vote.delete": "Remove your rating",
+  "RatingWidget.vote.ok": "Your opinion has been saved!",
+  "RatingWidget.vote.delete.ok": "Your opinion has been deleted.",
+  "RatingWidget.vote.yours": "Your rating:",
+  "RatingWidget.vote.yours.none": "You have not given your opinion yet.",
+  "publication.publishedIn": "Published in {0}",
+  "publication.publishedBy": "by {0}",
+  "publication.modifiedIn": "Updated in {0}",
+  "publication.modifiedBy": "by {0}"
 }
