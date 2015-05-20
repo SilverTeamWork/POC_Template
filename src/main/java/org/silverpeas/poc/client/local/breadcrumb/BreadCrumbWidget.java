@@ -4,10 +4,13 @@ import com.google.gwt.user.client.ui.Composite;
 import org.jboss.errai.ioc.client.api.AfterInitialization;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
+import org.silverpeas.poc.api.util.Log;
 import org.silverpeas.poc.client.local.application.ApplicationInstance;
-import org.silverpeas.poc.client.local.application.ApplicationInstanceSelection;
+import org.silverpeas.poc.client.local.application.event.LoadedApplicationInstance;
 import org.silverpeas.poc.client.local.space.Space;
-import org.silverpeas.poc.client.local.space.event.SpaceSelection;
+import org.silverpeas.poc.client.local.space.SpaceContent;
+import org.silverpeas.poc.client.local.space.event.LoadedSpace;
+import org.silverpeas.poc.client.local.space.event.SelectedSpace;
 import org.silverpeas.poc.client.local.util.HomeSpaceProvider;
 import org.silverpeas.poc.client.local.widget.SilverpeasHtmlPanel;
 
@@ -18,7 +21,6 @@ import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 
 /**
  * A widget to render a breadcrumb indicating the navigation level of the user in the current page.
@@ -43,41 +45,43 @@ public class BreadCrumbWidget extends Composite {
     items.add(new BreadCrumbSpaceItem(HomeSpaceProvider.getHomeSpace()));
   }
 
-  public void onSpaceSelection(@Observes SpaceSelection spaceSelection) {
-    Space selectedSpace = spaceSelection.getSelectedSpace();
-    if (!selectedSpace.isHome()) {
+  private void onSpaceSelection(@Observes SelectedSpace spaceSelection) {
+    Space selectedSpace = spaceSelection.getResource();
+    if (selectedSpace.isHome()) {
       init();
-      items.add(new BreadCrumbSpaceItem(selectedSpace));
+      refresh();
     }
   }
 
-  public void onApplicationInstanceSelection(
-      @Observes ApplicationInstanceSelection instanceSelection) {
-    ApplicationInstance selectedInstance = instanceSelection.getSelectedInstance();
-    if (!items.isEmpty()) {
-      ListIterator<BreadCrumbItem> listIterator = items.listIterator(items.size());
-      while (listIterator.hasPrevious()) {
-        BreadCrumbItem breadCrumbItem = listIterator.previous();
-        if (!(breadCrumbItem instanceof BreadCrumbSpaceItem)) {
-          listIterator.remove();
-        }
-        if (breadCrumbItem instanceof BreadCrumbAppItem) {
-          break;
-        }
+  private void onSpaceLoaded(@Observes LoadedSpace event) {
+    init();
+    Space space = event.getResource();
+    Log.dev("BreadCrumbWidget - onSpaceLoaded - {0} (id={1})", space.getLabel(), space.getId());
+    performSpaceContent(space);
+    refresh();
+  }
+
+  private void onApplicationInstanceLoaded(@Observes LoadedApplicationInstance instanceLoaded) {
+    init();
+    ApplicationInstance instance = instanceLoaded.getResource();
+    Log.debug("BreadCrumbWidget - onApplicationInstanceLoaded - {0} (type={1}, id={2})",
+        instance.getLabel(), instance.getComponentName(), instance.getId());
+    performSpaceContent(instance);
+    refresh();
+  }
+
+  private void performSpaceContent(SpaceContent spaceContent) {
+    if (spaceContent != null) {
+      if (spaceContent.isApplication()) {
+        items.add(1, new BreadCrumbAppItem((ApplicationInstance) spaceContent));
+      } else {
+        items.add(1, new BreadCrumbSpaceItem((Space) spaceContent));
       }
+      performSpaceContent(spaceContent.getParent());
     }
-    items.add(new BreadCrumbAppItem(selectedInstance));
   }
 
-  /**
-   * If a widget contains one or more child widgets that are not in the logical
-   * widget hierarchy (the child is physically connected only on the DOM level),
-   * it must override this method and call {@link #onAttach()} for each of its
-   * child widgets.
-   * @see #onAttach()
-   */
-  @Override
-  protected void doAttachChildren() {
+  private void refresh() {
     content.clear();
     Iterator<BreadCrumbItem> itemIt = items.iterator();
     while (itemIt.hasNext()) {

@@ -1,21 +1,15 @@
 package org.silverpeas.poc.client.local.space.event;
 
 import org.jboss.errai.common.client.api.annotations.LocalEvent;
+import org.silverpeas.poc.api.event.ResourceEvent;
 import org.silverpeas.poc.client.local.space.Space;
 
 /**
  * @author miguel
  */
 @LocalEvent
-public class SpaceSelection {
-
-  private Space space;
-
-  public SpaceSelection(final Space selectedSpace) {
-    this.space = selectedSpace;
-  }
-
-  public Space getSelectedSpace() {
-    return space;
+public class LoadedSpaceContent extends ResourceEvent<Space> {
+  public LoadedSpaceContent(final Space resource) {
+    super(resource);
   }
 }

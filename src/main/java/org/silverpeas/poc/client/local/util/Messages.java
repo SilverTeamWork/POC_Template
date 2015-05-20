@@ -35,6 +35,9 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
   @TranslationKey(defaultValue = "MM/dd/yyyy hh:mm")
   String DATETIME_FORMAT = "datetime.format";
 
+  @TranslationKey(defaultValue = "Homepage")
+  String SPACE_HOMEPAGE_LABEL = "space.homepage.label";
+
   @TranslationKey(defaultValue = "Subscribe")
   public static final String SUBSCRIBE_LABEL = "subscribe.label";
 
@@ -56,4 +59,7 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
 
   @DefaultMessage("No")
   String no();
+
+  @DefaultMessage("Error")
+  String error();
 }

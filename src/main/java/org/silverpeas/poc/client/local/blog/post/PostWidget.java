@@ -131,7 +131,7 @@ public class PostWidget extends Composite implements HasModel<Post> {
   }
 
   private void loadPost() {
-    Log.dev("blogId = " + blogId + " and postId = " + postId);
+    Log.debug("blogId = " + blogId + " and postId = " + postId);
     JsonHttp.onSuccess(new JsonResponse() {
       @Override
       public void process(final HttpResponse response) {
@@ -141,7 +141,7 @@ public class PostWidget extends Composite implements HasModel<Post> {
     }).onError(new JsonResponse() {
       @Override
       public void process(final HttpResponse response) {
-        Log.dev("Error while getting blog post: " + response.getStatusText());
+        Log.debug("Error while getting blog post: " + response.getStatusText());
       }
     }).get(PostCriteria.fromIds(getBlogId(), getPostId()));
   }

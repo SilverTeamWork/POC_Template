@@ -1,6 +1,9 @@
 package org.silverpeas.poc.client.local;
 
 import com.google.gwt.user.client.ui.Composite;
+import io.reinert.gdeferred.Deferred;
+import io.reinert.gdeferred.Promise;
+import io.reinert.gdeferred.impl.DeferredObject;
 import org.jboss.errai.ioc.client.api.AfterInitialization;
 import org.jboss.errai.ui.nav.client.local.DefaultNavigationErrorHandler;
 import org.jboss.errai.ui.nav.client.local.DefaultPage;
@@ -11,6 +14,7 @@ import org.silverpeas.poc.api.Callback;
 import org.silverpeas.poc.api.http.HttpResponse;
 import org.silverpeas.poc.api.http.JsonHttp;
 import org.silverpeas.poc.api.http.JsonResponse;
+import org.silverpeas.poc.api.ioc.BeanManager;
 import org.silverpeas.poc.api.util.I18n;
 import org.silverpeas.poc.api.util.Log;
 import org.silverpeas.poc.api.web.components.common.Message;
@@ -35,15 +39,29 @@ public class Starter extends Composite {
   @Inject
   private Navigation navigation;
 
+  private Deferred<Void, Void, Void> silverpeasStarted = new DeferredObject<>();
+
+  private static Starter get() {
+    return BeanManager.getInstanceOf(Starter.class);
+  }
+
+  public static void triggerSilverpeasIsStarted() {
+    get().silverpeasStarted.resolve(null);
+  }
+
+  public static Promise<Void, Void, Void> whenSilverpeasIsStarted() {
+    return get().silverpeasStarted;
+  }
+
   @AfterInitialization
   private void setup() {
     JsonHttp.setUnauthorizedCallback(new JsonResponse() {
       @Override
       public void process(final HttpResponse response) {
         CurrentUser.markAsDisconnected();
-        Message.notifies(I18n.format(Messages.DISCONNECTION_TOKEN_EXPIRED)).info(new Callback() {
+        Message.notifies(I18n.format(Messages.DISCONNECTION_TOKEN_EXPIRED)).error(new Callback() {
           @Override
-          public void invoke() {
+          public void invoke(final Object... parameters) {
             Dispatcher.home();
           }
         });

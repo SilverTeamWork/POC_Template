@@ -5,6 +5,18 @@ package org.silverpeas.poc.api.util;
  */
 public class StringUtil {
 
+  /**
+   * Indicates if the given string is defined.<br/>
+   * A string is defined if it is:
+   * <ul>
+   *   <li>not null</li>
+   *   <li>and not empty</li>
+   *   <li>and not composed only with spaces</li>
+   *   <li>and not equals to "null" string</li>
+   * </ul>
+   * @param string the string to verify.
+   * @return true if defined, false otherwise.
+   */
   public static boolean isDefined(String string) {
     if (string == null || string.length() == 0) {
       return false;
@@ -13,6 +25,12 @@ public class StringUtil {
     return tmp.length() != 0 && !"null".equals(tmp);
   }
 
+  /**
+   * Indicates if the given string is not defined.<br/>
+   * Please consult {@link #isDefined(String)}.
+   * @param string the string to verify.
+   * @return true if not defined, false otherwise.
+   */
   public static boolean isNotDefined(String string) {
     return !isDefined(string);
   }
@@ -79,5 +97,22 @@ public class StringUtil {
 
     return new StringBuilder(strLen).append(firstChar.toLowerCase()).append(str.substring(1))
         .toString();
+  }
+
+  /**
+   * Formats the given message by adding the given parameters.
+   * @param message the message.
+   * @param params the parameters to include into the message.
+   * @return the formatted message.
+   */
+  public static String format(String message, Object... params) {
+    String theMessage = message;
+
+    int i = 0;
+    for (Object param : params) {
+      theMessage = theMessage.replace("{" + (i++) + "}", param.toString());
+    }
+
+    return theMessage;
   }
 }

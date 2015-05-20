@@ -3,6 +3,7 @@ package org.silverpeas.poc.client.local.breadcrumb;
 import com.google.gwt.event.dom.client.ClickHandler;
 import org.jboss.errai.ui.client.widget.HasModel;
 import org.silverpeas.poc.api.navigation.SilverpeasTransitionAnchor;
+import org.silverpeas.poc.api.util.Log;
 
 /**
  * @author miguel

@@ -15,6 +15,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import org.silverpeas.poc.api.Callback;
 
 import static org.silverpeas.poc.api.util.StringUtil.isDefined;
+import static org.silverpeas.poc.api.util.StringUtil.isNotDefined;
 import static org.silverpeas.poc.client.local.util.BundleProvider.msg;
 
 /**
@@ -93,6 +94,9 @@ public class Message {
 
     switch (type) {
       case error:
+        if (isNotDefined(title)) {
+          box.setText(msg().error());
+        }
       case info:
       case confirmation:
         panel.add(emptyLabel);

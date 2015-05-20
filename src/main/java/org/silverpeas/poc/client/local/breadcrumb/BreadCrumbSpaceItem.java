@@ -6,8 +6,7 @@ import org.silverpeas.poc.api.ioc.BeanManager;
 import org.silverpeas.poc.client.local.HomePage;
 import org.silverpeas.poc.client.local.SpaceHomePage;
 import org.silverpeas.poc.client.local.space.Space;
-import org.silverpeas.poc.client.local.space.event.SpaceSelection;
-import org.silverpeas.poc.client.local.template.SilverpeasPageComposite;
+import org.silverpeas.poc.client.local.space.event.SelectedSpace;
 import org.silverpeas.poc.client.local.util.EventsProvider;
 
 import javax.enterprise.event.Event;
@@ -47,8 +46,8 @@ public class BreadCrumbSpaceItem extends BreadCrumbItem {
   @Override
   protected void fireEvent() {
     EventsProvider eventsProvider = BeanManager.getInstanceOf(EventsProvider.class);
-    Event<SpaceSelection> event = eventsProvider.getSpaceSelectionEvent();
-    event.fire(new SpaceSelection(space));
+    Event<SelectedSpace> event = eventsProvider.getSpaceSelectionEvent();
+    event.fire(new SelectedSpace(space));
   }
 
 }

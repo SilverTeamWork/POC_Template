@@ -5,7 +5,7 @@ import com.google.common.collect.Multimap;
 import org.silverpeas.poc.api.ioc.BeanManager;
 import org.silverpeas.poc.api.util.StringUtil;
 import org.silverpeas.poc.client.local.application.ApplicationInstance;
-import org.silverpeas.poc.client.local.application.ApplicationInstanceSelection;
+import org.silverpeas.poc.client.local.application.event.SelectedApplicationInstance;
 import org.silverpeas.poc.client.local.util.EventsProvider;
 
 import javax.enterprise.event.Event;
@@ -44,9 +44,9 @@ public class BreadCrumbAppItem extends BreadCrumbItem {
   @Override
   protected void fireEvent() {
     EventsProvider eventsProvider = BeanManager.getInstanceOf(EventsProvider.class);
-    Event<ApplicationInstanceSelection> event =
+    Event<SelectedApplicationInstance> event =
         eventsProvider.getApplicationInstanceSelectionEvent();
-    event.fire(new ApplicationInstanceSelection(instance));
+    event.fire(new SelectedApplicationInstance(instance));
   }
 
 }

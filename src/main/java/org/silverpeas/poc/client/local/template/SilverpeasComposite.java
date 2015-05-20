@@ -123,7 +123,7 @@ public abstract class SilverpeasComposite extends Composite {
       composite = composite.getCompositeParent();
     }
     Collections.reverse(hierarchy);
-    Log.dev(this.getClass().getName() + " - hierarchy of " + hierarchy.size() + " templates");
+    Log.debug(this.getClass().getName() + " - hierarchy of " + hierarchy.size() + " templates");
     return hierarchy;
   }
 

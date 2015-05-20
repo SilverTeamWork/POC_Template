@@ -5,8 +5,8 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import org.silverpeas.poc.api.navigation.SilverpeasTransitionAnchor;
 import org.silverpeas.poc.api.util.StringUtil;
 import org.silverpeas.poc.client.local.application.ApplicationInstance;
-import org.silverpeas.poc.client.local.application.ApplicationInstanceSelection;
-import org.silverpeas.poc.client.local.space.event.SpaceSelection;
+import org.silverpeas.poc.client.local.application.event.SelectedApplicationInstance;
+import org.silverpeas.poc.client.local.space.event.SelectedSpace;
 import org.silverpeas.poc.client.local.util.EventsProvider;
 
 import javax.inject.Inject;
@@ -29,16 +29,11 @@ public class SpaceContentTransitionAnchor extends SilverpeasTransitionAnchor
 
   @Override
   public void onClickEvent() {
-    if (spaceContent instanceof ApplicationInstance) {
-      // The parent space event of the application must be fired in the aim of all dependent
-      // space treatments will be performed
-      eventsProvider.getSpaceSelectionEvent()
-          .fire(new SpaceSelection(((ApplicationInstance) this.spaceContent).getParent()));
-      // Application event
+    if (spaceContent.isApplication()) {
       eventsProvider.getApplicationInstanceSelectionEvent()
-          .fire(new ApplicationInstanceSelection((ApplicationInstance) this.spaceContent));
+          .fire(new SelectedApplicationInstance((ApplicationInstance) this.spaceContent));
     } else {
-      eventsProvider.getSpaceSelectionEvent().fire(new SpaceSelection((Space) this.spaceContent));
+      eventsProvider.getSpaceSelectionEvent().fire(new SelectedSpace((Space) this.spaceContent));
     }
   }
 
@@ -47,7 +42,7 @@ public class SpaceContentTransitionAnchor extends SilverpeasTransitionAnchor
     setText(spaceContent.getLabel());
     final String toPrefixPageName;
     final String spaceContentIdKey;
-    if (spaceContent instanceof ApplicationInstance) {
+    if (spaceContent.isApplication()) {
       toPrefixPageName = ((ApplicationInstance) spaceContent).getComponentName();
       spaceContentIdKey = "instanceId";
     } else {

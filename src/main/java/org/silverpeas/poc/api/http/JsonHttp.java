@@ -16,14 +16,14 @@ import java.util.Map;
  */
 public class JsonHttp {
 
-  private static final String JSON_DATA_SERVER = "http://localhost:8000/silverpeas/services/";
+  private static final String JSON_DATA_SERVER = "/silverpeas/services/";
 
   private static JsonResponse unauthorizedCallback;
 
   private final JsonResponse successCallback;
   private JsonResponse errorCallback;
   private String dataToSend = null;
-  private boolean showWaiting = true;
+  private boolean showWaiting = false;
 
   public static void setUnauthorizedCallback(JsonResponse unauthorizedCallback) {
     JsonHttp.unauthorizedCallback = unauthorizedCallback;
@@ -47,8 +47,8 @@ public class JsonHttp {
     return this;
   }
 
-  public JsonHttp noWaitingMessage() {
-    this.showWaiting = false;
+  public JsonHttp waitingMessage() {
+    this.showWaiting = true;
     return this;
   }
 
@@ -121,7 +121,8 @@ public class JsonHttp {
 
   private String normalizeUri(String uri) {
     if (!uri.toLowerCase().startsWith("http")) {
-      uri = JSON_DATA_SERVER + uri;
+      uri = Window.Location.createUrlBuilder().setPort(8000).setPath(JSON_DATA_SERVER + uri)
+          .buildString();
     }
     return uri;
   }

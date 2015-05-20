@@ -2,7 +2,6 @@ package org.silverpeas.poc.client.local.blog.home;
 
 import com.google.gwt.core.client.JsonUtils;
 import org.jboss.errai.ui.nav.client.local.Page;
-import org.jboss.errai.ui.nav.client.local.PageState;
 import org.jboss.errai.ui.shared.api.annotations.Bundle;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
@@ -25,7 +24,7 @@ import javax.inject.Inject;
 @Page(path = "blog/{blogId}")
 @Templated
 @Bundle(BundleProvider.JSON_MESSAGES)
-public class BlogHomePage extends SilverpeasPageComposite {
+public class BlogHomePage extends BlogPageComposite {
 
   @Inject
   private SilverpeasApplicationLayout applicationLayout;
@@ -38,8 +37,10 @@ public class BlogHomePage extends SilverpeasPageComposite {
   private PostItemWidget post;
 
   @Override
-  protected SilverpeasComposite getCompositeParent() {
-    return applicationLayout;
+  public void onApplicationInstanceLoaded(ApplicationInstance instance) {
+    dockContainer.add(new Label(StringUtil
+        .format("{0} / {1} / {2}", instance.getLabel(), instance.getComponentName(),
+            instance.getId())));
   }
 
   @Override

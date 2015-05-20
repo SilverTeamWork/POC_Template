@@ -52,7 +52,7 @@ public class TemplateExample extends Composite {
     Message.notifies(I18n.format(Messages.DISCONNECTION_CONFIRM, CurrentUser.get().getName()))
         .confirm(new Callback() {
           @Override
-          public void invoke() {
+          public void invoke(final Object... parameters) {
             CurrentUser.markAsDisconnected();
             Dispatcher.home();
           }

@@ -12,6 +12,7 @@ import org.jboss.errai.ui.nav.client.local.TransitionAnchor;
 import org.jboss.errai.ui.nav.client.local.TransitionAnchorProvider;
 import org.jboss.errai.ui.nav.client.local.TransitionTo;
 import org.jboss.errai.ui.nav.client.local.spi.NavigationGraph;
+import org.silverpeas.poc.api.ioc.BeanManager;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -25,6 +26,10 @@ import java.lang.annotation.Annotation;
  */
 @ApplicationScoped
 public class NavigationProvider {
+
+  public static NavigationProvider get() {
+    return BeanManager.getInstanceOf(NavigationProvider.class);
+  }
 
   @Inject
   private Navigation navigation;

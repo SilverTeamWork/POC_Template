@@ -16,6 +16,7 @@
   <inherits name="org.jboss.errai.ui.nav.Navigation"/>
 
   <inherits name="org.turbogwt.core.collections.Collections"/>
+  <inherits name="io.reinert.gdeferred.GDeferred"/>
 
   <!-- Specify the paths for translatable code                    -->
   <extend-property name="locale" values="fr,en"/>

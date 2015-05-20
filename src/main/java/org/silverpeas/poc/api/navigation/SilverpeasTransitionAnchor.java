@@ -33,13 +33,7 @@ public class SilverpeasTransitionAnchor extends Anchor implements ClickHandler {
   @Override
   public final void onClick(final ClickEvent event) {
     if (isEnabled()) {
-      if (this.pageToken != null) {
-        onClickEvent();
-        navigation.goTo(pageToken.getPageName(), pageToken.getState());
-      } else {
-        Message.notifies(toPage + " does not (yet) exist...").withTitle("Destination not found")
-            .error();
-      }
+      click();
     }
 
     event.stopPropagation();
@@ -48,6 +42,18 @@ public class SilverpeasTransitionAnchor extends Anchor implements ClickHandler {
 
   protected void onClickEvent() {
 
+  }
+
+  /**
+   * Programmatically click on the anchor.
+   */
+  public void click() {
+    if (this.pageToken != null) {
+      onClickEvent();
+      navigation.goTo(pageToken.getPageName(), pageToken.getState());
+    } else {
+      Message.notifies(toPage + " does not (yet) exist...").error();
+    }
   }
 
   /**
