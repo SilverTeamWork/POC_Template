@@ -42,7 +42,6 @@ public class BlogHomePage extends BlogPageComposite {
     Window.addWindowScrollHandler(new Window.ScrollHandler() {
       @Override
       public void onWindowScroll(final Window.ScrollEvent event) {
-        Log.dev("scroll " + scroll);
         Document document = Document.get();
         int previousScroll = scroll;
         scroll = document.getScrollHeight();
@@ -50,9 +49,8 @@ public class BlogHomePage extends BlogPageComposite {
           return;
         }
 
-        int maxScrollTop = postsView.getOffsetHeight() - getContentPanel().getOffsetHeight();
+        int maxScrollTop = postsView.getOffsetHeight() - postsView.getParent().getOffsetHeight();
         if (scroll >= maxScrollTop) {
-          Log.dev("scroll to page " + page);
           ApplicationInstance instance = getApplicationInstance();
           JsonHttp.onSuccess(new JsonResponse() {
             @Override
