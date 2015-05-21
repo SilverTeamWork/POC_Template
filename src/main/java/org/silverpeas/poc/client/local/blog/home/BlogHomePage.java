@@ -1,5 +1,6 @@
 package org.silverpeas.poc.client.local.blog.home;
 
+import org.jboss.errai.ui.client.widget.ListWidget;
 import org.jboss.errai.ui.nav.client.local.Page;
 import org.jboss.errai.ui.shared.api.annotations.Bundle;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
@@ -15,6 +16,7 @@ import org.silverpeas.poc.client.local.blog.template.BlogPageComposite;
 import org.silverpeas.poc.client.local.util.BundleProvider;
 
 import javax.inject.Inject;
+import java.util.List;
 
 /**
  * @author Yohann Chastagnier
@@ -25,20 +27,19 @@ import javax.inject.Inject;
 public class BlogHomePage extends BlogPageComposite {
 
   @Inject
-  @DataField
-  private PostItemWidget post;
+  @DataField("blog")
+  private ListWidget<Post, PostItemWidget> postsView;
 
   @Override
   public void onApplicationInstanceLoaded(ApplicationInstance instance) {
-//    dockContainer.add(new Label(StringUtil
-//        .format("{0} / {1} / {2}", instance.getLabel(), instance.getComponentName(),
-//            instance.getId())));
+    final BlogHomePage self = this;
     JsonHttp.onSuccess(new JsonResponse() {
       @Override
       public void process(final HttpResponse response) {
-        Post fetchedPost = response.parseJsonEntity();
-        post.setModel(fetchedPost);
+        List<Post> posts = response.parseJsonEntities();
+        postsView.setItems(posts);
       }
-    }).get(PostCriteria.fromIds(instance.getId(), "2"));
+    }).get(PostCriteria.fromBlog(instance.getId()));
   }
+
 }

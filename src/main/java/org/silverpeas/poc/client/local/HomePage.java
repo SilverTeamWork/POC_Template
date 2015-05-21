@@ -1,5 +1,6 @@
 package org.silverpeas.poc.client.local;
 
+import com.google.gwt.user.client.ui.Panel;
 import org.jboss.errai.ui.nav.client.local.Page;
 import org.jboss.errai.ui.shared.api.annotations.Bundle;
 import org.jboss.errai.ui.shared.api.annotations.Templated;

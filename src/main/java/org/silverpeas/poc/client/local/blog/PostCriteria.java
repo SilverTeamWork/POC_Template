@@ -18,6 +18,12 @@ public class PostCriteria implements JsonGetCriteria {
     return postCriteria;
   }
 
+  public static PostCriteria fromBlog(String blogId) {
+    PostCriteria postCriteria = new PostCriteria();
+    postCriteria.blogId = blogId;
+    return postCriteria;
+  }
+
   /**
    * hidden constructor
    */
@@ -26,7 +32,10 @@ public class PostCriteria implements JsonGetCriteria {
 
   @Override
   public JsonHttpConfig configureJsonGetHttp() {
-    StringBuilder url = new StringBuilder("blogs/blog" + blogId + "/posts/" + postId);
+    StringBuilder url = new StringBuilder("blogs/blog").append(blogId).append("/posts");
+    if (postId != null) {
+      url.append("/").append(postId);
+    }
     JsonHttpConfig jsonHttpConfig = JsonHttpConfig.fromUrl(url);
     return jsonHttpConfig;
   }

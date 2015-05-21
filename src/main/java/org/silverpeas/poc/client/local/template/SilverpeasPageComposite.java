@@ -9,7 +9,7 @@ import com.google.gwt.user.client.ui.Panel;
 public abstract class SilverpeasPageComposite extends SilverpeasComposite {
 
   @Override
-  public final Panel getContentPanel() {
-    return null;
+  public Panel getContentPanel() {
+    return getCompositeParent().getContentPanel();
   }
 }

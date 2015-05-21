@@ -79,7 +79,7 @@ public class PostItemWidget extends Composite implements HasModel<Post> {
     title.setInnerText(post.getTitle());
     time.setModel(
         new Date((long) this.post.getCreateDate())); // long is simulated in js by a double with GWT
-    commentCount.setInnerText(post.getNbComments());
+    commentCount.setInnerText(String.valueOf(post.getNbComments()));
     fillContentSnippet();
     fillPublicationInfo();
     fillModificationInfo();

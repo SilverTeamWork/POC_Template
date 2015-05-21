@@ -1,5 +1,6 @@
 package org.silverpeas.poc.client.local.template;
 
+import com.google.gwt.user.client.ui.RootPanel;
 import io.reinert.gdeferred.DoneCallback;
 import io.reinert.gdeferred.FailCallback;
 import org.jboss.errai.ui.nav.client.local.PageState;
