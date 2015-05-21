@@ -1,5 +1,6 @@
 {
   "user.current.connected.log": "Current connected user: {0}",
+  "HeaderWidget.disconnection": "Sign out",
   "RatingWidget.labels": "Bad,Fair,Fairly well,Well,Great",
   "RatingWidget.votes": "rating(s)",
   "RatingWidget.vote.delete": "Remove your rating",

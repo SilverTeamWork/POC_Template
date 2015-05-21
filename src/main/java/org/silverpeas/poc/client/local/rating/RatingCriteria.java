@@ -8,7 +8,7 @@ import org.silverpeas.poc.api.http.JsonHttpConfig;
  * @author miguel
  */
 public class RatingCriteria implements JsonGetCriteria {
-  private static final String RATING_URI = "comments/%s/%s/%s";
+  private static final String RATING_URI = "rating/%s/%s/%s";
   private String instanceId;
   private String type;
   private String contribId;

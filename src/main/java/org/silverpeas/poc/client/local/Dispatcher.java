@@ -2,6 +2,7 @@ package org.silverpeas.poc.client.local;
 
 import com.google.gwt.user.client.ui.Composite;
 import org.jboss.errai.ioc.client.api.AfterInitialization;
+import org.jboss.errai.ioc.client.api.EntryPoint;
 import org.jboss.errai.ui.nav.client.local.DefaultPage;
 import org.jboss.errai.ui.nav.client.local.Page;
 import org.jboss.errai.ui.nav.client.local.PageShowing;
@@ -35,6 +36,7 @@ import javax.inject.Inject;
 @Page(role = DefaultPage.class)
 @Templated
 @Bundle(BundleProvider.JSON_TRANSLATIONS)
+@EntryPoint
 public class Dispatcher extends Composite {
 
   @Inject

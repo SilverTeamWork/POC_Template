@@ -6,6 +6,7 @@ import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.Window;
+import org.silverpeas.poc.api.util.UrlManager;
 import org.silverpeas.poc.api.web.components.common.Waiting;
 import org.silverpeas.poc.client.local.user.CurrentUser;
 
@@ -121,9 +122,7 @@ public class JsonHttp {
 
   private String normalizeUri(String uri) {
     if (!uri.toLowerCase().startsWith("http")) {
-      uri =
-          Window.Location.createUrlBuilder().setPort(8000).setPath(JSON_DATA_SERVER).buildString() +
-              uri;
+      uri = UrlManager.getSilverpeasUrl(JSON_DATA_SERVER) + uri;
     }
     return uri;
   }

@@ -46,6 +46,10 @@ public class User extends JavaScriptObject {
     return this.accessLevel;
   }-*/;
 
+  public final native String getAvatar() /*-{
+    return this.avatar;
+  }-*/;
+
   public final String getName() {
     return getFirstName() + " " + getLastName();
   }

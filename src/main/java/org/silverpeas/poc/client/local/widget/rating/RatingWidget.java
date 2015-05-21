@@ -37,7 +37,7 @@ public class RatingWidget extends Composite
 
   private Rating rating = null;
   private boolean readonly = false;
-  private int hoverRatingNote = -1;
+  private int hoverRatingNote = 0;
   private RatingWidgetResources resources = GWT.create(RatingWidgetResources.class);
 
   @Inject
@@ -73,9 +73,9 @@ public class RatingWidget extends Composite
     panel.setStyleName(RATING_STYLE);
 
     String[] labels = translation.format(RatingWidgetTranslations.LABELS).split(",");
-    for (int note = 0; note < NOTE_COUNT; note++) {
+    for (int note = 1; note <= NOTE_COUNT; note++) {
       Image image = new Image();
-      image.setTitle(labels[note].trim());
+      image.setTitle(labels[note - 1].trim());
       image.setAltText(String.valueOf(note));
       image.addClickHandler(this);
       image.addMouseOverHandler(this);
@@ -95,13 +95,13 @@ public class RatingWidget extends Composite
   }
 
   private void updateRatingNoteImages() {
-    for (int note = 0; note < NOTE_COUNT; note++) {
-      Image image = (Image) panel.getWidget(note);
+    for (int note = 1; note <= NOTE_COUNT; note++) {
+      Image image = (Image) panel.getWidget(note - 1);
       ImageResource resource;
       String style = DEFAULT_RATING_NOTE_STYLE + " ";
       if (rating != null) {
         double ceil = Math.ceil(rating.getAverageValue());
-        if (hoverRatingNote < 0) {
+        if (hoverRatingNote == 0) {
           if (note <= rating.getAverageValue()) {
             if (ceil != rating.getAverageValue() && note == (ceil - 1)) {
               resource = resources.noteHalfSelected();
@@ -178,6 +178,6 @@ public class RatingWidget extends Composite
   }
 
   private void unsetHoverRatingNote() {
-    hoverRatingNote = -1;
+    hoverRatingNote = 0;
   }
 }
