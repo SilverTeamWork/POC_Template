@@ -9,6 +9,14 @@ public class Rating extends Contribution {
   protected Rating() {
   }
 
+  public final native String getNotedContributionId() /*-{
+    return this.contributionId;
+  }-*/;
+
+  public final native String getNotedContributionType() /*-{
+    return this.contributionType;
+  }-*/;
+
   public final native int getRatingCount() /*-{
     return this.numberOfRaterRatings;
   }-*/;
@@ -21,7 +29,11 @@ public class Rating extends Contribution {
     return this.raterRatingValue;
   }-*/;
 
-  public final native boolean isRatingDone() /*-{
+  public final native boolean isUserRatingDone() /*-{
     return this.isRatingDone;
+  }-*/;
+
+  public final native void setUserRating(int note) /*-{
+    this.userRatingValue = note;
   }-*/;
 }

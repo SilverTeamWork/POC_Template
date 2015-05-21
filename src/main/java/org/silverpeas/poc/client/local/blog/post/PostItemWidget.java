@@ -1,5 +1,6 @@
 package org.silverpeas.poc.client.local.blog.post;
 
+import com.google.gwt.core.client.JsonUtils;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.DOM;
@@ -9,9 +10,15 @@ import org.jboss.errai.ui.client.local.spi.TranslationService;
 import org.jboss.errai.ui.client.widget.HasModel;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
+import org.silverpeas.poc.api.http.HttpResponse;
+import org.silverpeas.poc.api.http.JsonHttp;
+import org.silverpeas.poc.api.http.JsonResponse;
 import org.silverpeas.poc.client.local.blog.Post;
+import org.silverpeas.poc.client.local.rating.Rating;
+import org.silverpeas.poc.client.local.rating.RatingCriteria;
 import org.silverpeas.poc.client.local.util.CommonTranslations;
 import org.silverpeas.poc.client.local.widget.date.DateWidget;
+import org.silverpeas.poc.client.local.widget.rating.RatingWidget;
 
 import javax.inject.Inject;
 import java.util.Date;
@@ -36,6 +43,10 @@ public class PostItemWidget extends Composite implements HasModel<Post> {
   @DataField("content-from-wysiwyg")
   private HTML content;
 
+  @Inject
+  @DataField("post-rating")
+  private RatingWidget ratingView;
+
   @DataField("comment-count")
   private Element commentCount = DOM.createSpan();
 
@@ -58,6 +69,13 @@ public class PostItemWidget extends Composite implements HasModel<Post> {
   @Override
   public void setModel(final Post post) {
     this.post = post;
+    JsonHttp.onSuccess(new JsonResponse() {
+      @Override
+      public void process(final HttpResponse response) {
+        Rating rating = JsonUtils.safeEval(response.getText());
+        ratingView.readonly().setModel(rating);
+      }
+    }).get(RatingCriteria.forPublication(post.getComponentId(), post.getId()));
     title.setInnerText(post.getTitle());
     time.setModel(
         new Date((long) this.post.getCreateDate())); // long is simulated in js by a double with GWT
