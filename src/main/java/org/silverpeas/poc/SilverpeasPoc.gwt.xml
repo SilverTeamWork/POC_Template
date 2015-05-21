@@ -18,6 +18,10 @@
   <inherits name="org.turbogwt.core.collections.Collections"/>
   <inherits name="io.reinert.gdeferred.GDeferred"/>
 
+  <replace-with class="org.silverpeas.poc.api.navigation.ContentPanel">
+    <when-type-is class="org.jboss.errai.ui.nav.client.local.NavigatingContainer"/>
+  </replace-with>
+
   <!-- Specify the paths for translatable code                    -->
   <extend-property name="locale" values="fr,en"/>
   <source path='api'/>

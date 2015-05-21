@@ -1,6 +1,7 @@
 package org.silverpeas.poc.client.local.template;
 
 import com.google.gwt.user.client.ui.Panel;
+import org.silverpeas.poc.client.local.widget.SilverpeasHtmlPanel;
 
 /**
  * All pages must extend this class.
