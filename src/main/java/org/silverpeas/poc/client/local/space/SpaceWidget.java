@@ -27,7 +27,7 @@ public class SpaceWidget extends Composite implements HasModel<Space> {
 
   @Inject
   @DataField("space-item-content")
-  private SpaceContentListWidget spaceContents;
+  private SpaceContentListWidget spaceContentMenu;
 
   @Inject
   private SpaceLoader spaceLoader;
@@ -75,7 +75,7 @@ public class SpaceWidget extends Composite implements HasModel<Space> {
 
   protected void onSpaceContentLoaded(@Observes LoadedSpaceContent loadedSpaceContent) {
     if (loadedSpaceContent.getResource() == getModel()) {
-      spaceContents.setModel(loadedSpaceContent.getResource());
+      spaceContentMenu.setModel(loadedSpaceContent.getResource());
     }
   }
 

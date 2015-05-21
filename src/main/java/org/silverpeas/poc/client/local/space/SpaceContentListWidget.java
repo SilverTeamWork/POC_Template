@@ -6,7 +6,6 @@ import org.jboss.errai.ui.client.widget.ListWidget;
 import org.jboss.errai.ui.client.widget.UnOrderedList;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
-import org.silverpeas.poc.api.util.Log;
 
 import javax.inject.Inject;
 

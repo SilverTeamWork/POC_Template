@@ -1,12 +1,19 @@
 package org.silverpeas.poc.client.local.template;
 
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Panel;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
+import org.silverpeas.poc.client.local.application.ApplicationInstance;
+import org.silverpeas.poc.client.local.application.event.LoadedApplicationInstance;
+import org.silverpeas.poc.client.local.breadcrumb.BreadCrumbWidget;
 import org.silverpeas.poc.client.local.menu.ApplicationMenuWidget;
+import org.silverpeas.poc.client.local.space.SpaceContentMenuWidget;
 import org.silverpeas.poc.client.local.widget.SilverpeasHtmlPanel;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 
 /**
@@ -17,10 +24,21 @@ import javax.inject.Inject;
 public class SilverpeasApplicationLayout extends SilverpeasComposite {
 
   @Inject
-  private SilverpeasSpaceLayout spaceLayout;
+  private SilverpeasMainLayout mainLayout;
+
+  @Inject
+  @DataField
+  private BreadCrumbWidget breadcrumb;
+
+  @Inject
+  @DataField("nav-gauche")
+  private SpaceContentMenuWidget spaceContentMenuBis;
+
+  @DataField("app-section")
+  private Element appSection = DOM.createElement("section");
 
   @DataField
-  private SilverpeasHtmlPanel title = new SilverpeasHtmlPanel(SilverpeasHtmlPanel.TYPE.H2);
+  private Element title = DOM.createSpan();
 
   @Inject
   @DataField
@@ -36,6 +54,16 @@ public class SilverpeasApplicationLayout extends SilverpeasComposite {
   @DataField("application-content")
   private SilverpeasHtmlPanel contentPanel;
 
+  public void onApplicationInstanceLoaded(@Observes LoadedApplicationInstance event) {
+    final ApplicationInstance instance = event.getResource();
+    setApplicationData(instance);
+  }
+
+  private void setApplicationData(ApplicationInstance instance) {
+    title.setInnerText(instance.getLabel());
+    appSection.addClassName(instance.getComponentName());
+  }
+
   @Override
   public Panel getContentPanel() {
     return contentPanel;
@@ -47,7 +75,7 @@ public class SilverpeasApplicationLayout extends SilverpeasComposite {
 
   @Override
   protected SilverpeasComposite getCompositeParent() {
-    return spaceLayout;
+    return mainLayout;
   }
 
   @Override

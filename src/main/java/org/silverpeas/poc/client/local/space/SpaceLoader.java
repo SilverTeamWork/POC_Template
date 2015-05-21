@@ -108,47 +108,52 @@ public class SpaceLoader {
   public Promise<Space, Void, Void> loadSpaceContent(final Space rootSpace) {
     final Deferred<Space, Void, Void> deferred = new DeferredObject<>();
 
-    JsonHttp.onSuccess(new JsonResponse() {
+    whenSilverpeasIsStarted().then(new DoneCallback<Void>() {
       @Override
-      public void process(final HttpResponse response) {
-        List<Space> spaces = response.parseJsonEntities();
-        final List<SpaceContent> spaceContent = new ArrayList<>(spaces.size());
-        for (Space space : spaces) {
-          space.setParent(rootSpace);
-          spaceContent.add(space.getRank(), space);
-        }
-
+      public void onDone(final Void result) {
         JsonHttp.onSuccess(new JsonResponse() {
           @Override
           public void process(final HttpResponse response) {
-            response.parseJsonEntities(new HttpResponse.JsonArrayLine<ApplicationInstance>() {
+            List<Space> spaces = response.parseJsonEntities();
+            final List<SpaceContent> spaceContent = new ArrayList<>(spaces.size());
+            for (Space space : spaces) {
+              space.setParent(rootSpace);
+              spaceContent.add(space.getRank(), space);
+            }
+
+            JsonHttp.onSuccess(new JsonResponse() {
               @Override
-              public void perform(final int index, final ApplicationInstance instance) {
-                instance.setParent(rootSpace);
-                spaceContent.add(instance);
+              public void process(final HttpResponse response) {
+                response.parseJsonEntities(new HttpResponse.JsonArrayLine<ApplicationInstance>() {
+                  @Override
+                  public void perform(final int index, final ApplicationInstance instance) {
+                    instance.setParent(rootSpace);
+                    spaceContent.add(instance);
+                  }
+                });
+                rootSpace.setContent(spaceContent);
+                // Notifying
+                deferred.resolve(rootSpace);
+                spaceContentLoadedEvent.fire(new LoadedSpaceContent(rootSpace));
               }
-            });
-            rootSpace.setContent(spaceContent);
-            // Notifying
-            deferred.resolve(rootSpace);
-            spaceContentLoadedEvent.fire(new LoadedSpaceContent(rootSpace));
+            }).onError(new JsonResponse() {
+              @Override
+              public void process(final HttpResponse response) {
+                Log.dev("Error while getting root spaces: " + response.getStatusText());
+                deferred.reject(null);
+              }
+            }).get(SpaceCriteria.fromUrl(rootSpace.getComponentsUri()));
+
           }
         }).onError(new JsonResponse() {
           @Override
           public void process(final HttpResponse response) {
-            Log.dev("Error while getting root spaces: " + response.getStatusText());
+            Log.dev("Error while getting space content: " + response.getStatusText());
             deferred.reject(null);
           }
-        }).get(SpaceCriteria.fromUrl(rootSpace.getComponentsUri()));
-
+        }).get(SpaceCriteria.fromUrl(rootSpace.getSpacesUri()));
       }
-    }).onError(new JsonResponse() {
-      @Override
-      public void process(final HttpResponse response) {
-        Log.dev("Error while getting space content: " + response.getStatusText());
-        deferred.reject(null);
-      }
-    }).get(SpaceCriteria.fromUrl(rootSpace.getSpacesUri()));
+    });
 
     return deferred.promise();
   }

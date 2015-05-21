@@ -14,7 +14,6 @@ import org.silverpeas.poc.client.local.space.event.SelectedSpace;
 import org.silverpeas.poc.client.local.util.HomeSpaceProvider;
 import org.silverpeas.poc.client.local.widget.SilverpeasHtmlPanel;
 
-import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
 import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
@@ -26,7 +25,7 @@ import java.util.List;
  * A widget to render a breadcrumb indicating the navigation level of the user in the current page.
  * @author miguel
  */
-@ApplicationScoped
+
 @Templated
 public class BreadCrumbWidget extends Composite {
 
