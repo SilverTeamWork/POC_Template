@@ -121,8 +121,9 @@ public class JsonHttp {
 
   private String normalizeUri(String uri) {
     if (!uri.toLowerCase().startsWith("http")) {
-      uri = Window.Location.createUrlBuilder().setPort(8000).setPath(JSON_DATA_SERVER + uri)
-          .buildString();
+      uri =
+          Window.Location.createUrlBuilder().setPort(8000).setPath(JSON_DATA_SERVER).buildString() +
+              uri;
     }
     return uri;
   }

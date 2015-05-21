@@ -1,5 +1,8 @@
 package org.silverpeas.poc.client.local.blog.home;
 
+import com.google.gwt.dom.client.Document;
+import com.google.gwt.user.client.Window;
+import org.jboss.errai.ioc.client.api.AfterInitialization;
 import org.jboss.errai.ui.client.widget.ListWidget;
 import org.jboss.errai.ui.nav.client.local.Page;
 import org.jboss.errai.ui.shared.api.annotations.Bundle;
@@ -8,6 +11,7 @@ import org.jboss.errai.ui.shared.api.annotations.Templated;
 import org.silverpeas.poc.api.http.HttpResponse;
 import org.silverpeas.poc.api.http.JsonHttp;
 import org.silverpeas.poc.api.http.JsonResponse;
+import org.silverpeas.poc.api.util.Log;
 import org.silverpeas.poc.client.local.application.ApplicationInstance;
 import org.silverpeas.poc.client.local.blog.Post;
 import org.silverpeas.poc.client.local.blog.PostCriteria;
@@ -30,16 +34,49 @@ public class BlogHomePage extends BlogPageComposite {
   @DataField("blog")
   private ListWidget<Post, PostItemWidget> postsView;
 
+  private int scroll = 0;
+  private int page = 1;
+
+  @AfterInitialization
+  protected void init() {
+    Window.addWindowScrollHandler(new Window.ScrollHandler() {
+      @Override
+      public void onWindowScroll(final Window.ScrollEvent event) {
+        Log.dev("scroll " + scroll);
+        Document document = Document.get();
+        int previousScroll = scroll;
+        scroll = document.getScrollHeight();
+        if (previousScroll >= scroll) {
+          return;
+        }
+
+        int maxScrollTop = postsView.getOffsetHeight() - getContentPanel().getOffsetHeight();
+        if (scroll >= maxScrollTop) {
+          Log.dev("scroll to page " + page);
+          ApplicationInstance instance = getApplicationInstance();
+          JsonHttp.onSuccess(new JsonResponse() {
+            @Override
+            public void process(final HttpResponse response) {
+              List<Post> newPosts = response.parseJsonEntities();
+              postsView.getValue().addAll(newPosts);
+            }
+          }).get(PostCriteria.fromBlog(instance.getId()).paginatedBy(page++, 1));
+        }
+      }
+    });
+  }
+
   @Override
   public void onApplicationInstanceLoaded(ApplicationInstance instance) {
-    final BlogHomePage self = this;
     JsonHttp.onSuccess(new JsonResponse() {
       @Override
       public void process(final HttpResponse response) {
         List<Post> posts = response.parseJsonEntities();
         postsView.setItems(posts);
+        page += 3;
       }
-    }).get(PostCriteria.fromBlog(instance.getId()));
+    }).get(PostCriteria.fromBlog(instance.getId()).paginatedBy(page, 3));
   }
+
 
 }

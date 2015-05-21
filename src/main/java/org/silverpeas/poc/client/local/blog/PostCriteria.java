@@ -10,6 +10,9 @@ public class PostCriteria implements JsonGetCriteria {
 
   private String blogId;
   private String postId;
+  private String pagination;
+  private int page = 0;
+  private int count = 0;
 
   public static PostCriteria fromIds(String blogId, String postId) {
     PostCriteria postCriteria = new PostCriteria();
@@ -22,6 +25,12 @@ public class PostCriteria implements JsonGetCriteria {
     PostCriteria postCriteria = new PostCriteria();
     postCriteria.blogId = blogId;
     return postCriteria;
+  }
+
+  public PostCriteria paginatedBy(int page, int count) {
+    this.page = page;
+    this.count = count;
+    return this;
   }
 
   /**
@@ -37,6 +46,9 @@ public class PostCriteria implements JsonGetCriteria {
       url.append("/").append(postId);
     }
     JsonHttpConfig jsonHttpConfig = JsonHttpConfig.fromUrl(url);
+    if (page > 0 && count > 0) {
+      jsonHttpConfig.setPagination(page, count);
+    }
     return jsonHttpConfig;
   }
 

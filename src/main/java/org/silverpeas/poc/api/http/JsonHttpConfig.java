@@ -28,6 +28,23 @@ public class JsonHttpConfig {
     return this;
   }
 
+  public JsonHttpConfig addParameter(String key, String value) {
+    if (url.indexOf("?") > 0) {
+      url.append("&");
+    } else {
+      url.append("?");
+    }
+    url.append(key).append("=").append(value);
+    return this;
+  }
+
+  public JsonHttpConfig setPagination(int page, int count) {
+    if (page > 0 && count > 0) {
+      addParameter("page", page + ";" + count);
+    }
+    return this;
+  }
+
   public String getUrl() {
     return url.toString();
   }
