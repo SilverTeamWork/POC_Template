@@ -72,7 +72,7 @@ public class PostItemWidget extends Composite implements HasModel<Post> {
     JsonHttp.onSuccess(new JsonResponse() {
       @Override
       public void process(final HttpResponse response) {
-        Rating rating = JsonUtils.safeEval(response.getText());
+        Rating rating = response.parseJsonEntity();
         ratingView.readonly().setModel(rating);
       }
     }).get(RatingCriteria.forPublication(post.getComponentId(), post.getId()));

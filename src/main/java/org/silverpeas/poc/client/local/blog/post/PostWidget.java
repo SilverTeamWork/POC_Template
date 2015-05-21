@@ -135,7 +135,7 @@ public class PostWidget extends Composite implements HasModel<Post> {
     JsonHttp.onSuccess(new JsonResponse() {
       @Override
       public void process(final HttpResponse response) {
-        Post jsPost = JsonUtils.safeEval(response.getText());
+        Post jsPost = response.parseJsonEntity();
         setModel(jsPost);
       }
     }).onError(new JsonResponse() {
