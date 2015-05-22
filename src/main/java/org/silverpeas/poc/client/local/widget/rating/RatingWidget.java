@@ -10,12 +10,12 @@ import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
 import org.jboss.errai.ioc.client.api.AfterInitialization;
 import org.jboss.errai.ui.client.local.spi.TranslationService;
 import org.jboss.errai.ui.client.widget.HasModel;
 import org.silverpeas.poc.client.local.rating.Rating;
+import org.silverpeas.poc.client.local.widget.SilverpeasHtmlPanel;
 import org.silverpeas.poc.client.local.widget.rating.event.RatingChange;
 
 import javax.enterprise.event.Event;
@@ -46,7 +46,7 @@ public class RatingWidget extends Composite
   @Inject
   private TranslationService translation;
 
-  private FlowPanel panel = new FlowPanel();
+  private SilverpeasHtmlPanel panel = new SilverpeasHtmlPanel(SilverpeasHtmlPanel.TYPE.SPAN);
   private Image clearImage = new Image();
 
   public RatingWidget readonly() {

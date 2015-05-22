@@ -11,13 +11,13 @@ import org.jboss.errai.ui.shared.api.annotations.Templated;
 import org.silverpeas.poc.api.http.HttpResponse;
 import org.silverpeas.poc.api.http.JsonHttp;
 import org.silverpeas.poc.api.http.JsonResponse;
-import org.silverpeas.poc.api.util.Log;
 import org.silverpeas.poc.client.local.application.ApplicationInstance;
 import org.silverpeas.poc.client.local.blog.Post;
 import org.silverpeas.poc.client.local.blog.PostCriteria;
 import org.silverpeas.poc.client.local.blog.post.PostItemWidget;
 import org.silverpeas.poc.client.local.blog.template.BlogPageComposite;
 import org.silverpeas.poc.client.local.util.BundleProvider;
+import org.silverpeas.poc.client.local.widget.calendar.CalendarWidget;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -33,6 +33,9 @@ public class BlogHomePage extends BlogPageComposite {
   @Inject
   @DataField("blog")
   private ListWidget<Post, PostItemWidget> postsView;
+
+  @Inject
+  private CalendarWidget calendarWidget;
 
   private int scroll = 0;
   private int page = 1;
@@ -72,6 +75,8 @@ public class BlogHomePage extends BlogPageComposite {
         List<Post> posts = response.parseJsonEntities();
         postsView.setItems(posts);
         page += 3;
+
+        getRightPanel().add(calendarWidget);
       }
     }).get(PostCriteria.fromBlog(instance.getId()).paginatedBy(page, 3));
   }

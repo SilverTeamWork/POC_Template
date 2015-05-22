@@ -1,6 +1,6 @@
 package org.silverpeas.poc.client.local.template;
 
-import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.Panel;
 import io.reinert.gdeferred.DoneCallback;
 import io.reinert.gdeferred.FailCallback;
 import org.jboss.errai.ui.nav.client.local.PageState;
@@ -73,5 +73,9 @@ public abstract class SilverpeasApplicationPageComposite extends SilverpeasPageC
 
   public ApplicationInstance getApplicationInstance() {
     return applicationInstance;
+  }
+
+  public Panel getRightPanel() {
+    return applicationLayout.getRightPanel();
   }
 }
