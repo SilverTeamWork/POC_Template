@@ -2,6 +2,7 @@ package org.silverpeas.poc.client.local.blog;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.view.client.ProvidesKey;
+import org.silverpeas.poc.client.local.util.Contribution;
 
 import java.util.Date;
 
@@ -9,7 +10,7 @@ import java.util.Date;
  * Warning: GWT simulates long type with a double type in js.
  * @author ebonnet
  */
-public class Post extends JavaScriptObject {
+public class Post extends Contribution {
 
   /**
    * The key provider that provides the unique ID of a post.
@@ -24,18 +25,6 @@ public class Post extends JavaScriptObject {
   // Overlay types always have protected, zero argument constructors.
   protected Post() {
   }
-
-  public final native String getUri() /*-{
-    return this.uri;
-  }-*/;
-
-  public final native String getId() /*-{
-    return this.id;
-  }-*/;
-
-  public final native String getComponentId() /*-{
-    return this.componentId;
-  }-*/;
 
   public final native String getTitle() /*-{
     return this.title;
@@ -76,12 +65,5 @@ public class Post extends JavaScriptObject {
   public final native String getUpdater() /*-{
     return this.updater;
   }-*/;
-
-
-  //TODO add links metadata
-  /*
-  @XmlElement
-  private List<LinkMetadataEntity> links;
-   */
 
 }

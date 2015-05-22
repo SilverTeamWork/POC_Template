@@ -16,6 +16,7 @@ import org.silverpeas.poc.api.util.StringUtil;
 import org.silverpeas.poc.client.local.blog.Post;
 import org.silverpeas.poc.client.local.rating.Rating;
 import org.silverpeas.poc.client.local.rating.RatingCriteria;
+import org.silverpeas.poc.client.local.util.AccessController;
 import org.silverpeas.poc.client.local.util.CommonTranslations;
 import org.silverpeas.poc.client.local.widget.date.DateWidget;
 import org.silverpeas.poc.client.local.widget.rating.RatingWidget;
@@ -24,6 +25,8 @@ import javax.inject.Inject;
 import java.util.Date;
 
 /**
+ * A widget to render an excerpt of a blog content with global information about it (rating,
+ * comments count, ...).
  * @author miguel
  */
 @Templated
@@ -56,6 +59,9 @@ public class PostItemWidget extends Composite implements HasModel<Post> {
   @DataField("modification")
   private Element modificationInfo = DOM.createSpan();
 
+  @DataField
+  private Element operation = DOM.createDiv();
+
   private Post post;
 
   @Override
@@ -72,13 +78,19 @@ public class PostItemWidget extends Composite implements HasModel<Post> {
         Rating rating = response.parseJsonEntity();
         ratingView.readonly().setModel(rating);
       }
-    }).get(RatingCriteria.forPublication(post.getComponentId(), post.getId()));
+    }).get(RatingCriteria.forPublication(post.getAppInstanceId(), post.getId()));
     title.setInnerText(post.getTitle());
     time.setModel(this.post.getCreateDate()); // long is simulated in js by a double with GWT
     commentCount.setInnerText(String.valueOf(post.getNbComments()));
     fillContentSnippet();
     fillPublicationInfo();
     fillModificationInfo();
+    AccessController.on(this.post).doUnPrivileged(new AccessController.Action() {
+      @Override
+      public void run() {
+        operation.removeFromParent();
+      }
+    });
   }
 
   private void fillPublicationInfo() {
@@ -125,4 +137,5 @@ public class PostItemWidget extends Composite implements HasModel<Post> {
     String htmlSnippet = snippet.substring(0, idx);
     content.setHTML(StringUtil.isDefined(htmlSnippet) ? htmlSnippet : "<br/><br/>");
   }
+
 }

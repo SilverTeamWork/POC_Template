@@ -15,4 +15,8 @@ public interface CommonTranslations {
   String MODIFICATION_DATE = "publication.modifiedIn";
   @TranslationKey(defaultValue = "")
   String MODIFICATION_AUTHOR = "publication.modifiedBy";
+  @TranslationKey(defaultValue = "")
+  String ACTION_MODIFICATION = "action.modify";
+  @TranslationKey(defaultValue = "")
+  String ACTION_DELETION = "action.delete";
 }

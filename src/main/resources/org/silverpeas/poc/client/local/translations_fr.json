@@ -10,5 +10,7 @@
   "publication.publishedIn": "Publié le {0}",
   "publication.publishedBy": "par {0}",
   "publication.modifiedIn": "Mise à jour le {0}",
-  "publication.modifiedBy": "par {0}"
+  "publication.modifiedBy": "par {0}",
+  "action.modify": "Modifier",
+  "action.delete": "Supprimer"
 }

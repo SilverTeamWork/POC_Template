@@ -11,5 +11,7 @@
   "publication.publishedIn": "Published in {0}",
   "publication.publishedBy": "by {0}",
   "publication.modifiedIn": "Updated in {0}",
-  "publication.modifiedBy": "by {0}"
+  "publication.modifiedBy": "by {0}",
+  "action.modify": "Modify",
+  "action.delete": "Supprimer"
 }
