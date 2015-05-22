@@ -25,25 +25,21 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 /**
- * This class handle the start of the application.<br/>
- * When application is starting it is searching for the default page. So, this application starts
- * from this class because of the definition of annotation {@link Page} with role {@link
- * DefaultPage}.
- * It is annotated by {@link ApplicationScoped} in order to get one instance for all the life of
- * application.
+ * The default page when no one is found by Errai.
+ * It plays the role of dispatcher to page according to the navigation error: the user is not
+ * connected, then he's redirected to the login page, otherwise he's redirected to the home page.
  * @author Yohann Chastagnier
  */
 @Page(role = DefaultPage.class)
 @Templated
 @Bundle(BundleProvider.JSON_TRANSLATIONS)
-@EntryPoint
 public class Dispatcher extends Composite {
 
   @Inject
   @DataField
   private SpaceTransitionAnchor homepage;
 
-  @PostConstruct
+  @AfterInitialization
   private void setup() {
     homepage.setSpace(HomeSpaceProvider.getHomeSpace());
   }

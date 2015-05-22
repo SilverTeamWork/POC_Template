@@ -5,6 +5,7 @@ import io.reinert.gdeferred.Deferred;
 import io.reinert.gdeferred.Promise;
 import io.reinert.gdeferred.impl.DeferredObject;
 import org.jboss.errai.ioc.client.api.AfterInitialization;
+import org.jboss.errai.ioc.client.api.EntryPoint;
 import org.jboss.errai.ui.nav.client.local.DefaultNavigationErrorHandler;
 import org.jboss.errai.ui.nav.client.local.DefaultPage;
 import org.jboss.errai.ui.nav.client.local.Navigation;
@@ -19,22 +20,20 @@ import org.silverpeas.poc.api.util.I18n;
 import org.silverpeas.poc.api.util.Log;
 import org.silverpeas.poc.api.web.components.common.Message;
 import org.silverpeas.poc.client.local.user.CurrentUser;
+import org.silverpeas.poc.client.local.util.HomeSpaceProvider;
 import org.silverpeas.poc.client.local.util.Messages;
 
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 /**
  * This class handle the start of the application.<br/>
- * When application is starting it is searching for the default page. So, this application starts
- * from this class because of the definition of annotation {@link Page} with role {@link
- * DefaultPage}.
- * It is annotated by {@link ApplicationScoped} in order to get one instance for all the life of
- * application.
+ * It is the entry point of the application and as such all required resources are then initialized.
  * @author Yohann Chastagnier
  */
-@ApplicationScoped
-public class Starter extends Composite {
+@EntryPoint
+public class Starter {
 
   @Inject
   private Navigation navigation;

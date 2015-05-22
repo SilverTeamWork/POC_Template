@@ -5,7 +5,6 @@ import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
-import com.google.gwt.user.client.Window;
 import org.silverpeas.poc.api.util.UrlManager;
 import org.silverpeas.poc.api.web.components.common.Waiting;
 import org.silverpeas.poc.client.local.user.CurrentUser;
@@ -92,17 +91,11 @@ public class JsonHttp {
             HttpResponse httpResponse = new HttpResponse(response);
             if (httpResponse.getStatusCode() == Response.SC_OK) {
               successCallback.process(httpResponse);
-            } else {
-              try {
-                if (errorCallback != null) {
+            } else if (httpResponse.getStatusCode() == Response.SC_UNAUTHORIZED &&
+                unauthorizedCallback != null) {
+              unauthorizedCallback.process(httpResponse);
+            } else if (errorCallback != null) {
                   errorCallback.process(httpResponse);
-                }
-              } finally {
-                if (httpResponse.getStatusCode() == Response.SC_UNAUTHORIZED &&
-                    unauthorizedCallback != null) {
-                  unauthorizedCallback.process(httpResponse);
-                }
-              }
             }
           } finally {
             hideWaiting();

@@ -50,7 +50,7 @@ public class User extends JavaScriptObject {
     return this.avatar;
   }-*/;
 
-  public final String getName() {
-    return getFirstName() + " " + getLastName();
-  }
+  public final native String getName() /*-{
+    return this.firstName + ' ' + this.lastName;
+  }-*/;
 }
