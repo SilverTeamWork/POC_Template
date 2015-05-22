@@ -28,10 +28,11 @@ public class AccessController {
    * which the action is.
    * @param action a privileged action.
    */
-  public void doPrivileged(Action action) {
+  public AccessController doPrivileged(Action action) {
     if (hasPrivilege()) {
       action.run();
     }
+    return this;
   }
 
   /**
@@ -39,10 +40,11 @@ public class AccessController {
    * on which the action is.
    * @param action an unprivileged action.
    */
-  public void doUnPrivileged(Action action) {
+  public AccessController doUnPrivileged(Action action) {
     if (!hasPrivilege()) {
       action.run();
     }
+    return this;
   }
 
   public interface Action {

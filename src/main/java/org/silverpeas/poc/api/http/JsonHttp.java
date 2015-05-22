@@ -1,5 +1,7 @@
 package org.silverpeas.poc.api.http;
 
+import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.client.JsonUtils;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
@@ -22,7 +24,7 @@ public class JsonHttp {
 
   private final JsonResponse successCallback;
   private JsonResponse errorCallback;
-  private String dataToSend = null;
+  private JavaScriptObject dataToSend = null;
   private boolean showWaiting = false;
 
   public static void setUnauthorizedCallback(JsonResponse unauthorizedCallback) {
@@ -42,7 +44,7 @@ public class JsonHttp {
     return this;
   }
 
-  public JsonHttp withData(String dataToSend) {
+  public JsonHttp withData(JavaScriptObject dataToSend) {
     this.dataToSend = dataToSend;
     return this;
   }
@@ -61,8 +63,17 @@ public class JsonHttp {
 
   public HttpRequest post(JsonPostCriteria criteria) {
     JsonHttpConfig jsonHttpConfig = criteria.configureJsonPostHttp();
+    jsonHttpConfig.addHeader("Content-Type", "application/json");
     return performRequest(
         new RequestBuilder(RequestBuilder.POST, normalizeUri(jsonHttpConfig.getUrl())),
+        jsonHttpConfig);
+  }
+
+  public HttpRequest put(JsonPutCriteria criteria) {
+    JsonHttpConfig jsonHttpConfig = criteria.configureJsonPutHttp();
+    jsonHttpConfig.addHeader("Content-Type", "application/json");
+    return performRequest(
+        new RequestBuilder(RequestBuilder.PUT, normalizeUri(jsonHttpConfig.getUrl())),
         jsonHttpConfig);
   }
 
@@ -83,7 +94,7 @@ public class JsonHttp {
       for (Map.Entry<String, String> header : jsonHttpConfig.getHeaders().entrySet()) {
         builder.setHeader(header.getKey(), header.getValue());
       }
-      return new HttpRequest(builder.sendRequest(dataToSend, new RequestCallback() {
+      return new HttpRequest(builder.sendRequest(JsonUtils.stringify(dataToSend), new RequestCallback() {
 
         @Override
         public void onResponseReceived(final Request request, final Response response) {

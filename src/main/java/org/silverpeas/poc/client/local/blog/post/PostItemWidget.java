@@ -14,12 +14,15 @@ import org.silverpeas.poc.api.http.JsonResponse;
 import org.silverpeas.poc.api.util.I18n;
 import org.silverpeas.poc.api.util.StringUtil;
 import org.silverpeas.poc.client.local.blog.Post;
+import org.silverpeas.poc.client.local.blog.PostCriteria;
 import org.silverpeas.poc.client.local.rating.Rating;
 import org.silverpeas.poc.client.local.rating.RatingCriteria;
 import org.silverpeas.poc.client.local.util.AccessController;
 import org.silverpeas.poc.client.local.util.CommonTranslations;
+import org.silverpeas.poc.client.local.util.ValueChangeHandler;
 import org.silverpeas.poc.client.local.widget.date.DateWidget;
 import org.silverpeas.poc.client.local.widget.rating.RatingWidget;
+import org.silverpeas.poc.client.local.widget.title.EditableTitleWidget;
 
 import javax.inject.Inject;
 import java.util.Date;
@@ -36,8 +39,9 @@ public class PostItemWidget extends Composite implements HasModel<Post> {
   @DataField("post-date")
   private DateWidget time;
 
+  @Inject
   @DataField("post-title")
-  private Element title = DOM.createSpan();
+  private EditableTitleWidget title;
 
   @Inject
   @DataField("content-from-wysiwyg")
@@ -79,8 +83,30 @@ public class PostItemWidget extends Composite implements HasModel<Post> {
         ratingView.readonly().setModel(rating);
       }
     }).get(RatingCriteria.forPublication(post.getAppInstanceId(), post.getId()));
-    title.setInnerText(post.getTitle());
-    time.setModel(this.post.getCreateDate()); // long is simulated in js by a double with GWT
+    title.setModel(this.post);
+    title.setValueChangeHandler(new ValueChangeHandler<String>() {
+      @Override
+      public void onChange(final String previousValue, final String newValue) {
+        getModel().setTitle(newValue);
+        JsonHttp.onSuccess(new JsonResponse() {
+          @Override
+          public void process(final HttpResponse response) {
+            Post post = response.parseJsonEntity();
+            title.setModel(post);
+          }
+        })
+            .onError(new JsonResponse() {
+              @Override
+              public void process(final HttpResponse response) {
+                getModel().setTitle(previousValue);
+              }
+            })
+            .withData(getModel())
+            .put(PostCriteria.fromIds(getModel().getAppInstanceId(), getModel().getId()));
+      }
+    });
+    time.setModel(
+        new Date((long) this.post.getCreationTimestamp())); // long is simulated in js by a double with GWT
     commentCount.setInnerText(String.valueOf(post.getNbComments()));
     fillContentSnippet();
     fillPublicationInfo();
@@ -95,7 +121,7 @@ public class PostItemWidget extends Composite implements HasModel<Post> {
 
   private void fillPublicationInfo() {
     StringBuilder content = new StringBuilder();
-    Date creationDate = this.post.getCreateDate();
+    Date creationDate = this.post.getCreationDate();
     String dateTime =
         "<time datetime='" + DateTimeFormat.getFormat("yyyy-MM-dd").format(creationDate) + "'>" +
             DateTimeFormat.getFormat(DateTimeFormat.PredefinedFormat.DATE_TIME_SHORT)
@@ -109,7 +135,7 @@ public class PostItemWidget extends Composite implements HasModel<Post> {
 
   private void fillModificationInfo() {
     StringBuilder content = new StringBuilder();
-    if (this.post.getCreateDate().compareTo(this.post.getUpdateDate()) < 0) {
+    if (this.post.getCreationDate().compareTo(this.post.getUpdateDate()) < 0) {
       Date modificationDate = this.post.getUpdateDate();
       String dateTime =
           "<time datetime='" + DateTimeFormat.getFormat("yyyy-MM-dd").format(modificationDate) +

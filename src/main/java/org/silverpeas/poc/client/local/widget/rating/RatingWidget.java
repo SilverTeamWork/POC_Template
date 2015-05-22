@@ -8,6 +8,7 @@ import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Image;
@@ -45,10 +46,12 @@ public class RatingWidget extends Composite
 
   private SilverpeasHtmlPanel panel = new SilverpeasHtmlPanel(SilverpeasHtmlPanel.TYPE.SPAN);
   private Image clearImage = new Image();
+  private HandlerRegistration handlerRegistration;
 
   public RatingWidget readonly() {
     this.readonly = true;
     panel.remove(clearImage);
+    handlerRegistration.removeHandler();
     return this;
   }
 
@@ -66,7 +69,7 @@ public class RatingWidget extends Composite
   @AfterInitialization
   private void create() {
     initWidget(panel);
-    addDomHandler(this, MouseOutEvent.getType());
+    handlerRegistration = addDomHandler(this, MouseOutEvent.getType());
     panel.setStyleName(RATING_STYLE);
 
     String[] labels = I18n.format(RatingWidgetTranslations.LABELS).split(",");
@@ -135,6 +138,7 @@ public class RatingWidget extends Composite
    */
   @Override
   public void onClick(final ClickEvent event) {
+    event.stopPropagation();
     if (!readonly) {
       Image image = (Image) event.getSource();
       unsetHoverRatingNote();
@@ -157,8 +161,11 @@ public class RatingWidget extends Composite
    */
   @Override
   public void onMouseOut(final MouseOutEvent event) {
-    unsetHoverRatingNote();
-    updateRatingNoteImages();
+    event.stopPropagation();
+    if (!readonly) {
+      unsetHoverRatingNote();
+      updateRatingNoteImages();
+    }
   }
 
   /**
@@ -167,6 +174,7 @@ public class RatingWidget extends Composite
    */
   @Override
   public void onMouseOver(final MouseOverEvent event) {
+    event.stopPropagation();
     if (!readonly) {
       Image image = (Image) event.getSource();
       hoverRatingNote = Integer.parseInt(image.getAltText());

@@ -1,7 +1,5 @@
 package org.silverpeas.poc.client.local.blog.post;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.JsonUtils;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.DOM;
@@ -109,13 +107,13 @@ public class PostWidget extends Composite implements HasModel<Post> {
     Log.dev("create by=" + I18n.format(Messages.COMMON_BY) + " " + post.getCreator());
     this.postAuthor.setText(I18n.format(Messages.COMMON_BY) + " " + post.getCreator());
     this.postUpdater.setText(I18n.format(Messages.COMMON_BY) + " " + post.getUpdater());
-    Date jsCreateDate = new Date(Long.parseLong("" + post.getCreateDate()));
+    Date jsCreateDate = new Date(Long.parseLong("" + post.getCreationTimestamp()));
     this.postCreateDate.setAttribute("datetime",
         DateTimeFormat.getFormat(DateTimeFormat.PredefinedFormat.ISO_8601).format(jsCreateDate));
     this.postCreateDate.setInnerText(
         DateTimeFormat.getFormat(I18n.format(Messages.DATETIME_FORMAT)).format(jsCreateDate));
 
-    Date jsUpdateDate = new Date(Long.parseLong("" + post.getUpdateDate()));
+    Date jsUpdateDate = new Date(Long.parseLong("" + post.getUpdateTimestamp()));
     this.postUpdateDate.setAttribute("datetime",
         DateTimeFormat.getFormat(DateTimeFormat.PredefinedFormat.ISO_8601).format(jsUpdateDate));
     this.postUpdateDate.setInnerText(

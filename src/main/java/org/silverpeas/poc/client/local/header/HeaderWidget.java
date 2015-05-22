@@ -14,7 +14,6 @@ import org.jboss.errai.ui.client.widget.ListWidget;
 import org.jboss.errai.ui.client.widget.UnOrderedList;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
-import org.silverpeas.poc.api.util.Log;
 import org.silverpeas.poc.api.util.UrlManager;
 import org.silverpeas.poc.client.local.space.Space;
 import org.silverpeas.poc.client.local.space.SpaceLoader;
@@ -102,7 +101,6 @@ public class HeaderWidget extends Composite {
   protected void doAttachChildren() {
     super.doAttachChildren();
     if (spaces.getValue().isEmpty()) {
-      Log.dev("ATTACH HEADER");
       spaceLoader.loadRootSpaces();
       User currentUser = CurrentUser.get();
       name.setInnerText(currentUser.getName());
