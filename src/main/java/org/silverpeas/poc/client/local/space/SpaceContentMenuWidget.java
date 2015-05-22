@@ -14,9 +14,13 @@ import org.silverpeas.poc.client.local.application.ApplicationInstance;
 import org.silverpeas.poc.client.local.application.event.LoadedApplicationInstance;
 import org.silverpeas.poc.client.local.space.event.LoadedSpace;
 import org.silverpeas.poc.client.local.space.event.SelectedSpace;
+import org.silverpeas.poc.client.local.widget.SilverpeasHtmlPanel;
 
+import javax.enterprise.event.Event;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
+
+import static org.silverpeas.poc.client.local.widget.SilverpeasHtmlPanel.TYPE.ASIDE;
 
 /**
  * @author Yohann Chastagnier
@@ -32,7 +36,11 @@ public class SpaceContentMenuWidget extends Composite {
   @DataField
   private Anchor menuToggle;
 
-  private boolean menuIsShowed = true;
+  @Inject
+  private Event<SpaceContentMenuToggled> spaceContentMenuToggledEvent;
+
+  // Shared between all instances
+  private static boolean menuIsShowed = true;
 
   @AfterInitialization
   private void init() {
@@ -40,13 +48,17 @@ public class SpaceContentMenuWidget extends Composite {
       @Override
       public void onClick(final ClickEvent event) {
         menuIsShowed = !menuIsShowed;
-        if (menuIsShowed) {
-          DOM.getElementById("nav-gauche").setClassName("aside-gauche");
-        } else {
-          DOM.getElementById("nav-gauche").setClassName("aside-gauche minimize");
-        }
+        spaceContentMenuToggledEvent.fire(new SpaceContentMenuToggled(menuIsShowed));
       }
     });
+  }
+
+  private void onMenuToggled(@Observes SpaceContentMenuToggled event) {
+    if (event.getResource()) {
+      removeStyleName("minimize");
+    } else {
+      addStyleName("minimize");
+    }
   }
 
   public void onSpaceSelected(@Observes SelectedSpace event) {

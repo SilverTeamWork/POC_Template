@@ -36,8 +36,8 @@ public class DateWidget extends Composite implements HasModel<Date> {
   @Override
   public void setModel(final Date date) {
     this.date = new MyDate(date);
-    Log.dev("datetime: " + this.date.toISO8601());
-    Log.dev("true datetime: " + new Date(1428962400000l));
+    Log.debug("datetime: " + this.date.toISO8601());
+    Log.debug("true datetime: " + new Date(1428962400000l));
     getElement().setAttribute("datetime", this.date.toISO8601());
     year.setInnerText(this.date.getYear());
     month.setInnerText(this.date.getMonth());

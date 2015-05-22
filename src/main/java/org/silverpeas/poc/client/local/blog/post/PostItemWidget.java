@@ -1,18 +1,18 @@
 package org.silverpeas.poc.client.local.blog.post;
 
-import com.google.gwt.core.client.JsonUtils;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTML;
-import org.jboss.errai.ui.client.local.spi.TranslationService;
 import org.jboss.errai.ui.client.widget.HasModel;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
 import org.silverpeas.poc.api.http.HttpResponse;
 import org.silverpeas.poc.api.http.JsonHttp;
 import org.silverpeas.poc.api.http.JsonResponse;
+import org.silverpeas.poc.api.util.I18n;
+import org.silverpeas.poc.api.util.StringUtil;
 import org.silverpeas.poc.client.local.blog.Post;
 import org.silverpeas.poc.client.local.rating.Rating;
 import org.silverpeas.poc.client.local.rating.RatingCriteria;
@@ -28,9 +28,6 @@ import java.util.Date;
  */
 @Templated
 public class PostItemWidget extends Composite implements HasModel<Post> {
-
-  @Inject
-  private TranslationService translation;
 
   @Inject
   @DataField("post-date")
@@ -77,8 +74,7 @@ public class PostItemWidget extends Composite implements HasModel<Post> {
       }
     }).get(RatingCriteria.forPublication(post.getComponentId(), post.getId()));
     title.setInnerText(post.getTitle());
-    time.setModel(
-        new Date((long) this.post.getCreateDate())); // long is simulated in js by a double with GWT
+    time.setModel(this.post.getCreateDate()); // long is simulated in js by a double with GWT
     commentCount.setInnerText(String.valueOf(post.getNbComments()));
     fillContentSnippet();
     fillPublicationInfo();
@@ -87,30 +83,30 @@ public class PostItemWidget extends Composite implements HasModel<Post> {
 
   private void fillPublicationInfo() {
     StringBuilder content = new StringBuilder();
-    Date creationDate = new Date((long) this.post.getCreateDate());
+    Date creationDate = this.post.getCreateDate();
     String dateTime =
         "<time datetime='" + DateTimeFormat.getFormat("yyyy-MM-dd").format(creationDate) + "'>" +
             DateTimeFormat.getFormat(DateTimeFormat.PredefinedFormat.DATE_TIME_SHORT)
                 .format(creationDate) + "</time>";
-    content.append(translation.format(CommonTranslations.PUBLICATION_DATE, dateTime))
+    content.append(I18n.format(CommonTranslations.PUBLICATION_DATE, dateTime))
         .append(" <span class='author'>")
-        .append(translation.format(CommonTranslations.PUBLICATION_AUTHOR, post.getCreator()))
+        .append(I18n.format(CommonTranslations.PUBLICATION_AUTHOR, post.getCreator()))
         .append("</span>");
     publicationInfo.setInnerHTML(content.toString());
   }
 
   private void fillModificationInfo() {
     StringBuilder content = new StringBuilder();
-    if (this.post.getCreateDate() < this.post.getUpdateDate()) {
-      Date modificationDate = new Date((long) this.post.getUpdateDate());
+    if (this.post.getCreateDate().compareTo(this.post.getUpdateDate()) < 0) {
+      Date modificationDate = this.post.getUpdateDate();
       String dateTime =
           "<time datetime='" + DateTimeFormat.getFormat("yyyy-MM-dd").format(modificationDate) +
               "'>" +
               DateTimeFormat.getFormat(DateTimeFormat.PredefinedFormat.DATE_TIME_SHORT)
                   .format(modificationDate) + "</time>";
-      content.append(translation.format(CommonTranslations.MODIFICATION_DATE, dateTime))
+      content.append(I18n.format(CommonTranslations.MODIFICATION_DATE, dateTime))
           .append(" <span class='author'>")
-          .append(translation.format(CommonTranslations.MODIFICATION_AUTHOR, post.getUpdater()))
+          .append(I18n.format(CommonTranslations.MODIFICATION_AUTHOR, post.getUpdater()))
           .append("</span>");
       modificationInfo.setInnerHTML(content.toString());
     } else {
@@ -126,6 +122,7 @@ public class PostItemWidget extends Composite implements HasModel<Post> {
          i = snippet.indexOf(". ", idx)) {
       idx = i + 1;
     }
-    content.setHTML(snippet.substring(0, idx));
+    String htmlSnippet = snippet.substring(0, idx);
+    content.setHTML(StringUtil.isDefined(htmlSnippet) ? htmlSnippet : "<br/><br/>");
   }
 }

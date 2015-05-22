@@ -73,8 +73,6 @@ public class ApplicationInstanceLoader {
 
           // Notifying
           deferred.resolve(initialInstance);
-          EventsProvider.get().getApplicationInstanceLoadedEvent()
-              .fire(new LoadedApplicationInstance(initialInstance));
         }
       }
     }).onError(new JsonResponse() {

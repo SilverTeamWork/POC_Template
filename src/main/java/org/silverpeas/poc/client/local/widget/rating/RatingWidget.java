@@ -12,8 +12,8 @@ import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Image;
 import org.jboss.errai.ioc.client.api.AfterInitialization;
-import org.jboss.errai.ui.client.local.spi.TranslationService;
 import org.jboss.errai.ui.client.widget.HasModel;
+import org.silverpeas.poc.api.util.I18n;
 import org.silverpeas.poc.client.local.rating.Rating;
 import org.silverpeas.poc.client.local.widget.SilverpeasHtmlPanel;
 import org.silverpeas.poc.client.local.widget.rating.event.RatingChange;
@@ -43,9 +43,6 @@ public class RatingWidget extends Composite
   @Inject
   private Event<RatingChange> ratingChangeEvent;
 
-  @Inject
-  private TranslationService translation;
-
   private SilverpeasHtmlPanel panel = new SilverpeasHtmlPanel(SilverpeasHtmlPanel.TYPE.SPAN);
   private Image clearImage = new Image();
 
@@ -72,7 +69,7 @@ public class RatingWidget extends Composite
     addDomHandler(this, MouseOutEvent.getType());
     panel.setStyleName(RATING_STYLE);
 
-    String[] labels = translation.format(RatingWidgetTranslations.LABELS).split(",");
+    String[] labels = I18n.format(RatingWidgetTranslations.LABELS).split(",");
     for (int note = 1; note <= NOTE_COUNT; note++) {
       Image image = new Image();
       image.setTitle(labels[note - 1].trim());
@@ -87,7 +84,7 @@ public class RatingWidget extends Composite
     if (!readonly) {
       panel.getElement().getStyle().setCursor(Style.Cursor.POINTER);
       clearImage.setResource(resources.clearRating());
-      clearImage.setTitle(translation.format(RatingWidgetTranslations.VOTE_DELETION));
+      clearImage.setTitle(I18n.format(RatingWidgetTranslations.VOTE_DELETION));
       clearImage.addClickHandler(this);
       clearImage.addMouseOverHandler(this);
       panel.add(clearImage);

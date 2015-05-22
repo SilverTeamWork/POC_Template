@@ -11,16 +11,20 @@ import org.jboss.errai.ui.shared.api.annotations.Templated;
 import org.silverpeas.poc.api.http.HttpResponse;
 import org.silverpeas.poc.api.http.JsonHttp;
 import org.silverpeas.poc.api.http.JsonResponse;
+import org.silverpeas.poc.api.util.Log;
 import org.silverpeas.poc.client.local.application.ApplicationInstance;
 import org.silverpeas.poc.client.local.blog.Post;
 import org.silverpeas.poc.client.local.blog.PostCriteria;
 import org.silverpeas.poc.client.local.blog.post.PostItemWidget;
 import org.silverpeas.poc.client.local.blog.template.BlogPageComposite;
 import org.silverpeas.poc.client.local.util.BundleProvider;
-import org.silverpeas.poc.client.local.widget.calendar.CalendarWidget;
+import org.silverpeas.poc.client.local.widget.calendar.DatePickerWidget;
 
 import javax.inject.Inject;
+import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author Yohann Chastagnier
@@ -35,7 +39,7 @@ public class BlogHomePage extends BlogPageComposite {
   private ListWidget<Post, PostItemWidget> postsView;
 
   @Inject
-  private CalendarWidget calendarWidget;
+  private DatePickerWidget datePickerWidget;
 
   private int scroll = 0;
   private int page = 1;
@@ -48,6 +52,7 @@ public class BlogHomePage extends BlogPageComposite {
         Document document = Document.get();
         int previousScroll = scroll;
         scroll = document.getScrollHeight();
+
         if (previousScroll >= scroll) {
           return;
         }
@@ -69,16 +74,32 @@ public class BlogHomePage extends BlogPageComposite {
 
   @Override
   public void onApplicationInstanceLoaded(ApplicationInstance instance) {
+    getRightPanel().add(datePickerWidget);
+
+    // Posts to display
     JsonHttp.onSuccess(new JsonResponse() {
       @Override
       public void process(final HttpResponse response) {
         List<Post> posts = response.parseJsonEntities();
         postsView.setItems(posts);
         page += 3;
-
-        getRightPanel().add(calendarWidget);
       }
     }).get(PostCriteria.fromBlog(instance.getId()).paginatedBy(page, 3));
+
+    // Posts to indicate into the calendar
+    JsonHttp.onSuccess(new JsonResponse() {
+      @Override
+      public void process(final HttpResponse response) {
+        final Set<Date> postDates = new HashSet<>();
+        response.parseJsonEntities(new HttpResponse.JsonArrayLine<Post>() {
+          @Override
+          public void perform(final int index, final Post entity) {
+            postDates.add(entity.getCreateDate());
+          }
+        });
+        datePickerWidget.setDatesToHighlight(postDates);
+      }
+    }).get(PostCriteria.fromBlog(instance.getId()));
   }
 
 

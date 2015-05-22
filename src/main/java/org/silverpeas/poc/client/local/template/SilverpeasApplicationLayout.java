@@ -1,10 +1,11 @@
 package org.silverpeas.poc.client.local.template;
 
+import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Panel;
+import org.jboss.errai.ioc.client.api.AfterInitialization;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
 import org.silverpeas.poc.api.util.StringUtil;
@@ -13,7 +14,6 @@ import org.silverpeas.poc.client.local.application.event.LoadedApplicationInstan
 import org.silverpeas.poc.client.local.breadcrumb.BreadCrumbWidget;
 import org.silverpeas.poc.client.local.menu.ApplicationMenuWidget;
 import org.silverpeas.poc.client.local.space.SpaceContentMenuWidget;
-import org.silverpeas.poc.client.local.widget.SilverpeasHtml;
 import org.silverpeas.poc.client.local.widget.SilverpeasHtmlPanel;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -58,12 +58,29 @@ public class SilverpeasApplicationLayout extends SilverpeasComposite {
   @DataField("application-content")
   private SilverpeasHtmlPanel contentPanel;
 
+  private ApplicationInstance currentApplicationInstance;
+
+  @AfterInitialization
+  private void init() {
+    Window.addWindowScrollHandler(new Window.ScrollHandler() {
+      @Override
+      public void onWindowScroll(final Window.ScrollEvent event) {
+        if (Document.get().getScrollTop() >= 273) {
+          getRightPanel().addStyleName("fixed");
+        } else {
+          getRightPanel().removeStyleName("fixed");
+        }
+      }
+    });
+  }
+
   public void onApplicationInstanceLoaded(@Observes LoadedApplicationInstance event) {
     final ApplicationInstance instance = event.getResource();
     setApplicationData(instance);
   }
 
   private void setApplicationData(ApplicationInstance instance) {
+    currentApplicationInstance = instance;
     title.setInnerText(instance.getLabel());
     if (StringUtil.isDefined(instance.getDescription())) {
       edito.setInnerHTML(instance.getDescription());
@@ -80,6 +97,10 @@ public class SilverpeasApplicationLayout extends SilverpeasComposite {
     return rightPanel;
   }
 
+  public ApplicationInstance getCurrentApplicationInstance() {
+    return currentApplicationInstance;
+  }
+
   @Override
   protected SilverpeasComposite getCompositeParent() {
     return mainLayout;
@@ -87,5 +108,11 @@ public class SilverpeasApplicationLayout extends SilverpeasComposite {
 
   @Override
   public void onPageShowing() {
+  }
+
+  @Override
+  public void onPageHidden() {
+    super.onPageHidden();
+    rightPanel.clear();
   }
 }

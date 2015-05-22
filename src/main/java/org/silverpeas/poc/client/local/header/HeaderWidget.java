@@ -1,9 +1,11 @@
 package org.silverpeas.poc.client.local.header;
 
+import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Image;
@@ -37,6 +39,8 @@ import java.util.List;
 @Templated
 public class HeaderWidget extends Composite {
 
+  private Element header = null;
+
   @Inject
   @DataField
   @UnOrderedList
@@ -58,6 +62,23 @@ public class HeaderWidget extends Composite {
 
   @Inject
   private Event<SelectedSpace> spaceSelection;
+
+  @AfterInitialization
+  private void init() {
+    Window.addWindowScrollHandler(new Window.ScrollHandler() {
+      @Override
+      public void onWindowScroll(final Window.ScrollEvent event) {
+        if (header == null) {
+          header = Document.get().getElementById("header");
+        }
+        if (Document.get().getScrollTop() >= 273) {
+          header.addClassName("fixed");
+        } else {
+          header.removeClassName("fixed");
+        }
+      }
+    });
+  }
 
   @AfterInitialization
   protected void loadRootSpaces() {
