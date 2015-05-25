@@ -14,8 +14,12 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Image;
 import org.jboss.errai.ioc.client.api.AfterInitialization;
 import org.jboss.errai.ui.client.widget.HasModel;
+import org.silverpeas.poc.api.http.HttpResponse;
+import org.silverpeas.poc.api.http.JsonHttp;
+import org.silverpeas.poc.api.http.JsonResponse;
 import org.silverpeas.poc.api.util.I18n;
 import org.silverpeas.poc.client.local.rating.Rating;
+import org.silverpeas.poc.client.local.rating.RatingCriteria;
 import org.silverpeas.poc.client.local.widget.SilverpeasHtmlPanel;
 import org.silverpeas.poc.client.local.widget.rating.event.RatingChange;
 
@@ -152,6 +156,14 @@ public class RatingWidget extends Composite
 
   private void setRatingNote(final int note) {
     this.rating.setUserRating(note);
+    JsonHttp.onSuccess(new JsonResponse() {
+      @Override
+      public void process(final HttpResponse response) {
+        Rating newRating = response.parseJsonEntity();
+        setModel(newRating);
+      }
+    }).withValue(note).post(
+        RatingCriteria.forPublication(rating.getAppInstanceId(), rating.getNotedContributionId()));
     ratingChangeEvent.fire(new RatingChange(rating));
   }
 

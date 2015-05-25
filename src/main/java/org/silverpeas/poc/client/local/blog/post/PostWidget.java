@@ -5,14 +5,20 @@ import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.InlineLabel;
 import org.jboss.errai.ui.client.widget.HasModel;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
+import org.silverpeas.poc.api.http.HttpResponse;
+import org.silverpeas.poc.api.http.JsonHttp;
+import org.silverpeas.poc.api.http.JsonResponse;
 import org.silverpeas.poc.api.util.I18n;
 import org.silverpeas.poc.api.util.Log;
 import org.silverpeas.poc.client.local.blog.Post;
+import org.silverpeas.poc.client.local.rating.Rating;
+import org.silverpeas.poc.client.local.rating.RatingCriteria;
 import org.silverpeas.poc.client.local.util.Messages;
+import org.silverpeas.poc.client.local.widget.rating.RatingWidget;
 
 import javax.inject.Inject;
 import java.util.Date;
@@ -26,34 +32,39 @@ public class PostWidget extends Composite implements HasModel<Post> {
   private Post post;
 
   @Inject
-  @DataField
+  @DataField("post-content")
   private HTML postContent;
 
   @Inject
-  @DataField
-  private Label postComment;
+  @DataField("comment-count")
+  private InlineLabel postNbComment;
 
   @Inject
-  @DataField
-  private Label postCreateLabel;
+  @DataField("post-create-label")
+  private InlineLabel postCreateLabel;
 
   @Inject
-  @DataField
-  private Label postUpdateLabel;
+  @DataField("post-update-label")
+  private InlineLabel postUpdateLabel;
 
   @Inject
-  @DataField
-  private Label postAuthor;
+  @DataField("post-author")
+  private InlineLabel postAuthor;
 
   @Inject
-  @DataField
-  private Label postUpdater;
+  @DataField("post-updater")
+  private InlineLabel postUpdater;
 
-  @DataField
+  @DataField("post-create-date")
   private Element postCreateDate = DOM.createElement("time");
 
-  @DataField
+  @DataField("post-update-date")
   private Element postUpdateDate = DOM.createElement("time");
+
+  @Inject
+  @DataField("post-rating")
+  private RatingWidget ratingView;
+
 
   public Post getModel() {
     return post;
@@ -84,7 +95,7 @@ public class PostWidget extends Composite implements HasModel<Post> {
     Log.dev("custom format " + I18n.format(Messages.DATE_FORMAT) + " =" +
         DateTimeFormat.getFormat(I18n.format(Messages.DATE_FORMAT)).format(dateEvent));
 
-    this.postComment.setText(post.getNbComments());
+    this.postNbComment.setText(post.getNbComments());
     Log.dev("create by=" + I18n.format(Messages.COMMON_BY) + " " + post.getCreator());
     this.postAuthor.setText(I18n.format(Messages.COMMON_BY) + " " + post.getCreator());
     this.postUpdater.setText(I18n.format(Messages.COMMON_BY) + " " + post.getUpdater());
@@ -101,12 +112,18 @@ public class PostWidget extends Composite implements HasModel<Post> {
         DateTimeFormat.getFormat(I18n.format(Messages.DATETIME_FORMAT)).format(jsUpdateDate));
     this.postCreateLabel.setText(I18n.format(Messages.PUBLISH_DATE_LABEL));
     this.postUpdateLabel.setText(I18n.format(Messages.UPDATE_DATE_LABEL));
-
-    loadNotation();
+    loadRating();
   }
 
-  private void loadNotation() {
+  private void loadRating() {
     // TODO load notation from rating services
     // URL is something like /services/rating/{blogId}/Publication/{postId}
+    JsonHttp.onSuccess(new JsonResponse() {
+      @Override
+      public void process(final HttpResponse response) {
+        Rating rating = response.parseJsonEntity();
+        ratingView.setModel(rating);
+      }
+    }).get(RatingCriteria.forPublication(this.post.getAppInstanceId(), this.post.getId()));
   }
 }

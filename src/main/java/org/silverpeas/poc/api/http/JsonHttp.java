@@ -25,6 +25,7 @@ public class JsonHttp {
   private final JsonResponse successCallback;
   private JsonResponse errorCallback;
   private JavaScriptObject dataToSend = null;
+  private Object objectToSend = null;
   private boolean showWaiting = false;
 
   public static void setUnauthorizedCallback(JsonResponse unauthorizedCallback) {
@@ -48,6 +49,12 @@ public class JsonHttp {
     this.dataToSend = dataToSend;
     return this;
   }
+
+  public JsonHttp withValue(Object objectToSend) {
+    this.objectToSend = objectToSend;
+    return this;
+  }
+
 
   public JsonHttp waitingMessage() {
     this.showWaiting = true;
@@ -94,7 +101,11 @@ public class JsonHttp {
       for (Map.Entry<String, String> header : jsonHttpConfig.getHeaders().entrySet()) {
         builder.setHeader(header.getKey(), header.getValue());
       }
-      return new HttpRequest(builder.sendRequest(JsonUtils.stringify(dataToSend), new RequestCallback() {
+      String requestData = JsonUtils.stringify(dataToSend);
+      if (objectToSend != null) {
+        requestData = objectToSend.toString();
+      }
+      return new HttpRequest(builder.sendRequest(requestData, new RequestCallback() {
 
         @Override
         public void onResponseReceived(final Request request, final Response response) {

@@ -3,11 +3,12 @@ package org.silverpeas.poc.client.local.rating;
 import org.jboss.errai.common.client.logging.util.StringFormat;
 import org.silverpeas.poc.api.http.JsonGetCriteria;
 import org.silverpeas.poc.api.http.JsonHttpConfig;
+import org.silverpeas.poc.api.http.JsonPostCriteria;
 
 /**
  * @author miguel
  */
-public class RatingCriteria implements JsonGetCriteria {
+public class RatingCriteria implements JsonGetCriteria, JsonPostCriteria {
   private static final String RATING_URI = "rating/%s/%s/%s";
   private String instanceId;
   private String type;
@@ -21,13 +22,17 @@ public class RatingCriteria implements JsonGetCriteria {
     return criteria;
   }
 
+  private RatingCriteria() {
+  }
+
   @Override
   public JsonHttpConfig configureJsonGetHttp() {
     String uri = StringFormat.format(RATING_URI, this.instanceId, this.type, this.contribId);
     return JsonHttpConfig.fromUrl(uri);
   }
 
-  private RatingCriteria() {
-
+  @Override
+  public JsonHttpConfig configureJsonPostHttp() {
+    return configureJsonGetHttp();
   }
 }
