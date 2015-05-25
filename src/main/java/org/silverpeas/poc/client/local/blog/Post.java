@@ -1,8 +1,6 @@
 package org.silverpeas.poc.client.local.blog;
 
-import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.view.client.ProvidesKey;
-import org.silverpeas.poc.client.local.util.Contribution;
 import org.silverpeas.poc.client.local.util.Publication;
 
 import java.util.Date;
@@ -27,9 +25,13 @@ public class Post extends Publication {
   protected Post() {
   }
 
-  public final native double getDateEvent() /*-{
+  public final native double getDateEventTimestamp() /*-{
     return this.dateEvent;
   }-*/;
+
+  public final Date getDateEvent() {
+    return new Date((long) getDateEventTimestamp());
+  }
 
   public final native String getNbComments() /*-{
     return this.nbComments;

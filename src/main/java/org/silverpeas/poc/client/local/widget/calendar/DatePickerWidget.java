@@ -1,5 +1,7 @@
 package org.silverpeas.poc.client.local.widget.calendar;
 
+import com.google.gwt.event.logical.shared.ShowRangeEvent;
+import com.google.gwt.event.logical.shared.ShowRangeHandler;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.datepicker.client.DatePicker;
 import org.jboss.errai.ioc.client.api.AfterInitialization;
@@ -26,6 +28,12 @@ public class DatePickerWidget extends Composite {
   @AfterInitialization
   private void setup() {
     getDatePicker().setYearArrowsVisible(true);
+    datePicker.addShowRangeHandler(new ShowRangeHandler<Date>() {
+      @Override
+      public void onShowRange(final ShowRangeEvent<Date> event) {
+        getDatePicker().addStyleToDates(DATE_HIGHLIGHT_STYLE, datesToHighlight);
+      }
+    });
   }
 
   public void setDatesToHighlight(final Set<Date> datesToHighlight) {

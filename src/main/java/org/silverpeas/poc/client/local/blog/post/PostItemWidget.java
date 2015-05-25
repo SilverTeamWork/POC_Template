@@ -1,16 +1,20 @@
 package org.silverpeas.poc.client.local.blog.post;
 
+import com.google.common.collect.ImmutableMultimap;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTML;
 import org.jboss.errai.ui.client.widget.HasModel;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
+import org.jboss.errai.ui.shared.api.annotations.EventHandler;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
 import org.silverpeas.poc.api.http.HttpResponse;
 import org.silverpeas.poc.api.http.JsonHttp;
 import org.silverpeas.poc.api.http.JsonResponse;
+import org.silverpeas.poc.api.navigation.NavigationProvider;
 import org.silverpeas.poc.api.util.I18n;
 import org.silverpeas.poc.api.util.StringUtil;
 import org.silverpeas.poc.client.local.blog.Post;
@@ -67,6 +71,12 @@ public class PostItemWidget extends Composite implements HasModel<Post> {
   private Element operation = DOM.createDiv();
 
   private Post post;
+
+  @EventHandler
+  private void onPostItemClick(ClickEvent event) {
+    NavigationProvider.get().goTo(BlogPostPage.class, ImmutableMultimap
+        .of("instanceId", getModel().getAppInstanceId(), "postId", getModel().getId()));
+  }
 
   @Override
   public Post getModel() {

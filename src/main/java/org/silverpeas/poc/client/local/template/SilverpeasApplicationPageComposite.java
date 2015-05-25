@@ -88,7 +88,23 @@ public abstract class SilverpeasApplicationPageComposite extends SilverpeasPageC
     return applicationInstance;
   }
 
+  public void setPageTitle(String title) {
+    applicationLayout.setPageTitle(title);
+  }
+
+  public void setPageDescription(String description) {
+    applicationLayout.setPageDescription(description);
+  }
+
+  public Panel getHeaderDescriptionPanel() {
+    return applicationLayout.getHeaderDescriptionPanel();
+  }
+
   public Panel getRightPanel() {
     return applicationLayout.getRightPanel();
+  }
+
+  public Panel getFooterPanel() {
+    return applicationLayout.getFooterPanel();
   }
 }

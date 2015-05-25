@@ -20,6 +20,8 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 
+import static org.silverpeas.poc.client.local.widget.SilverpeasHtmlPanel.TYPE.*;
+
 /**
  * @author miguel
  */
@@ -42,17 +44,21 @@ public class SilverpeasApplicationLayout extends SilverpeasComposite {
   private Element appSection = DOM.createElement("section");
 
   @DataField
-  private Element title = DOM.createSpan();
+  private SilverpeasHtmlPanel title = new SilverpeasHtmlPanel(SPAN);
 
   @Inject
   @DataField
   private ApplicationMenuWidget menu;
 
   @DataField
-  private Element edito = DOM.createElement("p");
+  private SilverpeasHtmlPanel description = new SilverpeasHtmlPanel(P);
 
   @DataField("aside-app")
-  private SilverpeasHtmlPanel rightPanel = new SilverpeasHtmlPanel(SilverpeasHtmlPanel.TYPE.ASIDE);
+  private SilverpeasHtmlPanel rightPanel = new SilverpeasHtmlPanel(ASIDE);
+
+  @Inject
+  @DataField("application-footer")
+  private SilverpeasHtmlPanel footerPanel;
 
   @Inject
   @DataField("application-content")
@@ -81,11 +87,11 @@ public class SilverpeasApplicationLayout extends SilverpeasComposite {
 
   private void setApplicationData(ApplicationInstance instance) {
     currentApplicationInstance = instance;
-    title.setInnerText(instance.getLabel());
-    if (StringUtil.isDefined(instance.getDescription())) {
-      edito.setInnerHTML(instance.getDescription());
-    }
     appSection.addClassName(instance.getComponentName());
+  }
+
+  public Panel getHeaderDescriptionPanel() {
+    return this.description;
   }
 
   @Override
@@ -95,6 +101,10 @@ public class SilverpeasApplicationLayout extends SilverpeasComposite {
 
   public Panel getRightPanel() {
     return rightPanel;
+  }
+
+  public Panel getFooterPanel() {
+    return footerPanel;
   }
 
   public ApplicationInstance getCurrentApplicationInstance() {
@@ -114,5 +124,20 @@ public class SilverpeasApplicationLayout extends SilverpeasComposite {
   public void onPageHidden() {
     super.onPageHidden();
     rightPanel.clear();
+    footerPanel.clear();
+  }
+
+  public void setPageTitle(String title) {
+    this.title.getElement().setInnerText(StringUtil.isDefined(title) ? title : "");
+  }
+
+  /**
+   * For Application HomePage (description of application instance)
+   * TODO improve this part...
+   * @param description
+   */
+  public void setPageDescription(String description) {
+    this.description.getElement()
+        .setInnerText(StringUtil.isDefined(description) ? description : "");
   }
 }
