@@ -6,6 +6,7 @@ import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
 import org.silverpeas.poc.api.util.Log;
 import org.silverpeas.poc.client.local.application.ApplicationInstance;
+import org.silverpeas.poc.client.local.application.event.DisplayedInternalApplicationInstancePage;
 import org.silverpeas.poc.client.local.application.event.LoadedApplicationInstance;
 import org.silverpeas.poc.client.local.space.Space;
 import org.silverpeas.poc.client.local.space.SpaceContent;
@@ -20,6 +21,7 @@ import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 
 /**
  * A widget to render a breadcrumb indicating the navigation level of the user in the current page.
@@ -78,6 +80,21 @@ public class BreadCrumbWidget extends Composite {
       }
       performSpaceContent(spaceContent.getParent());
     }
+  }
+
+  private void onInternalApplicationInstancePageDisplayed(
+      @Observes DisplayedInternalApplicationInstancePage event) {
+    ListIterator<BreadCrumbItem> itemListIterator = items.listIterator(2);
+    boolean positionFound = false;
+    while (itemListIterator.hasNext()) {
+      BreadCrumbItem item = itemListIterator.next();
+      if (positionFound || item.getTargetPageName().equals(event.getPageName())) {
+        positionFound = true;
+        itemListIterator.remove();
+      }
+    }
+    items.add(new BreadCrumbInternalAppPageItem<>(event.getPage(), event.getPageState()));
+    refresh();
   }
 
   private void refresh() {

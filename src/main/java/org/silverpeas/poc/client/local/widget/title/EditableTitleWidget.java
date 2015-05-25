@@ -153,4 +153,12 @@ public class EditableTitleWidget extends Composite
       }
     });
   }
+
+  /**
+   * Indicates if the cursor is over the widget and if the user can modify the content.
+   * @return true if the cursor is over and if the content is editable.
+   */
+  public boolean isEditModeFocused() {
+    return textBox.isAttached();
+  }
 }

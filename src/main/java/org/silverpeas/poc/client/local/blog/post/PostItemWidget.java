@@ -85,23 +85,22 @@ public class PostItemWidget extends Composite implements HasModel<Post> {
             Post post = response.parseJsonEntity();
             title.setModel(post);
           }
-        })
-            .onError(new JsonResponse() {
-              @Override
-              public void process(final HttpResponse response) {
-                getModel().setTitle(previousValue);
-              }
-            })
-            .withData(getModel())
-            .put(PostCriteria.fromPost(getModel()));
+        }).onError(new JsonResponse() {
+          @Override
+          public void process(final HttpResponse response) {
+            getModel().setTitle(previousValue);
+          }
+        }).withData(getModel()).put(PostCriteria.fromPost(getModel()));
       }
     });
   }
 
   @EventHandler
   private void onPostItemClick(ClickEvent event) {
-    NavigationProvider.get().goTo(BlogPostPage.class, ImmutableMultimap
-        .of("instanceId", getModel().getAppInstanceId(), "postId", getModel().getId()));
+    if (!title.isEditModeFocused()) {
+      NavigationProvider.get().goTo(BlogPostPage.class, ImmutableMultimap
+          .of("instanceId", getModel().getAppInstanceId(), "postId", getModel().getId()));
+    }
   }
 
   @Override

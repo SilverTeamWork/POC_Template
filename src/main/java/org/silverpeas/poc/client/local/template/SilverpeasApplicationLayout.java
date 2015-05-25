@@ -90,6 +90,10 @@ public class SilverpeasApplicationLayout extends SilverpeasComposite {
     appSection.addClassName(instance.getComponentName());
   }
 
+  public Panel getHeaderTitlePanel() {
+    return this.title;
+  }
+
   public Panel getHeaderDescriptionPanel() {
     return this.description;
   }

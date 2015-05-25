@@ -2,6 +2,7 @@ package org.silverpeas.poc.api.navigation;
 
 import com.google.common.collect.ImmutableListMultimap;
 import com.google.common.collect.Multimap;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.IsWidget;
 import org.jboss.errai.ui.nav.client.local.HistoryToken;
 import org.jboss.errai.ui.nav.client.local.HistoryTokenFactory;
@@ -89,6 +90,22 @@ public class NavigationProvider {
    */
   public void goTo(String toPage, Multimap<String, String> state) {
     goTo(navGraph.getPage(toPage).contentType(), state);
+  }
+
+  /**
+   * This can be used to get the state of the current dis^played page.
+   * @return The state from the current page.
+   */
+  public Multimap<String, String> getCurrentPageState() {
+    return createCurrentHistoryToken().getState();
+  }
+
+  /**
+   * This can be used to generate a HistoryToken from the current page.
+   * @return A HistoryToken from the current page.
+   */
+  public HistoryToken createCurrentHistoryToken() {
+    return htFactory.parseURL(Window.Location.getPath());
   }
 
   /**
