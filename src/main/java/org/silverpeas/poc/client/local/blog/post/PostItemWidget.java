@@ -111,7 +111,7 @@ public class PostItemWidget extends Composite implements HasModel<Post> {
     fillContentSnippet();
     fillPublicationInfo();
     fillModificationInfo();
-    AccessController.on(this.post).doUnPrivileged(new AccessController.Action() {
+    AccessController.on(this.post).doOnlyIfUnprivileged(new AccessController.Action() {
       @Override
       public void run() {
         operation.removeFromParent();

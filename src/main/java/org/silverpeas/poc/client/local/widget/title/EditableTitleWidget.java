@@ -12,7 +12,6 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.TextBox;
 import org.jboss.errai.ui.client.widget.HasModel;
-import org.silverpeas.poc.api.util.Log;
 import org.silverpeas.poc.client.local.util.AccessController;
 import org.silverpeas.poc.client.local.util.Publication;
 import org.silverpeas.poc.client.local.util.ValueChangeHandler;
@@ -71,7 +70,7 @@ public class EditableTitleWidget extends Composite
   public void setModel(final Publication model) {
     this.publication = model;
     title.setText(this.publication.getTitle());
-    AccessController.on(publication).doPrivileged(new AccessController.Action() {
+    AccessController.on(publication).doOnlyIfPrivileged(new AccessController.Action() {
       @Override
       public void run() {
         addDomHandler(EditableTitleWidget.this, MouseOverEvent.getType());
@@ -89,7 +88,7 @@ public class EditableTitleWidget extends Composite
    */
   @Override
   protected void doAttachChildren() {
-    AccessController.on(publication).doPrivileged(new AccessController.Action() {
+    AccessController.on(publication).doOnlyIfPrivileged(new AccessController.Action() {
       @Override
       public void run() {
         textBox.setStyleName("input text");
@@ -110,7 +109,7 @@ public class EditableTitleWidget extends Composite
         });
         panel.add(title);
       }
-    }).doUnPrivileged(new AccessController.Action() {
+    }).doOnlyIfUnprivileged(new AccessController.Action() {
       @Override
       public void run() {
         if (transition != null) {
@@ -129,7 +128,7 @@ public class EditableTitleWidget extends Composite
    */
   @Override
   public void onMouseOut(final MouseOutEvent event) {
-    AccessController.on(publication).doPrivileged(new AccessController.Action() {
+    AccessController.on(publication).doOnlyIfPrivileged(new AccessController.Action() {
       @Override
       public void run() {
         panel.clear();
@@ -144,7 +143,7 @@ public class EditableTitleWidget extends Composite
    */
   @Override
   public void onMouseOver(final MouseOverEvent event) {
-    AccessController.on(publication).doPrivileged(new AccessController.Action() {
+    AccessController.on(publication).doOnlyIfPrivileged(new AccessController.Action() {
       @Override
       public void run() {
         textBox.setText(publication.getTitle());

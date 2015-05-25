@@ -28,7 +28,7 @@ public class AccessController {
    * which the action is.
    * @param action a privileged action.
    */
-  public AccessController doPrivileged(Action action) {
+  public AccessController doOnlyIfPrivileged(Action action) {
     if (hasPrivilege()) {
       action.run();
     }
@@ -40,7 +40,7 @@ public class AccessController {
    * on which the action is.
    * @param action an unprivileged action.
    */
-  public AccessController doUnPrivileged(Action action) {
+  public AccessController doOnlyIfUnprivileged(Action action) {
     if (!hasPrivilege()) {
       action.run();
     }
