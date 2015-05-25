@@ -7,6 +7,7 @@ import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTML;
+import org.jboss.errai.ioc.client.api.AfterInitialization;
 import org.jboss.errai.ui.client.widget.HasModel;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.EventHandler;
@@ -72,6 +73,31 @@ public class PostItemWidget extends Composite implements HasModel<Post> {
 
   private Post post;
 
+  @AfterInitialization
+  public void setUp() {
+    title.setValueChangeHandler(new ValueChangeHandler<String>() {
+      @Override
+      public void onChange(final String previousValue, final String newValue) {
+        getModel().setTitle(newValue);
+        JsonHttp.onSuccess(new JsonResponse() {
+          @Override
+          public void process(final HttpResponse response) {
+            Post post = response.parseJsonEntity();
+            title.setModel(post);
+          }
+        })
+            .onError(new JsonResponse() {
+              @Override
+              public void process(final HttpResponse response) {
+                getModel().setTitle(previousValue);
+              }
+            })
+            .withData(getModel())
+            .put(PostCriteria.fromPost(getModel()));
+      }
+    });
+  }
+
   @EventHandler
   private void onPostItemClick(ClickEvent event) {
     NavigationProvider.get().goTo(BlogPostPage.class, ImmutableMultimap
@@ -94,29 +120,7 @@ public class PostItemWidget extends Composite implements HasModel<Post> {
       }
     }).get(RatingCriteria.forPublication(post.getAppInstanceId(), post.getId()));
     title.setModel(this.post);
-    title.setValueChangeHandler(new ValueChangeHandler<String>() {
-      @Override
-      public void onChange(final String previousValue, final String newValue) {
-        getModel().setTitle(newValue);
-        JsonHttp.onSuccess(new JsonResponse() {
-          @Override
-          public void process(final HttpResponse response) {
-            Post post = response.parseJsonEntity();
-            title.setModel(post);
-          }
-        })
-            .onError(new JsonResponse() {
-              @Override
-              public void process(final HttpResponse response) {
-                getModel().setTitle(previousValue);
-              }
-            })
-            .withData(getModel())
-            .put(PostCriteria.fromIds(getModel().getAppInstanceId(), getModel().getId()));
-      }
-    });
-    time.setModel(
-        new Date((long) this.post.getCreationTimestamp())); // long is simulated in js by a double with GWT
+    time.setModel(this.post.getCreationDate());
     commentCount.setInnerText(String.valueOf(post.getNbComments()));
     fillContentSnippet();
     fillPublicationInfo();

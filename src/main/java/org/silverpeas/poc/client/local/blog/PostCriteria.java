@@ -2,7 +2,6 @@ package org.silverpeas.poc.client.local.blog;
 
 import org.silverpeas.poc.api.http.JsonGetCriteria;
 import org.silverpeas.poc.api.http.JsonHttpConfig;
-import org.silverpeas.poc.api.http.JsonPostCriteria;
 import org.silverpeas.poc.api.http.JsonPutCriteria;
 
 /**
@@ -12,10 +11,8 @@ public class PostCriteria implements JsonGetCriteria, JsonPutCriteria {
 
   private String blogId;
   private String postId;
-  private String pagination;
   private int page = 0;
   private int count = 0;
-  private Post data;
 
   public static PostCriteria fromIds(String blogId, String postId) {
     PostCriteria postCriteria = new PostCriteria();
@@ -34,7 +31,6 @@ public class PostCriteria implements JsonGetCriteria, JsonPutCriteria {
     PostCriteria postCriteria = new PostCriteria();
     postCriteria.blogId = post.getAppInstanceId();
     postCriteria.postId = post.getId();
-    postCriteria.data = post;
     return postCriteria;
   }
 
@@ -61,7 +57,11 @@ public class PostCriteria implements JsonGetCriteria, JsonPutCriteria {
   }
 
   private JsonHttpConfig buildJsonHttpConfig() {
-    StringBuilder url = new StringBuilder("blogs/blog").append(blogId).append("/posts");
+    StringBuilder url = new StringBuilder("blogs/");
+    if (!blogId.startsWith("blog")) {
+      url.append("blog");
+    }
+    url.append(blogId).append("/posts");
     if (postId != null) {
       url.append("/").append(postId);
     }
