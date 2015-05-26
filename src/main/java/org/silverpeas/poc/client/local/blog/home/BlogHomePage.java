@@ -40,7 +40,8 @@ public class BlogHomePage extends BlogPageComposite {
   @Inject
   private DatePickerWidget datePickerWidget;
 
-  private int scroll = 0;
+  private int highestScroll = 0;
+  private int scrollIncrement = 100;
   private int page = 1;
 
   @AfterInitialization
@@ -48,26 +49,27 @@ public class BlogHomePage extends BlogPageComposite {
     Window.addWindowScrollHandler(new Window.ScrollHandler() {
       @Override
       public void onWindowScroll(final Window.ScrollEvent event) {
-        final int increment = 100;
+        if (postsView.getValue().isEmpty()) {
+          return;
+        } else if (highestScroll == 0) {
+          highestScroll = (postsView.getWidgetCount() - 2) * scrollIncrement;
+        }
         Document document = Document.get();
-        int previousScroll = scroll;
-        scroll = document.getScrollTop();
+        int scroll = document.getScrollTop();
 
-        if (previousScroll >= scroll) {
+        if ((highestScroll + scrollIncrement) >= scroll) {
           return;
         }
+        highestScroll = scroll;
 
-        int maxScroll =  postsView.getOffsetHeight() - postsView.getWidget(0).getOffsetHeight();
-        if (scroll >= maxScroll + increment) {
-          ApplicationInstance instance = getApplicationInstance();
-          JsonHttp.onSuccess(new JsonResponse() {
-            @Override
-            public void process(final HttpResponse response) {
-              List<Post> newPosts = response.parseJsonEntities();
-              postsView.getValue().addAll(newPosts);
-            }
-          }).get(PostCriteria.fromBlog(instance.getId()).paginatedBy(page++, 1));
-        }
+        ApplicationInstance instance = getApplicationInstance();
+        JsonHttp.onSuccess(new JsonResponse() {
+          @Override
+          public void process(final HttpResponse response) {
+            List<Post> newPosts = response.parseJsonEntities();
+            postsView.getValue().addAll(newPosts);
+          }
+        }).get(PostCriteria.fromBlog(instance.getId()).paginatedBy(page++, 1));
       }
     });
   }
