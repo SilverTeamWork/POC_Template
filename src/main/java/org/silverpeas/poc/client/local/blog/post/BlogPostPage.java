@@ -18,16 +18,12 @@ import org.silverpeas.poc.client.local.blog.Post;
 import org.silverpeas.poc.client.local.blog.PostCriteria;
 import org.silverpeas.poc.client.local.blog.home.BlogHomePage;
 import org.silverpeas.poc.client.local.blog.template.BlogPageComposite;
+import org.silverpeas.poc.client.local.blog.widget.BlogDatePickerWidget;
 import org.silverpeas.poc.client.local.util.BundleProvider;
 import org.silverpeas.poc.client.local.util.EventsProvider;
 import org.silverpeas.poc.client.local.widget.SilverpeasHtmlPanel;
-import org.silverpeas.poc.client.local.widget.calendar.DatePickerWidget;
-import org.silverpeas.poc.client.local.widget.menu.MenuAction;
 
 import javax.inject.Inject;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
 import static org.silverpeas.poc.client.local.widget.menu.MenuAction.TYPE.MODIFY;
 
@@ -48,7 +44,7 @@ public class BlogPostPage extends BlogPageComposite {
   private SilverpeasHtmlPanel postPanel;
 
   @Inject
-  private DatePickerWidget datePickerWidget;
+  private BlogDatePickerWidget blogDatePickerWidget;
 
   @Inject
   private PostWidget postWidget;
@@ -58,7 +54,7 @@ public class BlogPostPage extends BlogPageComposite {
     getMenuWidget().setVisible(false);
     setPageDescription(null);
     getFooterPanel().setVisible(false);
-    getRightPanel().add(datePickerWidget);
+    getRightPanel().add(blogDatePickerWidget);
     postPanel.add(postWidget);
 
     JsonHttp.onSuccess(new JsonResponse() {
@@ -93,18 +89,6 @@ public class BlogPostPage extends BlogPageComposite {
     }).get(PostCriteria.fromIds(instance.getId(), postId));
 
     // Posts to indicate into the calendar
-    JsonHttp.onSuccess(new JsonResponse() {
-      @Override
-      public void process(final HttpResponse response) {
-        final Set<Date> postDates = new HashSet<>();
-        response.parseJsonEntities(new HttpResponse.JsonArrayLine<Post>() {
-          @Override
-          public void perform(final int index, final Post entity) {
-            postDates.add(entity.getCreationDate());
-          }
-        });
-        datePickerWidget.setDatesToHighlight(postDates);
-      }
-    }).get(PostCriteria.fromBlog(instance.getId()));
+    blogDatePickerWidget.loadFor(instance);
   }
 }

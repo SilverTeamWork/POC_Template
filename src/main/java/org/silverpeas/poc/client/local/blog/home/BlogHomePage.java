@@ -16,14 +16,12 @@ import org.silverpeas.poc.client.local.blog.Post;
 import org.silverpeas.poc.client.local.blog.PostCriteria;
 import org.silverpeas.poc.client.local.blog.post.PostItemWidget;
 import org.silverpeas.poc.client.local.blog.template.BlogPageComposite;
+import org.silverpeas.poc.client.local.blog.widget.BlogDatePickerWidget;
 import org.silverpeas.poc.client.local.util.BundleProvider;
-import org.silverpeas.poc.client.local.widget.calendar.DatePickerWidget;
+import org.silverpeas.poc.client.local.util.ContributionList;
 
 import javax.inject.Inject;
-import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * @author Yohann Chastagnier
@@ -38,7 +36,7 @@ public class BlogHomePage extends BlogPageComposite {
   private ListWidget<Post, PostItemWidget> postsView;
 
   @Inject
-  private DatePickerWidget datePickerWidget;
+  private BlogDatePickerWidget blogDatePickerWidget;
 
   private int highestScroll = 0;
   private int scrollIncrement = 100;
@@ -66,7 +64,7 @@ public class BlogHomePage extends BlogPageComposite {
         JsonHttp.onSuccess(new JsonResponse() {
           @Override
           public void process(final HttpResponse response) {
-            List<Post> newPosts = response.parseJsonEntities();
+            List<Post> newPosts = response.<ContributionList<Post>>parseJsonEntity().getEntities();
             postsView.getValue().addAll(newPosts);
           }
         }).get(PostCriteria.fromBlog(instance.getId()).paginatedBy(page++, 1));
@@ -76,7 +74,7 @@ public class BlogHomePage extends BlogPageComposite {
 
   @Override
   public void onApplicationInstanceLoaded(ApplicationInstance instance) {
-    getRightPanel().add(datePickerWidget);
+    getRightPanel().add(blogDatePickerWidget);
     setPageTitle(instance.getLabel());
     setPageDescription(instance.getDescription());
 
@@ -84,27 +82,13 @@ public class BlogHomePage extends BlogPageComposite {
     JsonHttp.onSuccess(new JsonResponse() {
       @Override
       public void process(final HttpResponse response) {
-        List<Post> posts = response.parseJsonEntities();
-        postsView.setItems(posts);
+        ContributionList<Post> posts = response.parseJsonEntity();
+        postsView.setItems(posts.getEntities());
         page += 3;
       }
     }).get(PostCriteria.fromBlog(instance.getId()).paginatedBy(page, 3));
 
     // Posts to indicate into the calendar
-    JsonHttp.onSuccess(new JsonResponse() {
-      @Override
-      public void process(final HttpResponse response) {
-        final Set<Date> postDates = new HashSet<>();
-        response.parseJsonEntities(new HttpResponse.JsonArrayLine<Post>() {
-          @Override
-          public void perform(final int index, final Post entity) {
-            postDates.add(entity.getDateEvent());
-          }
-        });
-        datePickerWidget.setDatesToHighlight(postDates);
-      }
-    }).get(PostCriteria.fromBlog(instance.getId()));
+    blogDatePickerWidget.forceLoadFor(instance);
   }
-
-
 }
