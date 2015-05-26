@@ -11,17 +11,23 @@ import org.jboss.errai.ui.shared.api.annotations.Templated;
 import org.silverpeas.poc.api.http.HttpResponse;
 import org.silverpeas.poc.api.http.JsonHttp;
 import org.silverpeas.poc.api.http.JsonResponse;
+import org.silverpeas.poc.api.navigation.NavigationProvider;
 import org.silverpeas.poc.client.local.application.ApplicationInstance;
 import org.silverpeas.poc.client.local.blog.Post;
 import org.silverpeas.poc.client.local.blog.PostCriteria;
+import org.silverpeas.poc.client.local.blog.bundle.BlogBundle;
+import org.silverpeas.poc.client.local.blog.post.BlogPostPage;
 import org.silverpeas.poc.client.local.blog.post.PostItemWidget;
 import org.silverpeas.poc.client.local.blog.template.BlogPageComposite;
 import org.silverpeas.poc.client.local.blog.widget.BlogDatePickerWidget;
 import org.silverpeas.poc.client.local.util.BundleProvider;
 import org.silverpeas.poc.client.local.util.ContributionList;
+import org.silverpeas.poc.client.local.widget.menu.ToPageAction;
 
 import javax.inject.Inject;
 import java.util.List;
+
+import static org.silverpeas.poc.client.local.widget.menu.MenuAction.TYPE.CREATION;
 
 /**
  * @author Yohann Chastagnier
@@ -37,6 +43,8 @@ public class BlogHomePage extends BlogPageComposite {
 
   @Inject
   private BlogDatePickerWidget blogDatePickerWidget;
+
+  private ToPageAction createPostAction;
 
   private int highestScroll = 0;
   private int scrollIncrement = 100;
@@ -74,6 +82,13 @@ public class BlogHomePage extends BlogPageComposite {
 
   @Override
   public void onApplicationInstanceLoaded(ApplicationInstance instance) {
+    createPostAction =
+        getMenuWidget().addPrivilegedToPageAction().ofType(CREATION, BlogBundle.msg().post("a"))
+            .toPage(BlogPostPage.class);
+    createPostAction.getParameters().putAll(NavigationProvider.get().getCurrentPageState());
+    createPostAction.getParameters().get("postId").clear();
+    createPostAction.getParameters().put("postId", "new");
+
     getRightPanel().add(blogDatePickerWidget);
     setPageTitle(instance.getLabel());
     setPageDescription(instance.getDescription());
@@ -85,6 +100,9 @@ public class BlogHomePage extends BlogPageComposite {
         ContributionList<Post> posts = response.parseJsonEntity();
         postsView.setItems(posts.getEntities());
         page += 3;
+
+        // Verify if this action is possible according to list privileges
+        createPostAction.verify(posts);
       }
     }).get(PostCriteria.fromBlog(instance.getId()).paginatedBy(page, 3));
 

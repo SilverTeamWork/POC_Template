@@ -15,9 +15,9 @@
   "page.previous.back": "Back to previous page",
   "subscribe.label": "Subscribe",
   "application.responsible.label": "Responsibles of application",
-  "action.create": "Create",
-  "action.modify": "Modify",
-  "action.delete": "Remove",
+  "action.create": "Create {0}",
+  "action.modify": "Modify {0}",
+  "action.delete": "Remove {0}",
   "action.ok": "Ok",
   "action.cancel": "Cancel",
   "message.confirmation.deletion": "Are you sure to delete it?"

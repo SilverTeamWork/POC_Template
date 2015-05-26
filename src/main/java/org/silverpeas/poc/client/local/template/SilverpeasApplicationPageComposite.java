@@ -82,18 +82,9 @@ public abstract class SilverpeasApplicationPageComposite extends SilverpeasPageC
 
     // Common menu actions
     if (getClass().getSimpleName().endsWith("HomePage")) {
-      getMenuWidget().addClickAction(new Callback() {
-        @Override
-        public void invoke(final Object... parameters) {
-          Message.notifies("Action not yet handled").warning();
-        }
-      }).setLabel(I18n.format(CommonTranslations.SUBSCRIBE_LABEL));
-      getMenuWidget().addClickAction(new Callback() {
-        @Override
-        public void invoke(final Object... parameters) {
-          Message.notifies("Action not yet handled").warning();
-        }
-      }).setLabel(I18n.format(CommonTranslations.APPLICATION_RESPONSIBLE_LABEL));
+      getMenuWidget().addClickAction().withLabel(I18n.format(CommonTranslations.SUBSCRIBE_LABEL));
+      getMenuWidget().addClickAction()
+          .withLabel(I18n.format(CommonTranslations.APPLICATION_RESPONSIBLE_LABEL));
     }
   }
 

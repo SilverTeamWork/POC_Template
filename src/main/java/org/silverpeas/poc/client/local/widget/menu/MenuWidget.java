@@ -6,19 +6,37 @@ import org.jboss.errai.ui.client.widget.ListWidget;
 import org.jboss.errai.ui.client.widget.UnOrderedList;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
-import org.silverpeas.poc.api.Callback;
-import org.silverpeas.poc.client.local.util.AccessController;
 import org.silverpeas.poc.client.local.util.Contribution;
+import org.silverpeas.poc.client.local.util.ContributionList;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
 
 /**
- * This widget handles a menu.
+ * This widget handles a menu.<br/>
+ * In order to get the control of the position of menu items, the principle of this mechanism is to
+ * prepare all menu instances with minimal data by using {@link #addClickAction()}, {@link
+ * #addPrivilegedClickAction()}, {@link #addToPageAction()} or  {@link
+ * #addPrivilegedToPageAction()}.<br/>
+ * An entry in the menu is added to each time one of the methods mentioned above is called.<br/>
+ * Once the instance of a menu item is added, it may be subsequently completed during synchronous
+ * or  asynchronous loading of information to take into account the specific resource data.<br/>
+ * When a menu item must be displayed only when the user has the right privileges, {@link
+ * #addPrivilegedClickAction()} or {@link #addPrivilegedToPageAction()} must be called first to add
+ * the entry, and the menu item should be checked later against the privileges specified for a
+ * resource by using {@link MenuAction#verify(Contribution)} or {@link
+ * MenuAction#verify(ContributionList)} methods.<br/>
+ * If there is only menu items that have to be verified according to privileges, the entire menu is
+ * shown after that there is no more menu entry for which the verification has not been
+ * performed.<br/>
+ * When there is a menu item that does not require verification against the privileges, the entire
+ * menu is displayed and menu entries that ask to be verify according to the privileges are
+ * displayed once the verification is performed successfully.
  * @author Yohann Chastagnier
  */
 @Templated
 public class MenuWidget extends Composite {
+
+  private MenuActionListWrapper menuActions;
 
   @Inject
   @DataField("menu-container")
@@ -27,99 +45,57 @@ public class MenuWidget extends Composite {
 
   @AfterInitialization
   private void init() {
-    menuActionList.setItems(new ArrayList<MenuAction>());
+    menuActions = new MenuActionListWrapper(this);
+    menuActionList.setItems(menuActions);
+    clear();
   }
 
   /**
    * Adds an action which the click event is handled by the caller.
-   * @param clickCallback the callback to call on click event.
-   * @return the initialized {@link ClickAction} instance. {@link ClickAction#DUMMY} instance if
-   * user has no privilege for the action.
+   * @return the initialized {@link ClickAction} instance.
    */
-  public ClickAction addClickAction(final Callback clickCallback) {
-    return addItem(new ClickAction[]{new ClickAction(MenuAction.TYPE.FREE, clickCallback)},
-        ClickAction.DUMMY);
+  public ClickAction addClickAction() {
+    return addItem(new ClickAction(false));
+  }
+
+  /**
+   * Adds an action which the click event is handled by the caller.<br/>
+   * This action must be verified via {@link ClickAction#verify(ContributionList)} or {@link
+   * ClickAction#verify(Contribution)} in order to get a visible menu container.
+   * @return the initialized {@link ClickAction} instance.
+   */
+  public ClickAction addPrivilegedClickAction() {
+    return addItem(new ClickAction(true));
   }
 
   /**
    * Adds an action which the click action brings the user to another page.
-   * @param toPageName the page name aimed.
-   * @return the initialized {@link ToPageAction} instance. {@link ToPageAction#DUMMY} instance if
-   * user has no privilege for the action.
+   * @return the initialized {@link ToPageAction} instance.
    */
-  public ToPageAction addToPageAction(final String toPageName) {
-    return addItem(new ToPageAction[]{new ToPageAction(MenuAction.TYPE.FREE, toPageName)},
-        ToPageAction.DUMMY);
+  public ToPageAction addToPageAction() {
+    return addItem(new ToPageAction(false));
   }
 
   /**
-   * Adds an action to a contribution which the click event is handled by the caller.<br/>
-   * The privileged on the resource are verified. If the user has not the privilege to perform the
-   * action, the menu is not added.
-   * @param contribution the contribution aimed by the action.
-   * @param type the primary type of the action.
-   * @param clickCallback the callback to call on click event.
-   * @return the initialized {@link ClickAction} instance. {@link ClickAction#DUMMY} instance if
-   * user has no privilege for the action.
+   * Adds an action which the click action brings the user to another page.<br/>
+   * This action must be verified via {@link ClickAction#verify(ContributionList)} or {@link
+   * ClickAction#verify(Contribution)} in order to get a visible menu container.
+   * @return the initialized {@link ToPageAction} instance.
    */
-  public ClickAction addClickAction(Contribution contribution, final MenuAction.TYPE type,
-      final Callback clickCallback) {
-    final ClickAction[] clickAction = new ClickAction[1];
-    if (type == MenuAction.TYPE.FREE) {
-      clickAction[0] = new ClickAction(type, clickCallback);
-    } else {
-      AccessController.on(contribution).doOnlyIfPrivileged(new AccessController.Action() {
-        @Override
-        public void run() {
-          clickAction[0] = new ClickAction(type, clickCallback);
-        }
-      });
-    }
-    return addItem(clickAction, ClickAction.DUMMY);
+  public ToPageAction addPrivilegedToPageAction() {
+    return addItem(new ToPageAction(true));
   }
 
-  /**
-   * Adds an action to a contribution which the click action brings the user to another page.<br/>
-   * The privileged on the resource are verified. If the user has not the privilege to perform the
-   * action, the menu is not added.
-   * @param contribution the contribution aimed by the action.
-   * @param type the primary type of the action.
-   * @param toPageName the page name aimed.
-   * @return the initialized {@link ToPageAction} instance. {@link ToPageAction#DUMMY} instance if
-   * user has no privilege for the action.
-   */
-  public ToPageAction addToPageAction(Contribution contribution, final MenuAction.TYPE type,
-      final String toPageName) {
-    final ToPageAction[] toPageAction = new ToPageAction[1];
-    if (type == MenuAction.TYPE.FREE) {
-      toPageAction[0] = new ToPageAction(type, toPageName);
-    } else {
-      AccessController.on(contribution).doOnlyIfPrivileged(new AccessController.Action() {
-        @Override
-        public void run() {
-          toPageAction[0] = new ToPageAction(type, toPageName);
-        }
-      });
-    }
-    return addItem(toPageAction, ToPageAction.DUMMY);
-  }
-
-  private <MENU_ACTION extends MenuAction> MENU_ACTION addItem(MENU_ACTION[] menuActions,
-      MENU_ACTION dummy) {
-    if (menuActions.length > 0 && menuActions[0] != null) {
-      MENU_ACTION menuAction = menuActions[0];
-      menuActionList.getValue().add(menuAction);
-      setVisible(true);
-      return menuAction;
-    }
-    return dummy;
+  private <MENU_ACTION extends MenuAction> MENU_ACTION addItem(MENU_ACTION menuAction) {
+    menuAction.setMenuActions(menuActions);
+    menuActions.add(menuAction);
+    return menuAction;
   }
 
   /**
    * Clears all action items from the menu.
    */
   public void clear() {
-    menuActionList.getValue().clear();
-    setVisible(false);
+    menuActions.clear();
   }
 }

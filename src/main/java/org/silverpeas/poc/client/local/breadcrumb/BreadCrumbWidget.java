@@ -18,6 +18,7 @@ import org.silverpeas.poc.client.local.util.CommonTranslations;
 import org.silverpeas.poc.client.local.util.HomeSpaceProvider;
 import org.silverpeas.poc.client.local.widget.SilverpeasHtmlPanel;
 
+import javax.enterprise.event.Event;
 import javax.enterprise.event.Observes;
 import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
@@ -43,7 +44,15 @@ public class BreadCrumbWidget extends Composite {
   private SilverpeasHtmlPanel backContainer;
 
   @DataField("back-button")
-  private SilverpeasTransitionAnchor backButton = new SilverpeasTransitionAnchor();
+  private SilverpeasTransitionAnchor backButton = new SilverpeasTransitionAnchor() {
+    @Override
+    protected void onClickEvent() {
+      backButtonClickedEvent.fire(new BackButtonClicked());
+    }
+  };
+
+  @Inject
+  private Event<BackButtonClicked> backButtonClickedEvent;
 
   @Inject
   private Instance<BreadCrumbTransitionAnchor> breadCrumbItemAnchorProvider;
@@ -51,16 +60,19 @@ public class BreadCrumbWidget extends Composite {
   private List<BreadCrumbItem> items = new ArrayList<>();
 
   @AfterInitialization
-  protected void init() {
-    items.clear();
-    items.add(new BreadCrumbSpaceItem(HomeSpaceProvider.getHomeSpace()));
+  protected void setup() {
     backContainer.setVisible(false);
     backContainer.add(backButton);
     backButton.setTitle(I18n.format(CommonTranslations.BACK_TO_PREVIOUS_PAGE));
     backButton.setText(backButton.getTitle());
   }
 
+  private void onBackButtonClicked(@Observes BackButtonClicked event) {
+    backContainer.setVisible(items.size() > 3);
+  }
+
   private void onSpaceSelection(@Observes SelectedSpace spaceSelection) {
+    backContainer.setVisible(false);
     Space selectedSpace = spaceSelection.getResource();
     if (selectedSpace.isHome()) {
       init();
@@ -71,7 +83,7 @@ public class BreadCrumbWidget extends Composite {
   private void onSpaceLoaded(@Observes LoadedSpace event) {
     init();
     Space space = event.getResource();
-    Log.dev("BreadCrumbWidget - onSpaceLoaded - {0} (id={1})", space.getLabel(), space.getId());
+    Log.debug("BreadCrumbWidget - onSpaceLoaded - {0} (id={1})", space.getLabel(), space.getId());
     performSpaceContent(space);
     refresh();
   }
@@ -83,6 +95,11 @@ public class BreadCrumbWidget extends Composite {
         instance.getLabel(), instance.getComponentName(), instance.getId());
     performSpaceContent(instance);
     refresh();
+  }
+
+  protected void init() {
+    items.clear();
+    items.add(new BreadCrumbSpaceItem(HomeSpaceProvider.getHomeSpace()));
   }
 
   private void performSpaceContent(SpaceContent spaceContent) {
@@ -113,8 +130,8 @@ public class BreadCrumbWidget extends Composite {
 
   private void refresh() {
     content.clear();
-    backContainer.setVisible(!items.isEmpty());
-    if (items.size() > 1) {
+    if (items.size() > 2) {
+      backContainer.setVisible(true);
       BreadCrumbItem item = items.get(items.size() - 2);
       backButton.initHref(item.getTargetPageName(), item.getTransitionParameters());
     }

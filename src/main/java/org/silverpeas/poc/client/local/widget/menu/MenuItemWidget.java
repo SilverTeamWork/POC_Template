@@ -4,7 +4,6 @@ import com.google.gwt.user.client.ui.Composite;
 import org.jboss.errai.ui.client.widget.HasModel;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
-import org.silverpeas.poc.api.util.Log;
 
 import javax.inject.Inject;
 
@@ -18,7 +17,7 @@ public class MenuItemWidget extends Composite implements HasModel<MenuAction> {
 
   @Inject
   @DataField("menu-item-action")
-  private MenuAnchor action;
+  private MenuAnchor actionAnchor;
 
   @Override
   public MenuAction getModel() {
@@ -28,6 +27,8 @@ public class MenuItemWidget extends Composite implements HasModel<MenuAction> {
   @Override
   public void setModel(final MenuAction menuAction) {
     this.menuAction = menuAction;
-    this.action.setModel(menuAction);
+    this.menuAction.setMenuItemWidget(this);
+    this.actionAnchor.setModel(menuAction);
+    setVisible(!menuAction.hasToBeVerified());
   }
 }

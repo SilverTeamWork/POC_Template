@@ -3,30 +3,31 @@ package org.silverpeas.poc.client.local.widget.menu;
 import org.silverpeas.poc.api.Callback;
 
 /**
+ * This menu action handles a click callback to invoke.
  * @author Yohann Chastagnier
  */
-public class ClickAction extends MenuAction {
+public class ClickAction extends MenuAction<ClickAction> {
 
-  private final Callback clickCallback;
+  private Callback clickCallback;
 
-  public static final ClickAction DUMMY = new ClickAction(TYPE.UNKNOWN, new Callback() {
-    @Override
-    public void invoke(final Object... parameters) {
+  /**
+   * @see MenuAction#MenuAction(boolean)
+   */
+  public ClickAction(final boolean mustBeVerified) {
+    super(mustBeVerified);
+  }
 
-    }
-  });
-
-  public ClickAction(final TYPE type, final Callback clickCallback) {
-    super(type);
+  /**
+   * Sets the callback to invoke when the menu item is clicked.
+   * @param clickCallback the callback to invoke.
+   * @return the current instance.
+   */
+  public ClickAction clickCallback(final Callback clickCallback) {
     this.clickCallback = clickCallback;
+    return this;
   }
 
-  public Callback getClickCallback() {
+  Callback getClickCallback() {
     return clickCallback;
-  }
-
-  @Override
-  protected ClickAction getDummy() {
-    return DUMMY;
   }
 }

@@ -1,12 +1,17 @@
 package org.silverpeas.poc.client.local.blog.bundle;
 
-import org.jboss.errai.ui.shared.api.annotations.TranslationKey;
+import com.google.gwt.core.client.GWT;
 
 /**
  * @author Yohann Chastagnier
  */
 public class BlogBundle {
+  private static BlogBundle me = new BlogBundle();
 
-  @TranslationKey(defaultValue = "Create a post")
-  public static final String MENU_ACTION_CREATE_POST_LABEL = "blog.menu.action.create.post.label";
+  private final Messages messageBundle = GWT.create(Messages.class);
+
+  public static Messages msg() {
+    return me.messageBundle;
+  }
+
 }
