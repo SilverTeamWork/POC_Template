@@ -10,7 +10,6 @@ import org.silverpeas.poc.api.util.Log;
 import org.silverpeas.poc.api.web.components.common.Message;
 
 import javax.enterprise.context.Dependent;
-import javax.inject.Inject;
 
 /**
  * This Class is annotated by {@link Dependent} in order to be managed by {@link BeanManager}

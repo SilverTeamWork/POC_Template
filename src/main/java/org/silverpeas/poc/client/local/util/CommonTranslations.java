@@ -17,6 +17,10 @@ public interface CommonTranslations {
   @TranslationKey(defaultValue = "")
   String MODIFICATION_AUTHOR = "publication.modifiedBy";
   @TranslationKey(defaultValue = "")
+  String BACK_TO_PREVIOUS_PAGE = "page.previous.back";
+  @TranslationKey(defaultValue = "")
+  String ACTION_CREATION = "action.create";
+  @TranslationKey(defaultValue = "")
   String ACTION_MODIFICATION = "action.modify";
   @TranslationKey(defaultValue = "")
   String ACTION_DELETION = "action.delete";

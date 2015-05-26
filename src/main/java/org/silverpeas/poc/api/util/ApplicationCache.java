@@ -21,7 +21,7 @@ public class ApplicationCache {
 
   public static void clear() {
     ApplicationCache me = get();
-    Log.dev("RequestCache will be cleaned with content: " + me.cache);
+    Log.dev("ApplicationCache will be cleaned with content: " + me.cache);
     me.cache.clear();
   }
 

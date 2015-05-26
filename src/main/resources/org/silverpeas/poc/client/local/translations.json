@@ -12,6 +12,8 @@
   "publication.publishedBy": "by {0}",
   "publication.modifiedIn": "Updated in {0}",
   "publication.modifiedBy": "by {0}",
+  "page.previous.back": "Back to previous page",
+  "action.create": "Create",
   "action.modify": "Modify",
   "action.delete": "Remove",
   "action.ok": "Ok",

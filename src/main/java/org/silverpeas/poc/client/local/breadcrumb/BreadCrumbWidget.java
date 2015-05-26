@@ -4,6 +4,8 @@ import com.google.gwt.user.client.ui.Composite;
 import org.jboss.errai.ioc.client.api.AfterInitialization;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
+import org.silverpeas.poc.api.navigation.SilverpeasTransitionAnchor;
+import org.silverpeas.poc.api.util.I18n;
 import org.silverpeas.poc.api.util.Log;
 import org.silverpeas.poc.client.local.application.ApplicationInstance;
 import org.silverpeas.poc.client.local.application.event.DisplayedInternalApplicationInstancePage;
@@ -12,6 +14,7 @@ import org.silverpeas.poc.client.local.space.Space;
 import org.silverpeas.poc.client.local.space.SpaceContent;
 import org.silverpeas.poc.client.local.space.event.LoadedSpace;
 import org.silverpeas.poc.client.local.space.event.SelectedSpace;
+import org.silverpeas.poc.client.local.util.CommonTranslations;
 import org.silverpeas.poc.client.local.util.HomeSpaceProvider;
 import org.silverpeas.poc.client.local.widget.SilverpeasHtmlPanel;
 
@@ -36,6 +39,13 @@ public class BreadCrumbWidget extends Composite {
   private SilverpeasHtmlPanel content;
 
   @Inject
+  @DataField("back-container")
+  private SilverpeasHtmlPanel backContainer;
+
+  @DataField("back-button")
+  private SilverpeasTransitionAnchor backButton = new SilverpeasTransitionAnchor();
+
+  @Inject
   private Instance<BreadCrumbTransitionAnchor> breadCrumbItemAnchorProvider;
 
   private List<BreadCrumbItem> items = new ArrayList<>();
@@ -44,6 +54,10 @@ public class BreadCrumbWidget extends Composite {
   protected void init() {
     items.clear();
     items.add(new BreadCrumbSpaceItem(HomeSpaceProvider.getHomeSpace()));
+    backContainer.setVisible(false);
+    backContainer.add(backButton);
+    backButton.setTitle(I18n.format(CommonTranslations.BACK_TO_PREVIOUS_PAGE));
+    backButton.setText(backButton.getTitle());
   }
 
   private void onSpaceSelection(@Observes SelectedSpace spaceSelection) {
@@ -99,13 +113,18 @@ public class BreadCrumbWidget extends Composite {
 
   private void refresh() {
     content.clear();
+    backContainer.setVisible(!items.isEmpty());
+    if (items.size() > 1) {
+      BreadCrumbItem item = items.get(items.size() - 2);
+      backButton.initHref(item.getTargetPageName(), item.getTransitionParameters());
+    }
     Iterator<BreadCrumbItem> itemIt = items.iterator();
     while (itemIt.hasNext()) {
       BreadCrumbItem item = itemIt.next();
       item.setEnabled(itemIt.hasNext());
-      BreadCrumbTransitionAnchor widget = breadCrumbItemAnchorProvider.get();
-      widget.setModel(item);
-      content.add(widget);
+      BreadCrumbTransitionAnchor anchor = breadCrumbItemAnchorProvider.get();
+      anchor.setModel(item);
+      content.add(anchor);
     }
   }
 }
