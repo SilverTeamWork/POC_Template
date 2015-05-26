@@ -7,6 +7,7 @@ import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
+import org.silverpeas.poc.api.util.Log;
 import org.silverpeas.poc.api.util.UrlManager;
 import org.silverpeas.poc.api.web.components.common.Waiting;
 import org.silverpeas.poc.client.local.user.CurrentUser;
@@ -84,6 +85,13 @@ public class JsonHttp {
         jsonHttpConfig);
   }
 
+  public HttpRequest delete(DeleteCriteria criteria) {
+    JsonHttpConfig jsonHttpConfig = criteria.configureDeleteHttp();
+    return performRequest(
+        new RequestBuilder(RequestBuilder.DELETE, normalizeUri(jsonHttpConfig.getUrl())),
+        jsonHttpConfig);
+  }
+
   private void hideWaiting() {
     if (showWaiting) {
       Waiting.hide();
@@ -111,7 +119,10 @@ public class JsonHttp {
         public void onResponseReceived(final Request request, final Response response) {
           try {
             HttpResponse httpResponse = new HttpResponse(response);
-            if (httpResponse.getStatusCode() == Response.SC_OK) {
+            int status = httpResponse.getStatusCode();
+            Log.dev("HTTP status: " + status);
+            if (status == Response.SC_OK || status == Response.SC_CREATED ||
+                status == Response.SC_NO_CONTENT) {
               successCallback.process(httpResponse);
             } else if (httpResponse.getStatusCode() == Response.SC_UNAUTHORIZED &&
                 unauthorizedCallback != null) {

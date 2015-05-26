@@ -11,6 +11,7 @@ import org.jboss.errai.ui.shared.api.annotations.Templated;
 import org.silverpeas.poc.api.http.HttpResponse;
 import org.silverpeas.poc.api.http.JsonHttp;
 import org.silverpeas.poc.api.http.JsonResponse;
+import org.silverpeas.poc.api.util.Log;
 import org.silverpeas.poc.client.local.application.ApplicationInstance;
 import org.silverpeas.poc.client.local.blog.Post;
 import org.silverpeas.poc.client.local.blog.PostCriteria;
@@ -48,16 +49,17 @@ public class BlogHomePage extends BlogPageComposite {
     Window.addWindowScrollHandler(new Window.ScrollHandler() {
       @Override
       public void onWindowScroll(final Window.ScrollEvent event) {
+        final int increment = 100;
         Document document = Document.get();
         int previousScroll = scroll;
-        scroll = document.getScrollHeight();
+        scroll = document.getScrollTop();
 
         if (previousScroll >= scroll) {
           return;
         }
 
-        int maxScrollTop = postsView.getOffsetHeight() - postsView.getParent().getOffsetHeight();
-        if (scroll >= maxScrollTop) {
+        int maxScroll =  postsView.getOffsetHeight() - postsView.getWidget(0).getOffsetHeight();
+        if (scroll >= maxScroll + increment) {
           ApplicationInstance instance = getApplicationInstance();
           JsonHttp.onSuccess(new JsonResponse() {
             @Override

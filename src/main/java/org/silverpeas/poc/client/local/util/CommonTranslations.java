@@ -20,4 +20,10 @@ public interface CommonTranslations {
   String ACTION_MODIFICATION = "action.modify";
   @TranslationKey(defaultValue = "")
   String ACTION_DELETION = "action.delete";
+  @TranslationKey(defaultValue = "")
+  String ACTION_OK = "action.ok";
+  @TranslationKey(defaultValue = "")
+  String ACTION_CANCEL = "action.cancel";
+  @TranslationKey(defaultValue = "")
+  String MESSAGE_CONFIRMATION_DELETION = "message.confirmation.deletion";
 }

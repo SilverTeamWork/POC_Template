@@ -4,14 +4,7 @@ import com.google.common.collect.ImmutableListMultimap;
 import com.google.common.collect.Multimap;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.IsWidget;
-import org.jboss.errai.ui.nav.client.local.HistoryToken;
-import org.jboss.errai.ui.nav.client.local.HistoryTokenFactory;
-import org.jboss.errai.ui.nav.client.local.Navigation;
-import org.jboss.errai.ui.nav.client.local.PageState;
-import org.jboss.errai.ui.nav.client.local.PageTransitionProvider;
-import org.jboss.errai.ui.nav.client.local.TransitionAnchor;
-import org.jboss.errai.ui.nav.client.local.TransitionAnchorProvider;
-import org.jboss.errai.ui.nav.client.local.TransitionTo;
+import org.jboss.errai.ui.nav.client.local.*;
 import org.jboss.errai.ui.nav.client.local.spi.NavigationGraph;
 import org.silverpeas.poc.api.ioc.BeanManager;
 
@@ -42,7 +35,7 @@ public class NavigationProvider {
   private NavigationGraph navGraph;
 
   @Inject
-  private TransitionAnchorProvider transitionAnchorProvider;
+  private TransitionAnchorFactoryProvider transitionAnchorFactoryProvider;
 
   @Inject
   private PageTransitionProvider pageTransitionProvider;
@@ -126,7 +119,24 @@ public class NavigationProvider {
    */
   @SuppressWarnings("unchecked")
   public <P extends IsWidget> TransitionAnchor<P> getTransitionAnchor(Class<P> pageClass) {
-    return transitionAnchorProvider.provide(new Class[]{pageClass}, new Annotation[0]);
+    TransitionAnchorFactory factory = transitionAnchorFactoryProvider.provide(new Class[]{pageClass},
+        new Annotation[0]);
+    return factory.get();
+  }
+
+  /**
+   * Gets a {@link TransitionAnchor} instance from the given page class and state.
+   * @param pageClass the page class to associate with the requested transition.
+   * @param state the state of the page instance.
+   * @param <P> the type of the page
+   * @return a {@link TransitionAnchor} instance from the given page class.
+   */
+  @SuppressWarnings("unchecked")
+  public <P extends IsWidget> TransitionAnchor<P> getTransitionAnchor(Class<P> pageClass,
+      Multimap<String, String> state) {
+    TransitionAnchorFactory factory = transitionAnchorFactoryProvider.provide(new Class[]{pageClass},
+        new Annotation[0]);
+    return factory.get(state);
   }
 
   /**

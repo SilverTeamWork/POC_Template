@@ -12,5 +12,8 @@
   "publication.modifiedIn": "Mise à jour le {0}",
   "publication.modifiedBy": "par {0}",
   "action.modify": "Modifier",
-  "action.delete": "Supprimer"
+  "action.delete": "Supprimer",
+  "action.ok": "Ok",
+  "action.cancel": "Annuler",
+  "message.confirmation.deletion": "Êtes vous sûr de vouloir le supprimer ?"
 }

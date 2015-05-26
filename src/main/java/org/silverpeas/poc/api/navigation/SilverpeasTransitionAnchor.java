@@ -20,9 +20,6 @@ import javax.inject.Inject;
 @Dependent
 public class SilverpeasTransitionAnchor extends Anchor implements ClickHandler {
 
-  @Inject
-  private NavigationProvider navigation;
-
   private String toPage;
   private HistoryToken pageToken;
 
@@ -47,10 +44,10 @@ public class SilverpeasTransitionAnchor extends Anchor implements ClickHandler {
   /**
    * Programmatically click on the anchor.
    */
-  public void click() {
+  public final void click() {
     if (this.pageToken != null) {
       onClickEvent();
-      navigation.goTo(pageToken.getPageName(), pageToken.getState());
+      NavigationProvider.get().goTo(pageToken.getPageName(), pageToken.getState());
     } else {
       Message.notifies(toPage + " does not (yet) exist...").error();
     }
@@ -61,10 +58,10 @@ public class SilverpeasTransitionAnchor extends Anchor implements ClickHandler {
    * @param toPage The page name this transition goes to. Not null.
    * @param state The page state.  Cannot be null (but can be an empty multimap)
    */
-  protected void initHref(String toPage, Multimap<String, String> state) {
+  public void initHref(String toPage, Multimap<String, String> state) {
     this.toPage = toPage;
     try {
-      this.pageToken = navigation.createHistoryToken(toPage, state);
+      this.pageToken = NavigationProvider.get().createHistoryToken(toPage, state);
     } catch (Exception e) {
       this.pageToken = null;
     }
@@ -82,7 +79,7 @@ public class SilverpeasTransitionAnchor extends Anchor implements ClickHandler {
    * @param toPage The page type this transition goes to. Not null.
    * @param state The page state.  Cannot be null (but can be an empty multimap)
    */
-  protected void initHref(Class toPage, Multimap<String, String> state) {
+  public void initHref(Class toPage, Multimap<String, String> state) {
     initHref(toPage.getSimpleName(), state);
   }
 }

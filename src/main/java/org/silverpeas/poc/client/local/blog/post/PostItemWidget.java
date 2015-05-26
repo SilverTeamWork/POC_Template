@@ -3,6 +3,7 @@ package org.silverpeas.poc.client.local.blog.post;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Composite;
@@ -25,6 +26,7 @@ import org.silverpeas.poc.client.local.rating.RatingCriteria;
 import org.silverpeas.poc.client.local.util.AccessController;
 import org.silverpeas.poc.client.local.util.CommonTranslations;
 import org.silverpeas.poc.client.local.util.ValueChangeHandler;
+import org.silverpeas.poc.client.local.widget.OperationWidget;
 import org.silverpeas.poc.client.local.widget.date.DateWidget;
 import org.silverpeas.poc.client.local.widget.rating.RatingWidget;
 import org.silverpeas.poc.client.local.widget.title.EditableTitleWidget;
@@ -69,7 +71,10 @@ public class PostItemWidget extends Composite implements HasModel<Post> {
   private Element modificationInfo = DOM.createSpan();
 
   @DataField
-  private Element operation = DOM.createDiv();
+  private OperationWidget operation = new OperationWidget();
+
+  /*@Inject
+  private ConfirmationPopup popup;*/
 
   private Post post;
 
@@ -91,6 +96,17 @@ public class PostItemWidget extends Composite implements HasModel<Post> {
             getModel().setTitle(previousValue);
           }
         }).withData(getModel()).put(PostCriteria.fromPost(getModel()));
+      }
+    });
+    operation.setDeletionHandler(new ClickHandler() {
+      @Override
+      public void onClick(final ClickEvent event) {
+        JsonHttp.onSuccess(new JsonResponse() {
+          @Override
+          public void process(final HttpResponse response) {
+            removeFromParent();
+          }
+        }).delete(PostCriteria.fromPost(getModel()));
       }
     });
   }
@@ -124,12 +140,18 @@ public class PostItemWidget extends Composite implements HasModel<Post> {
     fillContentSnippet();
     fillPublicationInfo();
     fillModificationInfo();
-    AccessController.on(this.post).doOnlyIfUnprivileged(new AccessController.Action() {
+    AccessController.on(this.post).doOnlyIfPrivileged(new AccessController.Action() {
       @Override
       public void run() {
-        operation.removeFromParent();
+        fillOperationPane();
       }
     });
+  }
+
+  private void fillOperationPane() {
+    operation.setEditionPage(BlogPostPage.class,
+        ImmutableMultimap.of("instanceId", getModel().getAppInstanceId(), "postId",
+            getModel().getId()));
   }
 
   private void fillPublicationInfo() {
