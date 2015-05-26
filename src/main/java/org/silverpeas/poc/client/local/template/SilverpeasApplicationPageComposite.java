@@ -6,13 +6,16 @@ import io.reinert.gdeferred.FailCallback;
 import org.jboss.errai.ui.nav.client.local.PageState;
 import org.silverpeas.poc.api.Callback;
 import org.silverpeas.poc.api.ioc.BeanManager;
+import org.silverpeas.poc.api.util.I18n;
 import org.silverpeas.poc.api.util.Log;
 import org.silverpeas.poc.api.web.components.common.Message;
 import org.silverpeas.poc.client.local.Dispatcher;
 import org.silverpeas.poc.client.local.application.ApplicationInstance;
 import org.silverpeas.poc.client.local.application.ApplicationInstanceLoader;
 import org.silverpeas.poc.client.local.application.event.LoadedApplicationInstance;
+import org.silverpeas.poc.client.local.util.CommonTranslations;
 import org.silverpeas.poc.client.local.util.EventsProvider;
+import org.silverpeas.poc.client.local.widget.menu.MenuWidget;
 
 /**
  * Application instance pages must extends this class in order to get a common behaviour.
@@ -46,7 +49,7 @@ public abstract class SilverpeasApplicationPageComposite extends SilverpeasPageC
               if (getComponentType().equals(applicationInstance.getComponentName())) {
                 EventsProvider.get().getApplicationInstanceLoadedEvent()
                     .fire(new LoadedApplicationInstance(applicationInstance));
-                onApplicationInstanceLoaded(applicationInstance);
+                loadComponentSuccess();
               } else {
                 loadComponentError();
               }
@@ -61,7 +64,7 @@ public abstract class SilverpeasApplicationPageComposite extends SilverpeasPageC
       // The layout can already provide all the necessary data, so application instance is reloaded
       EventsProvider.get().getApplicationInstanceLoadedEvent()
           .fire(new LoadedApplicationInstance(applicationInstance));
-      onApplicationInstanceLoaded(applicationInstance);
+      loadComponentSuccess();
     }
   }
 
@@ -72,6 +75,26 @@ public abstract class SilverpeasApplicationPageComposite extends SilverpeasPageC
         Dispatcher.home();
       }
     });
+  }
+
+  private void loadComponentSuccess() {
+    onApplicationInstanceLoaded(applicationInstance);
+
+    // Common menu actions
+    if (getClass().getSimpleName().endsWith("HomePage")) {
+      getMenuWidget().addClickAction(new Callback() {
+        @Override
+        public void invoke(final Object... parameters) {
+          Message.notifies("Action not yet handled").warning();
+        }
+      }).setLabel(I18n.format(CommonTranslations.SUBSCRIBE_LABEL));
+      getMenuWidget().addClickAction(new Callback() {
+        @Override
+        public void invoke(final Object... parameters) {
+          Message.notifies("Action not yet handled").warning();
+        }
+      }).setLabel(I18n.format(CommonTranslations.APPLICATION_RESPONSIBLE_LABEL));
+    }
   }
 
   public abstract void onApplicationInstanceLoaded(ApplicationInstance instance);
@@ -110,5 +133,9 @@ public abstract class SilverpeasApplicationPageComposite extends SilverpeasPageC
 
   public Panel getFooterPanel() {
     return applicationLayout.getFooterPanel();
+  }
+
+  public MenuWidget getMenuWidget() {
+    return applicationLayout.getMenuWidget();
   }
 }

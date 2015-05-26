@@ -12,6 +12,8 @@
   "publication.modifiedIn": "Mise à jour le {0}",
   "publication.modifiedBy": "par {0}",
   "page.previous.back": "Retour à la page précédente",
+  "subscribe.label": "S'abonner",
+  "application.responsible.label": "Responsable de l'application",
   "action.create": "Créer",
   "action.modify": "Modifier",
   "action.delete": "Supprimer",

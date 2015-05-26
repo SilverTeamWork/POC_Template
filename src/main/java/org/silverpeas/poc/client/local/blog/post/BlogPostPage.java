@@ -22,11 +22,14 @@ import org.silverpeas.poc.client.local.util.BundleProvider;
 import org.silverpeas.poc.client.local.util.EventsProvider;
 import org.silverpeas.poc.client.local.widget.SilverpeasHtmlPanel;
 import org.silverpeas.poc.client.local.widget.calendar.DatePickerWidget;
+import org.silverpeas.poc.client.local.widget.menu.MenuAction;
 
 import javax.inject.Inject;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+
+import static org.silverpeas.poc.client.local.widget.menu.MenuAction.TYPE.MODIFY;
 
 /**
  * @author Yohann Chastagnier
@@ -52,6 +55,7 @@ public class BlogPostPage extends BlogPageComposite {
 
   @Override
   public void onApplicationInstanceLoaded(ApplicationInstance instance) {
+    getMenuWidget().setVisible(false);
     setPageDescription(null);
     getFooterPanel().setVisible(false);
     getRightPanel().add(datePickerWidget);
@@ -63,8 +67,16 @@ public class BlogPostPage extends BlogPageComposite {
         Post post = response.parseJsonEntity();
         postWidget.setModel(post);
         setPageTitle(post.getTitle());
+
         EventsProvider.get().getDisplayedInternalApplicationInstancePageEvent()
             .fire(new DisplayedInternalApplicationInstancePage(me));
+
+        getMenuWidget().addClickAction(post, MODIFY, new Callback() {
+          @Override
+          public void invoke(final Object... parameters) {
+            Message.notifies("Action not yet handled").warning();
+          }
+        });
       }
     }).onError(new JsonResponse() {
       @Override

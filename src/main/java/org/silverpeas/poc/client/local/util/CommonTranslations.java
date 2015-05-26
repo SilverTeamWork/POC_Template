@@ -19,6 +19,10 @@ public interface CommonTranslations {
   @TranslationKey(defaultValue = "")
   String BACK_TO_PREVIOUS_PAGE = "page.previous.back";
   @TranslationKey(defaultValue = "")
+  String SUBSCRIBE_LABEL = "subscribe.label";
+  @TranslationKey(defaultValue = "")
+  String APPLICATION_RESPONSIBLE_LABEL = "application.responsible.label";
+  @TranslationKey(defaultValue = "")
   String ACTION_CREATION = "action.create";
   @TranslationKey(defaultValue = "")
   String ACTION_MODIFICATION = "action.modify";

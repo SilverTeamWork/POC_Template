@@ -38,12 +38,6 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
   @TranslationKey(defaultValue = "Homepage")
   String SPACE_HOMEPAGE_LABEL = "space.homepage.label";
 
-  @TranslationKey(defaultValue = "Subscribe")
-  public static final String SUBSCRIBE_LABEL = "subscribe.label";
-
-  @TranslationKey(defaultValue = "Application responsibles")
-  public static final String APPLICATION_RESPONSIBLE_LABEL = "application.responsible.label";
-
   /**
    * GWT i18n framework
    */
@@ -62,4 +56,7 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
 
   @DefaultMessage("Error")
   String error();
+
+  @DefaultMessage("Warning")
+  String warning();
 }

@@ -63,6 +63,11 @@ public class Message {
     return display(TYPE.error);
   }
 
+  public DialogBox warning(Callback... callbacks) {
+    this.callbacks = callbacks;
+    return display(TYPE.warning);
+  }
+
   public DialogBox confirm(Callback... callbacks) {
     this.callbacks = callbacks;
     return display(TYPE.confirmation);
@@ -91,48 +96,48 @@ public class Message {
 
     // Content
     panel.add(content);
-
-    switch (type) {
-      case error:
-        if (isNotDefined(title)) {
-          box.setText(msg().error());
-        }
-      case info:
-      case confirmation:
-        panel.add(emptyLabel);
-        panel.add(emptyLabel);
-        ClickHandler clickHandler = new ClickHandler() {
-          @Override
-          public void onClick(final ClickEvent event) {
-            if (callbacks != null) {
-              for (Callback callback : callbacks) {
-                callback.invoke();
-              }
-            }
-            box.hide();
+    panel.add(emptyLabel);
+    panel.add(emptyLabel);
+    ClickHandler clickHandler = new ClickHandler() {
+      @Override
+      public void onClick(final ClickEvent event) {
+        if (callbacks != null) {
+          for (Callback callback : callbacks) {
+            callback.invoke();
           }
-        };
-        if (type != TYPE.confirmation) {
-          final Button okButton = new Button(msg().ok(), clickHandler);
-          panel.add(okButton);
-          panel.setCellHorizontalAlignment(okButton, HasAlignment.ALIGN_RIGHT);
-        } else {
-          final Button yesButton = new Button(msg().yes(), clickHandler);
-          final Button noButton = new Button(msg().no(), new ClickHandler() {
-            @Override
-            public void onClick(final ClickEvent event) {
-              box.hide();
-            }
-          });
-          HorizontalPanel buttonPanel = new HorizontalPanel();
-          buttonPanel.add(yesButton);
-          buttonPanel.add(noButton);
-          panel.add(buttonPanel);
-          panel.setCellHorizontalAlignment(buttonPanel, HasAlignment.ALIGN_RIGHT);
         }
-        break;
-      case warning:
-        break;
+        box.hide();
+      }
+    };
+    if (type != TYPE.confirmation) {
+      final Button okButton = new Button(msg().ok(), clickHandler);
+      panel.add(okButton);
+      panel.setCellHorizontalAlignment(okButton, HasAlignment.ALIGN_RIGHT);
+    } else {
+      final Button yesButton = new Button(msg().yes(), clickHandler);
+      final Button noButton = new Button(msg().no(), new ClickHandler() {
+        @Override
+        public void onClick(final ClickEvent event) {
+          box.hide();
+        }
+      });
+      HorizontalPanel buttonPanel = new HorizontalPanel();
+      buttonPanel.add(yesButton);
+      buttonPanel.add(noButton);
+      panel.add(buttonPanel);
+      panel.setCellHorizontalAlignment(buttonPanel, HasAlignment.ALIGN_RIGHT);
+    }
+
+    // Title
+    if (isNotDefined(title)) {
+      switch (type) {
+        case error:
+          box.setText(msg().error());
+          break;
+        case warning:
+          box.setText(msg().warning());
+          break;
+      }
     }
 
     box.setWidget(panel);

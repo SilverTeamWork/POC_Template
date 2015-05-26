@@ -13,6 +13,8 @@
   "publication.modifiedIn": "Updated in {0}",
   "publication.modifiedBy": "by {0}",
   "page.previous.back": "Back to previous page",
+  "subscribe.label": "Subscribe",
+  "application.responsible.label": "Responsibles of application",
   "action.create": "Create",
   "action.modify": "Modify",
   "action.delete": "Remove",

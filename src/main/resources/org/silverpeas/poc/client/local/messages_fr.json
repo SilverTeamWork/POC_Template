@@ -11,8 +11,6 @@
   "date.format": "dd/MM/yyyy",
   "datetime.format": "dd/MM/yyyy hh:mm",
   "space.homepage.label":"Home sweet home",
-  "ApplicationMenuWidget.menu.button.label": "Plus",
-  "subscribe.label": "S'abonner",
-  "application.responsible.label": "Responsable de l'application",
+  "MenuWidget.menu.button.label": "Plus",
   "blog.menu.action.create.post.label": "Créer un billet"
 }

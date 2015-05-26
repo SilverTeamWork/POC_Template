@@ -1,9 +1,6 @@
 package org.silverpeas.poc.api.navigation;
 
 import com.google.common.collect.Multimap;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.ui.Anchor;
 import org.jboss.errai.ui.nav.client.local.HistoryToken;
 import org.silverpeas.poc.api.ioc.BeanManager;
 import org.silverpeas.poc.api.util.Log;
@@ -17,24 +14,10 @@ import javax.enterprise.context.Dependent;
  * @author Yohann Chastagnier
  */
 @Dependent
-public class SilverpeasTransitionAnchor extends Anchor implements ClickHandler {
+public class SilverpeasTransitionAnchor extends SilverpeasAnchor {
 
   private String toPage;
   private HistoryToken pageToken;
-
-  public SilverpeasTransitionAnchor() {
-    addClickHandler(this);
-  }
-
-  @Override
-  public final void onClick(final ClickEvent event) {
-    if (isEnabled()) {
-      click();
-    }
-
-    event.stopPropagation();
-    event.preventDefault();
-  }
 
   protected void onClickEvent() {
 

@@ -12,7 +12,7 @@ import org.silverpeas.poc.api.util.StringUtil;
 import org.silverpeas.poc.client.local.application.ApplicationInstance;
 import org.silverpeas.poc.client.local.application.event.LoadedApplicationInstance;
 import org.silverpeas.poc.client.local.breadcrumb.BreadCrumbWidget;
-import org.silverpeas.poc.client.local.menu.ApplicationMenuWidget;
+import org.silverpeas.poc.client.local.widget.menu.MenuWidget;
 import org.silverpeas.poc.client.local.space.SpaceContentMenuWidget;
 import org.silverpeas.poc.client.local.widget.SilverpeasHtmlPanel;
 
@@ -48,7 +48,7 @@ public class SilverpeasApplicationLayout extends SilverpeasComposite {
 
   @Inject
   @DataField
-  private ApplicationMenuWidget menu;
+  private MenuWidget menu;
 
   @DataField
   private SilverpeasHtmlPanel description = new SilverpeasHtmlPanel(P);
@@ -111,6 +111,10 @@ public class SilverpeasApplicationLayout extends SilverpeasComposite {
     return footerPanel;
   }
 
+  public MenuWidget getMenuWidget() {
+    return menu;
+  }
+
   public ApplicationInstance getCurrentApplicationInstance() {
     return currentApplicationInstance;
   }
@@ -127,6 +131,7 @@ public class SilverpeasApplicationLayout extends SilverpeasComposite {
   @Override
   public void onPageHidden() {
     super.onPageHidden();
+    menu.clear();
     rightPanel.clear();
     footerPanel.clear();
   }

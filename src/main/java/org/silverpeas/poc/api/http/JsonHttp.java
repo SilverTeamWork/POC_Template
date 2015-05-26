@@ -120,7 +120,7 @@ public class JsonHttp {
           try {
             HttpResponse httpResponse = new HttpResponse(response);
             int status = httpResponse.getStatusCode();
-            Log.dev("HTTP status: " + status);
+            Log.debug("HTTP status: " + status);
             if (status == Response.SC_OK || status == Response.SC_CREATED ||
                 status == Response.SC_NO_CONTENT) {
               successCallback.process(httpResponse);
