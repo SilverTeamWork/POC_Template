@@ -11,7 +11,6 @@ import org.jboss.errai.ui.shared.api.annotations.Templated;
 import org.silverpeas.poc.api.http.HttpResponse;
 import org.silverpeas.poc.api.http.JsonHttp;
 import org.silverpeas.poc.api.http.JsonResponse;
-import org.silverpeas.poc.api.util.Log;
 import org.silverpeas.poc.client.local.application.ApplicationInstance;
 import org.silverpeas.poc.client.local.blog.Post;
 import org.silverpeas.poc.client.local.blog.PostCriteria;
@@ -97,7 +96,7 @@ public class BlogHomePage extends BlogPageComposite {
         response.parseJsonEntities(new HttpResponse.JsonArrayLine<Post>() {
           @Override
           public void perform(final int index, final Post entity) {
-            postDates.add(entity.getCreationDate());
+            postDates.add(entity.getDateEvent());
           }
         });
         datePickerWidget.setDatesToHighlight(postDates);

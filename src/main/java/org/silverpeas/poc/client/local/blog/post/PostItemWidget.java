@@ -135,7 +135,7 @@ public class PostItemWidget extends Composite implements HasModel<Post> {
       }
     }).get(RatingCriteria.forPublication(post.getAppInstanceId(), post.getId()));
     title.setModel(this.post);
-    time.setModel(this.post.getCreationDate());
+    time.setModel(this.post.getDateEvent());
     commentCount.setInnerText(String.valueOf(post.getNbComments()));
     fillContentSnippet();
     fillPublicationInfo();
