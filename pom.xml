@@ -198,13 +198,10 @@
           <noServer>false</noServer>
           <server>org.jboss.errai.cdi.server.gwt.JBossLauncher</server>
           <disableCastChecking>true</disableCastChecking>
-          <runTarget>${errai.dev.context}/index.html</runTarget>
+          <runTarget>${errai.dev.context}/index.jsp</runTarget>
           <soyc>false</soyc>
           <hostedWebapp>${gwt.webapp.root}</hostedWebapp>
-          <extraJvmArgs>-Djava.io.tmpdir=${temp.directory} -Xmx712m -XX:CompileThreshold=7000
-            -XX:MaxPermSize=128M -Derrai.jboss.home=${errai.jboss.home}
-            -Derrai.dev.context=${errai.dev.context}
-            -Derrai.jboss.javaagent.path=${settings.localRepository}/org/jboss/errai/errai-client-local-class-hider/${errai.version}/errai-client-local-class-hider-${errai.version}.jar
+          <extraJvmArgs>-Djava.io.tmpdir=${temp.directory} -Xmx712m -XX:CompileThreshold=7000 -XX:MaxPermSize=128M -Derrai.jboss.home=${errai.jboss.home} -Derrai.dev.context=${errai.dev.context} -Derrai.jboss.javaagent.path=${settings.localRepository}/org/jboss/errai/errai-client-local-class-hider/${errai.version}/errai-client-local-class-hider-${errai.version}.jar
           </extraJvmArgs>
         </configuration>
       </plugin>

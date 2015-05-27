@@ -26,4 +26,5 @@
   <extend-property name="locale" values="fr,en"/>
   <source path='api'/>
   <source path='client'/>
+  <source path='server'/>
 </module>

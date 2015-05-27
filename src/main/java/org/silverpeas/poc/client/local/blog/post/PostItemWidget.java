@@ -77,6 +77,7 @@ public class PostItemWidget extends Composite implements HasModel<Post> {
 
   @AfterInitialization
   public void setUp() {
+    ratingView.readonly();
     title.setValueChangeHandler(new ValueChangeHandler<String>() {
       @Override
       public void onChange(final String previousValue, final String newValue) {
@@ -128,7 +129,7 @@ public class PostItemWidget extends Composite implements HasModel<Post> {
       @Override
       public void process(final HttpResponse response) {
         Rating rating = response.parseJsonEntity();
-        ratingView.readonly().setModel(rating);
+        ratingView.setModel(rating);
       }
     }).get(RatingCriteria.forPublication(post.getAppInstanceId(), post.getId()));
     title.setModel(this.post);

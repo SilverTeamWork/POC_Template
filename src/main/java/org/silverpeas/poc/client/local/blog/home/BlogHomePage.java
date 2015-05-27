@@ -66,7 +66,7 @@ public class BlogHomePage extends BlogPageComposite {
         Document document = Document.get();
         int scroll = document.getScrollTop();
 
-        if ((highestScroll + SCROLL_INCREMENT) >= scroll) {
+        if (highestScroll >= scroll) {
           return;
         }
         highestScroll = scroll;
@@ -75,11 +75,11 @@ public class BlogHomePage extends BlogPageComposite {
         JsonHttp.onSuccess(new JsonResponse() {
           @Override
           public void process(final HttpResponse response) {
-            List<Post> newPosts = response.parseJsonEntities();
+            List<Post> newPosts = response.<ContributionList<Post>>parseJsonEntity().getEntities();
             postsView.getValue().addAll(newPosts);
+            page += POSTS_COUNT_PER_SCROLL;
           }
         }).get(PostCriteria.fromBlog(instance.getId()).paginatedBy(page, POSTS_COUNT_PER_SCROLL));
-        page += POSTS_COUNT_PER_SCROLL;
       }
     });
   }

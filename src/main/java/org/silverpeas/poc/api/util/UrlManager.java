@@ -1,7 +1,7 @@
 package org.silverpeas.poc.api.util;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
+import org.jboss.errai.ui.nav.client.local.Navigation;
 
 /**
  * @author Yohann Chastagnier
@@ -14,6 +14,10 @@ public class UrlManager {
    * @return the server URL of the resource at the given path.
    */
   public static String getServerUrl(String path) {
+    String appContext = Navigation.getAppContext();
+    if (StringUtil.isDefined(appContext) && !path.startsWith(appContext)) {
+      path = (appContext + "/" + path).replaceAll("/{2,}", "/");
+    }
     return Window.Location.createUrlBuilder().setPath(path).buildString();
   }
 
