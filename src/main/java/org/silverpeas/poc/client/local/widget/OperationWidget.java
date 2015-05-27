@@ -61,20 +61,20 @@ public class OperationWidget extends Composite {
     panel.setStyleName("operation");
     if (modify != null) {
       modify.setHref("#");
-      modify.setTitle(I18n.format(CommonTranslations.ACTION_MODIFICATION));
+      modify.setTitle(I18n.format(CommonTranslations.ACTION_MODIFICATION, ""));
       Image image = new Image();
-      image.setAltText(I18n.format(CommonTranslations.ACTION_MODIFICATION));
-      image.setTitle(I18n.format(CommonTranslations.ACTION_MODIFICATION));
+      image.setAltText(I18n.format(CommonTranslations.ACTION_MODIFICATION, ""));
+      image.setTitle(I18n.format(CommonTranslations.ACTION_MODIFICATION, ""));
       image.setUrl("/img/update.gif");
       modify.setHTML(image.toString());
       panel.add(modify);
     }
 
     Anchor delete = new Anchor();
-    delete.setTitle(I18n.format(CommonTranslations.ACTION_DELETION));
+    delete.setTitle(I18n.format(CommonTranslations.ACTION_DELETION, ""));
     Image image = new Image();
-    image.setAltText(I18n.format(CommonTranslations.ACTION_DELETION));
-    image.setTitle(I18n.format(CommonTranslations.ACTION_DELETION));
+    image.setAltText(I18n.format(CommonTranslations.ACTION_DELETION, ""));
+    image.setTitle(I18n.format(CommonTranslations.ACTION_DELETION, ""));
     image.setUrl("/img/delete.gif");
     delete.setHTML(image.toString());
     delete.addClickHandler(new ClickHandler() {

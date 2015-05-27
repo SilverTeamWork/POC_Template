@@ -1,11 +1,13 @@
 package org.silverpeas.poc.client.local.blog.post;
 
+import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.InlineLabel;
+import com.google.gwt.user.client.ui.TextArea;
 import org.jboss.errai.ui.client.widget.HasModel;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
@@ -35,10 +37,6 @@ import java.util.Date;
 public class PostWidget extends Composite implements HasModel<Post> {
 
   private Post post;
-
-  /*@Inject
-  @DataField("post-content")
-  private HTML postContent;*/
 
   @Inject
   @DataField("comment-count")
@@ -70,34 +68,18 @@ public class PostWidget extends Composite implements HasModel<Post> {
   @DataField("post-rating")
   private RatingWidget ratingView;
 
-  private WysiwygEditor editor;
-
   @DataField("post-content")
   private SilverpeasHtmlPanel content = new SilverpeasHtmlPanel(SilverpeasHtmlPanel.TYPE.DIV);
 
+  private boolean edition = false;
+  private WysiwygEditor editor = null;
 
   public void setEditionMode() {
-    editor = new WysiwygEditor();
-    editor.setTextSaveHandler(new WysiwygEditor.TextSaveHandler() {
-      @Override
-      public void onTextSave(final String text) {
-        if (!getModel().getContent().equals(text)) {
-          getModel().setContent(text);
-          JsonHttp.onSuccess(new JsonResponse() {
-            @Override
-            public void process(final HttpResponse response) {
-              Post updatedPost = response.parseJsonEntity();
-              setModel(updatedPost);
-            }
-          }).withData(getModel()).put(PostCriteria.fromPost(getModel()));
-        }
-      }
-    });
-    content.add(editor);
+    edition = true;
   }
 
   public boolean isInEdition() {
-    return editor != null;
+    return edition;
   }
 
   public Post getModel() {
@@ -107,30 +89,18 @@ public class PostWidget extends Composite implements HasModel<Post> {
   @Override
   public void setModel(final Post post) {
     this.post = post;
+    initViewFromModel();
+  }
+
+  private void initViewFromModel() {
     if (isInEdition()) {
-      this.editor.setValue(this.post.getContent());
+      loadWysiwygEditor();
     } else {
-      HTML text = new HTML(this.post.getContent());
+      HTML text = new HTML(getModel().getContent());
       content.add(text);
     }
+
     Date dateEvent = post.getDateEvent();
-    /*
-    Log.dev("dateEvent = " + post.getDateEvent());
-    Log.dev("today = " + new Date());
-    Log.dev("Date(dateEvent) = " + new Date(Long.parseLong("" + post.getDateEvent())));
-    Log.dev("currentTimeMillis = " + System.currentTimeMillis());
-    Log.dev("today(currentTimeMillis) = " + new Date(System.currentTimeMillis()));
-    Log.dev("" +
-        DateTimeFormat.getFormat(DateTimeFormat.PredefinedFormat.DATE_FULL).format(jsDateEvent));
-    Log.dev("" +
-        DateTimeFormat.getFormat(DateTimeFormat.PredefinedFormat.DATE_LONG).format(jsDateEvent));
-    Log.dev("" +
-        DateTimeFormat.getFormat(DateTimeFormat.PredefinedFormat.DATE_MEDIUM).format(jsDateEvent));
-    Log.dev("" +
-        DateTimeFormat.getFormat(DateTimeFormat.PredefinedFormat.DATE_SHORT).format(jsDateEvent));
-    Log.dev("custom format =" +
-        DateTimeFormat.getFormat("dd/MM/yyyy").format(jsDateEvent));
-    */
     Log.dev("custom format " + I18n.format(Messages.DATE_FORMAT) + " =" +
         DateTimeFormat.getFormat(I18n.format(Messages.DATE_FORMAT)).format(dateEvent));
 
@@ -164,6 +134,31 @@ public class PostWidget extends Composite implements HasModel<Post> {
         ratingView.setModel(rating);
       }
     }).get(RatingCriteria.forPublication(this.post.getAppInstanceId(), this.post.getId()));
+  }
+
+  private WysiwygEditor loadWysiwygEditor() {
+    if (editor == null) {
+      editor = new WysiwygEditor(getModel().getContent());
+      editor.setTextSaveHandler(new WysiwygEditor.TextSaveHandler() {
+        @Override
+        public void onTextSave(final String text) {
+          if (!getModel().getContent().equals(text)) {
+            getModel().setContent(text);
+            JsonHttp.onSuccess(new JsonResponse() {
+              @Override
+              public void process(final HttpResponse response) {
+                Post updatedPost = response.parseJsonEntity();
+                Log.dev("Content of post " + updatedPost.getId() + " from blog " +
+                    updatedPost.getAppInstanceId() + " updated");
+                setModel(updatedPost);
+              }
+            }).withData(getModel()).put(PostCriteria.fromPost(getModel()));
+          }
+        }
+      });
+      content.add(editor);
+    }
+    return editor;
   }
 
 }

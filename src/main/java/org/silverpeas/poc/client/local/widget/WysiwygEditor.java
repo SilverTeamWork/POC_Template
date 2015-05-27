@@ -7,6 +7,8 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.TextArea;
 
+import java.util.Random;
+
 
 /**
  * A WYSIWYG editor.
@@ -14,18 +16,34 @@ import com.google.gwt.user.client.ui.TextArea;
  */
 public class WysiwygEditor extends Composite implements TakesValue<String> {
 
-  private FormPanel text;
+  private static final Random random = new Random();
+
+  private FormPanel editorPanel;
   protected JavaScriptObject editor;
   private TextSaveHandler handler;
 
   /**
-   * Constructs a new WYSIWYG editor with the edition enabled.
+   * Constructs a new WYSIWYG editor with an empty textual content.
    */
   public WysiwygEditor() {
-    text = new FormPanel();
-    text.setAction("javascript:save();");
-    initWidget(text);
-    text.add(new TextArea());
+    this(null);
+  }
+
+  /**
+   * Constructs a new WYSIWYG editor initialized with the specified text.
+   * The widget must be attached otherwise an assertion error is thrown.
+   * @param text the text that should be displayed by the editor.
+   */
+  public WysiwygEditor(String text) {
+    editorPanel = new FormPanel();
+    editorPanel.setAction("javascript:save();");
+    initWidget(editorPanel);
+    TextArea content = new TextArea();
+    content.getElement().setId("wysiwyg-" + nextRandomValue());
+    if (text != null && !text.trim().isEmpty()) {
+      content.setText(text);
+    }
+    editorPanel.add(content);
   }
 
   public void setTextSaveHandler(final TextSaveHandler handler) {
@@ -34,11 +52,7 @@ public class WysiwygEditor extends Composite implements TakesValue<String> {
 
   @Override
   protected void doAttachChildren() {
-    if (text.getWidget().getElement().getId() == null ||
-        text.getWidget().getElement().getId().trim().isEmpty()) {
-      text.getWidget().getElement().setId("wysiwyg");
-    }
-    initCKEditor(text.getWidget().getElement().getId());
+    initCKEditor(editorPanel.getWidget().getElement().getId());
   }
 
   /**
@@ -47,8 +61,10 @@ public class WysiwygEditor extends Composite implements TakesValue<String> {
    * @see #getValue()
    */
   @Override
-  public native void setValue(final String text)  /*-{
-    this.@org.silverpeas.poc.client.local.widget.WysiwygEditor::editor.setData(text);
+  public native void setValue(final String text) /*-{
+    this.@org.silverpeas.poc.client.local.widget.WysiwygEditor::editor.setData(text, {
+      internal : true, noSnapshot : true
+    });
   }-*/;
 
   /**
@@ -69,7 +85,7 @@ public class WysiwygEditor extends Composite implements TakesValue<String> {
     });
   }-*/;
 
-  private void save() {
+  public void save() {
     if (this.handler != null) {
       this.handler.onTextSave(getValue());
     }
@@ -77,5 +93,9 @@ public class WysiwygEditor extends Composite implements TakesValue<String> {
 
   public interface TextSaveHandler extends EventHandler {
     void onTextSave(String text);
+  }
+
+  private String nextRandomValue() {
+    return String.valueOf(random.nextInt());
   }
 }

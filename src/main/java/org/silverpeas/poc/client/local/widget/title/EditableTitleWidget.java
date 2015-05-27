@@ -79,6 +79,10 @@ public class EditableTitleWidget extends Composite
     });
   }
 
+  public String getText() {
+    return this.title.getText();
+  }
+
   /**
    * If a widget contains one or more child widgets that are not in the logical
    * widget hierarchy (the child is physically connected only on the DOM level),

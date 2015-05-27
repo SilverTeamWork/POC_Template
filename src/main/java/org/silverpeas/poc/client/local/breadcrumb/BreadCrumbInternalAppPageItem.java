@@ -25,7 +25,7 @@ public class BreadCrumbInternalAppPageItem<P extends SilverpeasApplicationPageCo
 
   @Override
   public String getLabel() {
-    return page.getHeaderTitlePanel().getElement().getInnerText();
+    return page.getTitle();
   }
 
   @Override
