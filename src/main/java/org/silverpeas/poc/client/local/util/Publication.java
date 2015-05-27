@@ -23,6 +23,10 @@ public class Publication extends Contribution {
     return this.content;
   }-*/;
 
+  public final native void setContent(String content) /*-{
+    this.content = content;
+  }-*/;
+
   public final native double getCreationTimestamp() /*-{
     return this.createDate;
   }-*/;

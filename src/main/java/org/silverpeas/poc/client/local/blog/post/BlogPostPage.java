@@ -41,6 +41,9 @@ public class BlogPostPage extends BlogPageComposite {
   @PageState
   private String postId;
 
+  @PageState
+  private String state;
+
   @Inject
   @DataField("blog-post")
   private SilverpeasHtmlPanel postPanel;
@@ -52,6 +55,16 @@ public class BlogPostPage extends BlogPageComposite {
   private PostWidget postWidget;
 
   private ClickAction modifyPostAction;
+
+  /**
+   * Contains treatments that must be performed during the page shown lifecycle.
+   */
+  @Override
+  public void beforeOnPageShowing() {
+    if ("edition".equals(state)) {
+      postWidget.setEditionMode();
+    }
+  }
 
   @Override
   public void onApplicationInstanceLoaded(ApplicationInstance instance) {

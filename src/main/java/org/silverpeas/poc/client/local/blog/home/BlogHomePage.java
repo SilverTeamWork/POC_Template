@@ -37,6 +37,10 @@ import static org.silverpeas.poc.client.local.widget.menu.MenuAction.TYPE.CREATI
 @Bundle(BundleProvider.JSON_MESSAGES)
 public class BlogHomePage extends BlogPageComposite {
 
+  private static final int INITIAL_POSTS_COUNT = 5;
+  private static final int POSTS_COUNT_PER_SCROLL = 1;
+  private static final int SCROLL_INCREMENT = 100;
+
   @Inject
   @DataField("blog")
   private ListWidget<Post, PostItemWidget> postsView;
@@ -47,7 +51,6 @@ public class BlogHomePage extends BlogPageComposite {
   private ToPageAction createPostAction;
 
   private int highestScroll = 0;
-  private int scrollIncrement = 100;
   private int page = 1;
 
   @AfterInitialization
@@ -58,12 +61,12 @@ public class BlogHomePage extends BlogPageComposite {
         if (postsView.getValue().isEmpty()) {
           return;
         } else if (highestScroll == 0) {
-          highestScroll = (postsView.getWidgetCount() - 2) * scrollIncrement;
+          highestScroll = (postsView.getWidgetCount() - 2) * SCROLL_INCREMENT;
         }
         Document document = Document.get();
         int scroll = document.getScrollTop();
 
-        if ((highestScroll + scrollIncrement) >= scroll) {
+        if ((highestScroll + SCROLL_INCREMENT) >= scroll) {
           return;
         }
         highestScroll = scroll;
@@ -72,10 +75,11 @@ public class BlogHomePage extends BlogPageComposite {
         JsonHttp.onSuccess(new JsonResponse() {
           @Override
           public void process(final HttpResponse response) {
-            List<Post> newPosts = response.<ContributionList<Post>>parseJsonEntity().getEntities();
+            List<Post> newPosts = response.parseJsonEntities();
             postsView.getValue().addAll(newPosts);
           }
-        }).get(PostCriteria.fromBlog(instance.getId()).paginatedBy(page++, 1));
+        }).get(PostCriteria.fromBlog(instance.getId()).paginatedBy(page, POSTS_COUNT_PER_SCROLL));
+        page += POSTS_COUNT_PER_SCROLL;
       }
     });
   }
@@ -99,12 +103,12 @@ public class BlogHomePage extends BlogPageComposite {
       public void process(final HttpResponse response) {
         ContributionList<Post> posts = response.parseJsonEntity();
         postsView.setItems(posts.getEntities());
-        page += 3;
+        page += INITIAL_POSTS_COUNT;
 
         // Verify if this action is possible according to list privileges
         createPostAction.verify(posts);
       }
-    }).get(PostCriteria.fromBlog(instance.getId()).paginatedBy(page, 3));
+    }).get(PostCriteria.fromBlog(instance.getId()).paginatedBy(page, INITIAL_POSTS_COUNT));
 
     // Posts to indicate into the calendar
     blogDatePickerWidget.forceLoadFor(instance);

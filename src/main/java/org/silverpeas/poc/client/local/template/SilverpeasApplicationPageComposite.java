@@ -34,6 +34,7 @@ public abstract class SilverpeasApplicationPageComposite extends SilverpeasPageC
 
   @Override
   public final void onPageShowing() {
+    beforeOnPageShowing();
     applicationInstance = applicationLayout.getCurrentApplicationInstance();
     if (applicationInstance == null || !applicationInstance.getId().equals(instanceId)) {
       // The necessary data about the application instance are not already loaded
@@ -66,6 +67,10 @@ public abstract class SilverpeasApplicationPageComposite extends SilverpeasPageC
           .fire(new LoadedApplicationInstance(applicationInstance));
       loadComponentSuccess();
     }
+  }
+
+  protected void beforeOnPageShowing() {
+
   }
 
   private void loadComponentError() {

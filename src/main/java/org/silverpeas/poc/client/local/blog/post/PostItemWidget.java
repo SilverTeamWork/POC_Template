@@ -73,9 +73,6 @@ public class PostItemWidget extends Composite implements HasModel<Post> {
   @DataField
   private OperationWidget operation = new OperationWidget();
 
-  /*@Inject
-  private ConfirmationPopup popup;*/
-
   private Post post;
 
   @AfterInitialization
@@ -140,18 +137,23 @@ public class PostItemWidget extends Composite implements HasModel<Post> {
     fillContentSnippet();
     fillPublicationInfo();
     fillModificationInfo();
-    AccessController.on(this.post).doOnlyIfPrivileged(new AccessController.Action() {
-      @Override
-      public void run() {
-        fillOperationPane();
-      }
-    });
+    fillOperationPane();
   }
 
   private void fillOperationPane() {
-    operation.setEditionPage(BlogPostPage.class,
-        ImmutableMultimap.of("instanceId", getModel().getAppInstanceId(), "postId",
-            getModel().getId()));
+    AccessController.on(this.post).doOnlyIfPrivileged(new AccessController.Action() {
+      @Override
+      public void run() {
+        operation.setEditionPage(BlogPostPage.class,
+            ImmutableMultimap.of("instanceId", getModel().getAppInstanceId(), "postId",
+                getModel().getId(), "state", "edition"));
+      }
+    }).doOnlyIfUnprivileged(new AccessController.Action() {
+      @Override
+      public void run() {
+        operation.removeFromParent();
+      }
+    });
   }
 
   private void fillPublicationInfo() {
@@ -191,7 +193,7 @@ public class PostItemWidget extends Composite implements HasModel<Post> {
   private void fillContentSnippet() {
     String snippet = this.post.getContent();
     int idx = snippet.length();
-    for (int i = snippet.indexOf(". ", 0), p = 0; p < 5 && i != -1;
+    for (int i = snippet.indexOf(". ", 0), p = 0; p < 10 && i != -1;
          i = snippet.indexOf(". ", idx)) {
       idx = i + 1;
     }

@@ -11,13 +11,18 @@ import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
 import org.silverpeas.poc.api.http.HttpResponse;
 import org.silverpeas.poc.api.http.JsonHttp;
+import org.silverpeas.poc.api.http.JsonPostCriteria;
+import org.silverpeas.poc.api.http.JsonPutCriteria;
 import org.silverpeas.poc.api.http.JsonResponse;
 import org.silverpeas.poc.api.util.I18n;
 import org.silverpeas.poc.api.util.Log;
 import org.silverpeas.poc.client.local.blog.Post;
+import org.silverpeas.poc.client.local.blog.PostCriteria;
 import org.silverpeas.poc.client.local.rating.Rating;
 import org.silverpeas.poc.client.local.rating.RatingCriteria;
 import org.silverpeas.poc.client.local.util.Messages;
+import org.silverpeas.poc.client.local.widget.SilverpeasHtmlPanel;
+import org.silverpeas.poc.client.local.widget.WysiwygEditor;
 import org.silverpeas.poc.client.local.widget.rating.RatingWidget;
 
 import javax.inject.Inject;
@@ -31,9 +36,9 @@ public class PostWidget extends Composite implements HasModel<Post> {
 
   private Post post;
 
-  @Inject
+  /*@Inject
   @DataField("post-content")
-  private HTML postContent;
+  private HTML postContent;*/
 
   @Inject
   @DataField("comment-count")
@@ -65,6 +70,35 @@ public class PostWidget extends Composite implements HasModel<Post> {
   @DataField("post-rating")
   private RatingWidget ratingView;
 
+  private WysiwygEditor editor;
+
+  @DataField("post-content")
+  private SilverpeasHtmlPanel content = new SilverpeasHtmlPanel(SilverpeasHtmlPanel.TYPE.DIV);
+
+
+  public void setEditionMode() {
+    editor = new WysiwygEditor();
+    editor.setTextSaveHandler(new WysiwygEditor.TextSaveHandler() {
+      @Override
+      public void onTextSave(final String text) {
+        if (!getModel().getContent().equals(text)) {
+          getModel().setContent(text);
+          JsonHttp.onSuccess(new JsonResponse() {
+            @Override
+            public void process(final HttpResponse response) {
+              Post updatedPost = response.parseJsonEntity();
+              setModel(updatedPost);
+            }
+          }).withData(getModel()).put(PostCriteria.fromPost(getModel()));
+        }
+      }
+    });
+    content.add(editor);
+  }
+
+  public boolean isInEdition() {
+    return editor != null;
+  }
 
   public Post getModel() {
     return post;
@@ -73,7 +107,12 @@ public class PostWidget extends Composite implements HasModel<Post> {
   @Override
   public void setModel(final Post post) {
     this.post = post;
-    this.postContent.setHTML(post.getContent());
+    if (isInEdition()) {
+      this.editor.setValue(this.post.getContent());
+    } else {
+      HTML text = new HTML(this.post.getContent());
+      content.add(text);
+    }
     Date dateEvent = post.getDateEvent();
     /*
     Log.dev("dateEvent = " + post.getDateEvent());
@@ -126,4 +165,5 @@ public class PostWidget extends Composite implements HasModel<Post> {
       }
     }).get(RatingCriteria.forPublication(this.post.getAppInstanceId(), this.post.getId()));
   }
+
 }

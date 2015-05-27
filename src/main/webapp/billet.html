@@ -10,6 +10,7 @@
   <link rel="stylesheet/less" type="text/css" href="css/knacss.less"/>
   <!-- a voir si on utilise �a  <script src="js/vendor/modernizr-2.8.3-respond-1.4.2.min.js"></script>-->
   <script src="js/less.min.js"></script>
+  <script src="//cdn.ckeditor.com/4.4.7/full/ckeditor.js"></script>
   <script>
 
     var menuState = 'show';
@@ -103,7 +104,7 @@
       <aside class="aside-app" id="aside-app-fixed">
         <img src="img/calendar-magie-13-mars.png" alt="calendrier"/>
       </aside>
-      <div class="content-from-wysiwyg"> Je récupère notre réponse chez l'imprimeur dans 3/4 d'heure
+      <div id="wysiwyg" class="content-from-wysiwyg"> Je récupère notre réponse chez l'imprimeur dans 3/4 d'heure
         et le dépose dans la foulée.<br>
         Je voulais en profiter pour faire un petit bilan suite à mon investissement personnel sur
         cet AO.<br>
@@ -219,5 +220,8 @@
 <div class="footer-container">
   <footer class="wrapper"> 2015 Silverpeas Represente ! Tac tac</footer>
 </div>
+<script>
+  CKEDITOR.replace('wysiwyg');
+</script>
 </body>
 </html>

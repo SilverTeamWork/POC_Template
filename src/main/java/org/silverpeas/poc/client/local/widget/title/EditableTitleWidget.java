@@ -103,6 +103,7 @@ public class EditableTitleWidget extends Composite
                   handler.onChange(publication.getTitle(), textBox.getText());
                 }
               }
+              unedit();
             }
             event.stopPropagation();
           }
@@ -128,13 +129,7 @@ public class EditableTitleWidget extends Composite
    */
   @Override
   public void onMouseOut(final MouseOutEvent event) {
-    AccessController.on(publication).doOnlyIfPrivileged(new AccessController.Action() {
-      @Override
-      public void run() {
-        panel.clear();
-        panel.add(title);
-      }
-    });
+    unedit();
   }
 
   /**
@@ -160,5 +155,15 @@ public class EditableTitleWidget extends Composite
    */
   public boolean isEditModeFocused() {
     return textBox.isAttached();
+  }
+
+  private void unedit() {
+    AccessController.on(publication).doOnlyIfPrivileged(new AccessController.Action() {
+      @Override
+      public void run() {
+        panel.clear();
+        panel.add(title);
+      }
+    });
   }
 }

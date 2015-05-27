@@ -14,6 +14,7 @@ import org.silverpeas.poc.client.local.template.SilverpeasPageComposite;
 import org.silverpeas.poc.client.local.template.SilverpeasSpaceLayout;
 import org.silverpeas.poc.client.local.widget.OperationWidget;
 import org.silverpeas.poc.client.local.widget.SilverpeasHtmlPanel;
+import org.silverpeas.poc.client.local.widget.WysiwygEditor;
 
 import javax.inject.Inject;
 
@@ -30,8 +31,9 @@ public class MiguelHomePage extends SilverpeasPageComposite {
   @Inject
   private TransitionAnchorFactory<BlogHomePage> transitionAnchorFactory;
 
+  @Inject
   @DataField("home-content")
-  private OperationWidget content = new OperationWidget();
+  private WysiwygEditor content;
 
   /**
    * Gets the {@link SilverpeasComposite} instance that represents the parent of the current one.
@@ -50,6 +52,5 @@ public class MiguelHomePage extends SilverpeasPageComposite {
     /*TransitionAnchor<BlogHomePage> transitionAnchor = transitionAnchorFactory.get("blogId", "blog1");
     transitionAnchor.setText("Go to blog 1");
     content.add(transitionAnchor);*/
-    content.setEditionPage(BlogPostPage.class, ImmutableMultimap.<String, String>of("instanceId", "1", "postId", "1"));
   }
 }
