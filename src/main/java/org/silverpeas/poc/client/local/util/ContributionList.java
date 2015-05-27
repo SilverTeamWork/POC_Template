@@ -18,7 +18,7 @@ public class ContributionList<ENTITY> extends JavaScriptObject {
     return @org.turbogwt.core.collections.JsArrayList::new([Ljava/lang/Object;)(this.entities);
   }-*/;
 
-  public final native Contribution.Link[] getLinks() /*-{
+  public final native WebLink[] getLinks() /*-{
     return this.links;
   }-*/;
 }

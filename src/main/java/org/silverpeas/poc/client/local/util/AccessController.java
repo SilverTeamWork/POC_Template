@@ -13,9 +13,9 @@ public class AccessController {
   private static final List<String> PRIVILEGED_HTTP_METHODS =
       Arrays.asList("PUT", "POST", "DELETE", "PATCH");
 
-  private final Contribution.Link[] links;
+  private final WebLink[] links;
 
-  protected AccessController(Contribution.Link[] links) {
+  protected AccessController(WebLink[] links) {
     this.links = links;
   }
 
@@ -58,7 +58,7 @@ public class AccessController {
 
   private boolean hasPrivilege() {
     if (links != null && links.length > 0) {
-      for (Contribution.Link link : links) {
+      for (WebLink link : links) {
         if (PRIVILEGED_HTTP_METHODS.contains(link.getHttpMethod())) {
           return true;
         }

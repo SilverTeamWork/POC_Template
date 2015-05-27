@@ -24,26 +24,7 @@ public abstract class Contribution extends JavaScriptObject {
     return this.componentId;
   }-*/;
 
-  public final native Link[] getLinks() /*-{
+  public final native WebLink[] getLinks() /*-{
     return this.links;
   }-*/;
-
-
-  public static class Link extends JavaScriptObject {
-
-    protected Link() {
-    }
-
-    public final native String getUrl() /*-{
-      return this.href;
-    }-*/;
-
-    public final native String getRelationship() /*-{
-      return this.rel;
-    }-*/;
-
-    public final native String getHttpMethod() /*-{
-      return this.method;
-    }-*/;
-  }
 }
