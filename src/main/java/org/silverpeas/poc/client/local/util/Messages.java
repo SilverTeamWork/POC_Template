@@ -38,6 +38,29 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
   @TranslationKey(defaultValue = "Homepage")
   String SPACE_HOMEPAGE_LABEL = "space.homepage.label";
 
+
+  @TranslationKey(defaultValue = "Comment")
+  String COMMENT_COMMENT = "comment.comment";
+
+  @TranslationKey(defaultValue = "Are you sure you want to delete this comment?")
+  String COMMENT_DELETE_CONFIRMATION = "comment.delete.confirmation";
+
+  @TranslationKey(defaultValue = "Add comment")
+  String COMMENT_ADD_LABEL = "comment.add.label";
+
+  @TranslationKey(defaultValue = "You must filled all mandatory fields.")
+  String COMMENT_CHECK_FIELD_MANDATORY = "comment.check.field.mandatory";
+
+  @TranslationKey(defaultValue = "A comment is limited to 2000 characters.")
+  String COMMENT_CHECK_FIELD_LENGTH = "comment.check.fieldlength";
+
+  @TranslationKey(defaultValue = "Required")
+  String GML_REQUIRED_FIELD = "GML.required.field";
+
+  @TranslationKey(defaultValue = "Validate")
+  String GML_VALIDATE = "GML.validate";
+
+
   /**
    * GWT i18n framework
    */

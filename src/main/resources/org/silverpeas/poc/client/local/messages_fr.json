@@ -12,5 +12,12 @@
   "datetime.format": "dd/MM/yyyy hh:mm",
   "space.homepage.label":"Home sweet home",
   "MenuWidget.menu.button.label": "Plus",
-  "blog.menu.action.create.post.label": "Créer un billet"
+  "blog.menu.action.create.post.label": "Créer un billet",
+  "comment.add.label" : "Ajouter un commentaire",
+  "GML.required.field" : "Obligatoire",
+  "GML.validate" : "Valider",
+  "comment.comment" : "Commentaire",
+  "comment.delete.confirmation" : "Etes vous s\u00fbr(e) de vouloir supprimer le commentaire ?",
+  "comment.check.field.mandatory": "Vous devez remplir tous les champs obligatoires.",
+  "comment.check.fieldlength" : "Le commentaire est limité à 2000 caractères"
 }

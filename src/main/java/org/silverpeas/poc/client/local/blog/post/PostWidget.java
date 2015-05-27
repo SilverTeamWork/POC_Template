@@ -1,30 +1,29 @@
 package org.silverpeas.poc.client.local.blog.post;
 
-import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.InlineLabel;
-import com.google.gwt.user.client.ui.TextArea;
 import org.jboss.errai.ui.client.widget.HasModel;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
 import org.silverpeas.poc.api.http.HttpResponse;
 import org.silverpeas.poc.api.http.JsonHttp;
-import org.silverpeas.poc.api.http.JsonPostCriteria;
-import org.silverpeas.poc.api.http.JsonPutCriteria;
 import org.silverpeas.poc.api.http.JsonResponse;
 import org.silverpeas.poc.api.util.I18n;
 import org.silverpeas.poc.api.util.Log;
+import org.silverpeas.poc.api.util.UrlManager;
 import org.silverpeas.poc.client.local.blog.Post;
 import org.silverpeas.poc.client.local.blog.PostCriteria;
 import org.silverpeas.poc.client.local.rating.Rating;
 import org.silverpeas.poc.client.local.rating.RatingCriteria;
+import org.silverpeas.poc.client.local.user.CurrentUser;
 import org.silverpeas.poc.client.local.util.Messages;
 import org.silverpeas.poc.client.local.widget.SilverpeasHtmlPanel;
 import org.silverpeas.poc.client.local.widget.WysiwygEditor;
+import org.silverpeas.poc.client.local.widget.comment.CommentWidget;
 import org.silverpeas.poc.client.local.widget.rating.RatingWidget;
 
 import javax.inject.Inject;
@@ -82,6 +81,10 @@ public class PostWidget extends Composite implements HasModel<Post> {
     return edition;
   }
 
+  @Inject
+  @DataField
+  private CommentWidget commentWidget;
+
   public Post getModel() {
     return post;
   }
@@ -122,6 +125,7 @@ public class PostWidget extends Composite implements HasModel<Post> {
     this.postCreateLabel.setText(I18n.format(Messages.PUBLISH_DATE_LABEL));
     this.postUpdateLabel.setText(I18n.format(Messages.UPDATE_DATE_LABEL));
     loadRating();
+    loadComments();
   }
 
   private void loadRating() {
@@ -159,6 +163,12 @@ public class PostWidget extends Composite implements HasModel<Post> {
       content.add(editor);
     }
     return editor;
+  }
+
+  private void loadComments() {
+    commentWidget.initCommentWidget(this.post.getAppInstanceId(), this.post.getId(),
+        CurrentUser.get().getId(), UrlManager
+            .getSilverpeasUrl(CurrentUser.get().getAvatar()), true, CurrentUser.token());
   }
 
 }
