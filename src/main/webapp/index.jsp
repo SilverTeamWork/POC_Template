@@ -16,6 +16,7 @@
   <script src="<%=contextPath%>/js/jquery/jquery-1.10.2.min.js" type="text/javascript" charset="utf-8"></script>
   <script src="<%=contextPath%>/js/jquery/jquery-ui-1.10.3.custom.min.js" type="text/javascript" charset="utf-8"></script>
   <script src="<%=contextPath%>/js/jquery/autoresize.jquery.min.js" type="text/javascript" charset="utf-8" ></script>
+  <script src="<%=contextPath%>/js/noty-2.3.5/js/noty/packaged/jquery.noty.packaged.min.js" type="application/javascript" charset="utf-8"></script>
   <script src="<%=contextPath%>/js/silverpeas-userZoom.js" type="text/javascript" charset="utf-8" ></script>
   <script src="<%=contextPath%>/js/checkForm.js" type="text/javascript" charset="utf-8" ></script>
   <script src="<%=contextPath%>/js/silverpeas-comment.js" type="text/javascript" charset="utf-8" ></script>

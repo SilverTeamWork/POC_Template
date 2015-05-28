@@ -35,5 +35,11 @@ public interface CommonTranslations {
   @TranslationKey(defaultValue = "")
   String MESSAGE_CONFIRMATION_DELETION = "message.confirmation.deletion";
   @TranslationKey(defaultValue = "")
+  String MESSAGE_UPDATE_SUCCESS = "message.contribution.update.success";
+  @TranslationKey(defaultValue = "")
+  String MESSAGE_UPDATE_ERROR = "message.contribution.update.error";
+  @TranslationKey(defaultValue = "")
   String TITLE_LABEL = "title.label";
+  @TranslationKey(defaultValue = "")
+  String POST = "post";
 }

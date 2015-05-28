@@ -23,6 +23,7 @@ import org.silverpeas.poc.client.local.rating.RatingCriteria;
 import org.silverpeas.poc.client.local.user.CurrentUser;
 import org.silverpeas.poc.client.local.util.CommonTranslations;
 import org.silverpeas.poc.client.local.util.Messages;
+import org.silverpeas.poc.client.local.widget.NotificationWidget;
 import org.silverpeas.poc.client.local.widget.SilverpeasHtmlPanel;
 import org.silverpeas.poc.client.local.widget.WysiwygEditor;
 import org.silverpeas.poc.client.local.widget.comment.CommentWidget;
@@ -182,6 +183,16 @@ public class PostWidget extends Composite implements HasModel<Post> {
                 Log.dev("Content of post " + updatedPost.getId() + " from blog " +
                     updatedPost.getAppInstanceId() + " updated");
                 updateModel(updatedPost);
+                NotificationWidget.notifSuccess(
+                    I18n.format(CommonTranslations.MESSAGE_UPDATE_SUCCESS,
+                        I18n.format(CommonTranslations.POST)));
+              }
+            }).onError(new JsonResponse() {
+              @Override
+              public void process(final HttpResponse response) {
+                NotificationWidget.notifError(
+                    I18n.format(CommonTranslations.MESSAGE_UPDATE_ERROR,
+                        I18n.format(CommonTranslations.POST)));
               }
             }).withData(getModel());
 

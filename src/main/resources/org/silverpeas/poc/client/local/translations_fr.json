@@ -20,5 +20,8 @@
   "action.ok": "Ok",
   "action.cancel": "Annuler",
   "message.confirmation.deletion": "Êtes vous sûr de vouloir le supprimer ?",
-  "title.label": "Titre"
+  "message.contribution.update.success": "Votre {0} a été mise à jour avec succès",
+  "message.contribution.update.error": "La mise-à-jour de votre {0} a échouée lamentablement",
+  "title.label": "Titre",
+  "post": "billet"
 }

@@ -21,5 +21,8 @@
   "action.ok": "Ok",
   "action.cancel": "Cancel",
   "message.confirmation.deletion": "Are you sure to delete it?",
-  "title.label": "Title"
+  "message.contribution.update.success": "Your {0} has been successfully updated",
+  "message.contribution.update.error": "The update of your {0} has failed",
+  "title.label": "Title",
+  "post": "post"
 }
