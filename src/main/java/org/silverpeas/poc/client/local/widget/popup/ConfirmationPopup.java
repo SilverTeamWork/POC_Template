@@ -46,7 +46,7 @@ public class ConfirmationPopup extends PopupPanel {
     ok.addFocusHandler(new FocusHandler() {
       @Override
       public void onFocus(final FocusEvent event) {
-        ok.setStyleName("ui-state-hover");
+        ok.addStyleName("ui-state-hover");
       }
     });
     ok.addBlurHandler(new BlurHandler() {
@@ -58,7 +58,8 @@ public class ConfirmationPopup extends PopupPanel {
     ok.addMouseOverHandler(new MouseOverHandler() {
       @Override
       public void onMouseOver(final MouseOverEvent event) {
-        ok.setStyleName("ui-state-hover");
+        ok.addStyleName("ui-state-hover");
+        ok.setFocus(true);
       }
     });
     ok.addMouseOutHandler(new MouseOutHandler() {
@@ -84,7 +85,7 @@ public class ConfirmationPopup extends PopupPanel {
     cancel.addFocusHandler(new FocusHandler() {
       @Override
       public void onFocus(final FocusEvent event) {
-        cancel.setStyleName("ui-state-hover");
+        cancel.addStyleName("ui-state-hover");
       }
     });
     cancel.addBlurHandler(new BlurHandler() {
@@ -96,7 +97,8 @@ public class ConfirmationPopup extends PopupPanel {
     cancel.addMouseOverHandler(new MouseOverHandler() {
       @Override
       public void onMouseOver(final MouseOverEvent event) {
-        cancel.setStyleName("ui-state-hover");
+        cancel.addStyleName("ui-state-hover");
+        cancel.setFocus(true);
       }
     });
     cancel.addMouseOutHandler(new MouseOutHandler() {
