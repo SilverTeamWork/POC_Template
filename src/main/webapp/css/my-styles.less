@@ -1,5 +1,5 @@
 /* --------------------------------- */
-/* Style decoratif r�utilisable*/
+/* Style decoratif réutilisable*/
 /* ----------------------------- */
 
 .bloc {
@@ -312,7 +312,8 @@ footer.wrapper {
 		> .application-content,
 		> article,
 		> .content-from-wysiwyg,
-		> .commentaires {
+		> .commentaires,
+		> .commentaires_oldPlugin {
 			margin-right:@box-right-size+@medium-value*3;
 		}
 }
@@ -493,3 +494,139 @@ article .calendar-presentation {
 .edition-form-line input {
   width: 600px;
 }
+
+/*- [ comment old plugin BEGIN ] ------------------------- */
+
+.commentaires_oldPlugin hr{
+  clear:both;
+  margin-bottom:20px;
+  background-color:#CECECE;
+  border:0;
+  height:1px;
+  color:#CECECE;
+
+}
+.commentaires_oldPlugin .oneComment, .commentaires_oldPlugin #edition-box {
+  background-color:#F0F0F0;
+  border:1px solid #CECECE;
+  border-radius:10px;
+  moz-border-radius:10px;
+  webkit-border-radius:10px;
+  padding:10px;
+  position:relative;
+  margin:70px 2em 0;
+}
+
+.commentaires_oldPlugin #edition-box {
+  padding-top: 24px;
+}
+
+
+.commentaires_oldPlugin div.avatar {
+  position:absolute;
+  top:0;
+  left:0;
+  border:1px solid #CECECE;
+  padding:1px;
+  background-color:#FFF;
+  top:-50px;
+  left:-1em;
+}
+.commentaires_oldPlugin div.avatar img {
+  width:50px;
+  height:auto;
+}
+
+.commentaires_oldPlugin .oneComment .action {
+  bottom: 10px;
+  position: absolute;
+  right: 9px;
+}
+.commentaires_oldPlugin .oneComment .action img {
+  width:13px;
+  height: 13px;
+}
+
+.commentaires_oldPlugin #edition-box .title , .commentaires_oldPlugin .oneComment p.author{
+  font-size: 8pt;
+  color: #111111;
+  height: 20px;
+  margin:0;
+  position:absolute;
+  top:-40px;
+  left:0;
+  line-height:10px;
+  padding:0 0 20px 50px;
+  background:transparent url(../img/commentStartBubble.gif) 50px bottom no-repeat;
+}
+.commentaires_oldPlugin .oneComment p.author {
+  color:#26334A;
+}
+.commentaires_oldPlugin .oneComment .date {
+  color:#999;
+  font-size:11px;
+}
+
+.commentaires_oldPlugin .oneComment .text {
+  color: #888888;
+  font-family: Arial;
+  font-size: 13px;
+  line-height: 120%;
+  margin: 0;
+  padding: 0;
+  text-align: justify;
+  text-indent: 41px;
+  white-space: normal;
+}
+.commentaires_oldPlugin .oneComment .text a { font-size: 13px;}
+
+.commentaires_oldPlugin #list-box {
+}
+
+.commentaires_oldPlugin #list-box .action {
+  cursor: pointer;
+}
+
+.commentaires_oldPlugin #update-box {
+}
+
+
+#comments-update-box .text,
+.commentaires_oldPlugin #edition-box .text {
+  width: 95%;
+  height: 3em;
+  color: #888888;
+  font-family: Arial;
+  font-size: 13px;
+  line-height: 120%;
+}
+
+.commentaires_oldPlugin .buttons {
+  text-align: center;
+}
+
+.commentaires_oldPlugin button {
+  margin: 5px;
+  cursor: pointer;
+}
+
+.mandatoryField img {
+  width: 5px;
+  height: 5px;
+}
+
+select.mandatoryField {
+  font-style: oblique;
+  color: #333;
+}
+
+select.mandatoryField option {
+  font-style: normal;
+  color: #000;
+}
+select.mandatoryField option.emphasis {
+  font-style: oblique;
+  color: #333;
+}
+
+/*- [ comment old Plugin END ] ------------------------- */
