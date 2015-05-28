@@ -96,13 +96,7 @@ public class PostWidget extends Composite implements HasModel<Post> {
   }
 
   private void initViewFromModel() {
-    if (isInEdition()) {
-      loadWysiwygEditor();
-    } else {
-      HTML text = new HTML(getModel().getContent());
-      content.add(text);
-    }
-
+    switchEditionMode(isInEdition());
     Date dateEvent = post.getDateEvent();
     Log.dev("custom format " + I18n.format(Messages.DATE_FORMAT) + " =" +
         DateTimeFormat.getFormat(I18n.format(Messages.DATE_FORMAT)).format(dateEvent));
@@ -126,6 +120,21 @@ public class PostWidget extends Composite implements HasModel<Post> {
     this.postUpdateLabel.setText(I18n.format(Messages.UPDATE_DATE_LABEL));
     loadRating();
     loadComments();
+  }
+
+  public void switchEditionMode(boolean edition) {
+    this.edition = edition;
+    content.clear();
+    if (isInEdition()) {
+      loadWysiwygEditor();
+    } else {
+      if (editor != null) {
+        editor.removeFromParent();
+        editor = null;
+      }
+      HTML text = new HTML(getModel().getContent());
+      content.add(text);
+    }
   }
 
   private void loadRating() {
@@ -167,8 +176,8 @@ public class PostWidget extends Composite implements HasModel<Post> {
 
   private void loadComments() {
     commentWidget.initCommentWidget(this.post.getAppInstanceId(), this.post.getId(),
-        CurrentUser.get().getId(), UrlManager
-            .getSilverpeasUrl(CurrentUser.get().getAvatar()), true, CurrentUser.token());
+        CurrentUser.get().getId(), UrlManager.getSilverpeasUrl(CurrentUser.get().getAvatar()), true,
+        CurrentUser.token());
   }
 
 }

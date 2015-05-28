@@ -79,7 +79,7 @@ public class BlogPostPage extends BlogPageComposite {
     JsonHttp.onSuccess(new JsonResponse() {
       @Override
       public void process(final HttpResponse response) {
-        Post post = response.parseJsonEntity();
+        final Post post = response.parseJsonEntity();
         postWidget.setModel(post);
         setPageTitle(post.getTitle());
 
@@ -87,7 +87,13 @@ public class BlogPostPage extends BlogPageComposite {
             .fire(new DisplayedInternalApplicationInstancePage(me));
 
         // Verify that the modify action can be performed
-        modifyPostAction.verify(post);
+        modifyPostAction.clickCallback(new Callback() {
+          @Override
+          public void invoke(final Object... parameters) {
+            postWidget.switchEditionMode(true);
+            getMenuWidget().setVisible(false);
+          }
+        }).verify(post);
 
       }
     }).onError(new JsonResponse() {
