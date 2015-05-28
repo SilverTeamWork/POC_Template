@@ -6,6 +6,7 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.InlineLabel;
+import com.google.gwt.user.client.ui.TextBox;
 import org.jboss.errai.ui.client.widget.HasModel;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
@@ -20,6 +21,7 @@ import org.silverpeas.poc.client.local.blog.PostCriteria;
 import org.silverpeas.poc.client.local.rating.Rating;
 import org.silverpeas.poc.client.local.rating.RatingCriteria;
 import org.silverpeas.poc.client.local.user.CurrentUser;
+import org.silverpeas.poc.client.local.util.CommonTranslations;
 import org.silverpeas.poc.client.local.util.Messages;
 import org.silverpeas.poc.client.local.widget.SilverpeasHtmlPanel;
 import org.silverpeas.poc.client.local.widget.WysiwygEditor;
@@ -70,6 +72,8 @@ public class PostWidget extends Composite implements HasModel<Post> {
   @DataField("post-content")
   private SilverpeasHtmlPanel content = new SilverpeasHtmlPanel(SilverpeasHtmlPanel.TYPE.DIV);
 
+  private TextBox titleInput = new TextBox();
+
   private boolean edition = false;
   private WysiwygEditor editor = null;
 
@@ -91,12 +95,18 @@ public class PostWidget extends Composite implements HasModel<Post> {
 
   @Override
   public void setModel(final Post post) {
-    this.post = post;
-    initViewFromModel();
+    updateModel(post);
+    switchEditionMode(isInEdition());
+    loadRating();
+    loadComments();
   }
 
-  private void initViewFromModel() {
-    switchEditionMode(isInEdition());
+  private void updateModel(final Post post) {
+    this.post = post;
+    setViewFromModel();
+  }
+
+  private void setViewFromModel() {
     Date dateEvent = post.getDateEvent();
     Log.dev("custom format " + I18n.format(Messages.DATE_FORMAT) + " =" +
         DateTimeFormat.getFormat(I18n.format(Messages.DATE_FORMAT)).format(dateEvent));
@@ -118,14 +128,20 @@ public class PostWidget extends Composite implements HasModel<Post> {
         DateTimeFormat.getFormat(I18n.format(Messages.DATETIME_FORMAT)).format(jsUpdateDate));
     this.postCreateLabel.setText(I18n.format(Messages.PUBLISH_DATE_LABEL));
     this.postUpdateLabel.setText(I18n.format(Messages.UPDATE_DATE_LABEL));
-    loadRating();
-    loadComments();
   }
 
   public void switchEditionMode(boolean edition) {
     this.edition = edition;
     content.clear();
     if (isInEdition()) {
+      SilverpeasHtmlPanel titlePanel = new SilverpeasHtmlPanel(SilverpeasHtmlPanel.TYPE.DIV);
+      titlePanel.setStyleName("edition-form-line");
+      SilverpeasHtmlPanel titleLabel = new SilverpeasHtmlPanel(SilverpeasHtmlPanel.TYPE.SPAN);
+      titleLabel.getElement().setInnerHTML(I18n.format(CommonTranslations.TITLE_LABEL));
+      titlePanel.add(titleLabel);
+      titleInput.setText(getModel().getTitle());
+      titlePanel.add(titleInput);
+      content.add(titlePanel);
       loadWysiwygEditor();
     } else {
       if (editor != null) {
@@ -155,17 +171,25 @@ public class PostWidget extends Composite implements HasModel<Post> {
       editor.setTextSaveHandler(new WysiwygEditor.TextSaveHandler() {
         @Override
         public void onTextSave(final String text) {
-          if (!getModel().getContent().equals(text)) {
+          if (!getModel().getContent().equals(text) ||
+              !getModel().getTitle().equals(titleInput.getText())) {
+            getModel().setTitle(titleInput.getText());
             getModel().setContent(text);
-            JsonHttp.onSuccess(new JsonResponse() {
+            JsonHttp jsonHttp = JsonHttp.onSuccess(new JsonResponse() {
               @Override
               public void process(final HttpResponse response) {
                 Post updatedPost = response.parseJsonEntity();
                 Log.dev("Content of post " + updatedPost.getId() + " from blog " +
                     updatedPost.getAppInstanceId() + " updated");
-                setModel(updatedPost);
+                updateModel(updatedPost);
               }
-            }).withData(getModel()).put(PostCriteria.fromPost(getModel()));
+            }).withData(getModel());
+
+            if (getModel().getId().equals("new")) {
+              jsonHttp.post(PostCriteria.fromPost(getModel()));
+            } else {
+              jsonHttp.put(PostCriteria.fromPost(getModel()));
+            }
           }
         }
       });

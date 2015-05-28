@@ -19,5 +19,6 @@
   "action.delete": "Supprimer {0}",
   "action.ok": "Ok",
   "action.cancel": "Annuler",
-  "message.confirmation.deletion": "Êtes vous sûr de vouloir le supprimer ?"
+  "message.confirmation.deletion": "Êtes vous sûr de vouloir le supprimer ?",
+  "title.label": "Titre"
 }

@@ -3,12 +3,14 @@ package org.silverpeas.poc.client.local.blog;
 import org.silverpeas.poc.api.http.DeleteCriteria;
 import org.silverpeas.poc.api.http.JsonGetCriteria;
 import org.silverpeas.poc.api.http.JsonHttpConfig;
+import org.silverpeas.poc.api.http.JsonPostCriteria;
 import org.silverpeas.poc.api.http.JsonPutCriteria;
 
 /**
  * @author ebonnet
  */
-public class PostCriteria implements JsonGetCriteria, JsonPutCriteria, DeleteCriteria {
+public class PostCriteria
+    implements JsonGetCriteria, JsonPostCriteria, JsonPutCriteria, DeleteCriteria {
 
   private String blogId;
   private String postId;
@@ -49,6 +51,11 @@ public class PostCriteria implements JsonGetCriteria, JsonPutCriteria, DeleteCri
 
   @Override
   public JsonHttpConfig configureJsonGetHttp() {
+    return buildJsonHttpConfig();
+  }
+
+  @Override
+  public JsonHttpConfig configureJsonPostHttp() {
     return buildJsonHttpConfig();
   }
 

@@ -20,5 +20,6 @@
   "action.delete": "Remove {0}",
   "action.ok": "Ok",
   "action.cancel": "Cancel",
-  "message.confirmation.deletion": "Are you sure to delete it?"
+  "message.confirmation.deletion": "Are you sure to delete it?",
+  "title.label": "Title"
 }

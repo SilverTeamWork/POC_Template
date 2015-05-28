@@ -34,4 +34,6 @@ public interface CommonTranslations {
   String ACTION_CANCEL = "action.cancel";
   @TranslationKey(defaultValue = "")
   String MESSAGE_CONFIRMATION_DELETION = "message.confirmation.deletion";
+  @TranslationKey(defaultValue = "")
+  String TITLE_LABEL = "title.label";
 }
