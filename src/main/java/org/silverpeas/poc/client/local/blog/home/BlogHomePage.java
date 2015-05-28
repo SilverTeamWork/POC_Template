@@ -103,6 +103,9 @@ public class BlogHomePage extends BlogPageComposite {
     setPageTitle(instance.getLabel());
     setPageDescription(instance.getDescription());
 
+    //Initialize highest scroll for each display
+    highestScroll = 0;
+
     // Posts to display
     JsonHttp.onSuccess(new JsonResponse() {
       @Override
