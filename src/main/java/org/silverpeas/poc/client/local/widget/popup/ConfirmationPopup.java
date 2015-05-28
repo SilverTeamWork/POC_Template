@@ -1,9 +1,9 @@
 package org.silverpeas.poc.client.local.widget.popup;
 
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.*;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PopupPanel;
 import org.silverpeas.poc.api.util.I18n;
@@ -28,9 +28,45 @@ public class ConfirmationPopup extends PopupPanel {
     super(true, true);
     setWidget(panel);
     setGlassEnabled(true);
+    panel.setStyleName(
+        "ui-dialog ui-widget ui-widget-content ui-corner-all ui-front ui-dialog-buttons " +
+            "ui-draggable ui-resizable");
+    panel.setWidth("320px");
+    panel.setHeight("auto");
     Label question = new Label();
     FlowPanel buttonBar = new FlowPanel();
-    Button ok = new Button(I18n.format(CommonTranslations.ACTION_OK));
+    buttonBar.setStyleName("ui-dialog-buttonpane ui-widget-content ui-helper-clearfix");
+    FlowPanel buttonSet = new FlowPanel();
+    buttonSet.setStyleName("ui-dialog-buttonset");
+    final Button ok = new Button();
+    ok.setStyleName("ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only");
+    InlineLabel label = new InlineLabel(I18n.format(CommonTranslations.ACTION_OK));
+    label.setStyleName("ui-button-text");
+    ok.setHTML(label.toString());
+    ok.addFocusHandler(new FocusHandler() {
+      @Override
+      public void onFocus(final FocusEvent event) {
+        ok.setStyleName("ui-state-hover");
+      }
+    });
+    ok.addBlurHandler(new BlurHandler() {
+      @Override
+      public void onBlur(final BlurEvent event) {
+        ok.removeStyleName("ui-state-hover");
+      }
+    });
+    ok.addMouseOverHandler(new MouseOverHandler() {
+      @Override
+      public void onMouseOver(final MouseOverEvent event) {
+        ok.setStyleName("ui-state-hover");
+      }
+    });
+    ok.addMouseOutHandler(new MouseOutHandler() {
+      @Override
+      public void onMouseOut(final MouseOutEvent event) {
+        ok.removeStyleName("ui-state-hover");
+      }
+    });
     ok.addClickHandler(new ClickHandler() {
       @Override
       public void onClick(final ClickEvent event) {
@@ -40,15 +76,44 @@ public class ConfirmationPopup extends PopupPanel {
         hide();
       }
     });
-    Button cancel = new Button(I18n.format(CommonTranslations.ACTION_CANCEL));
+    final Button cancel = new Button();
+    cancel.setStyleName("ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only");
+    label = new InlineLabel(I18n.format(CommonTranslations.ACTION_CANCEL));
+    label.setStyleName("ui-button-text");
+    cancel.setHTML(label.toString());
+    cancel.addFocusHandler(new FocusHandler() {
+      @Override
+      public void onFocus(final FocusEvent event) {
+        cancel.setStyleName("ui-state-hover");
+      }
+    });
+    cancel.addBlurHandler(new BlurHandler() {
+      @Override
+      public void onBlur(final BlurEvent event) {
+        cancel.removeStyleName("ui-state-hover");
+      }
+    });
+    cancel.addMouseOverHandler(new MouseOverHandler() {
+      @Override
+      public void onMouseOver(final MouseOverEvent event) {
+        cancel.setStyleName("ui-state-hover");
+      }
+    });
+    cancel.addMouseOutHandler(new MouseOutHandler() {
+      @Override
+      public void onMouseOut(final MouseOutEvent event) {
+        cancel.removeStyleName("ui-state-hover");
+      }
+    });
     cancel.addClickHandler(new ClickHandler() {
       @Override
       public void onClick(final ClickEvent event) {
         hide();
       }
     });
-    buttonBar.add(cancel);
-    buttonBar.add(ok);
+    buttonSet.add(cancel);
+    buttonSet.add(ok);
+    buttonBar.add(buttonSet);
 
     panel.add(question);
     panel.add(buttonBar);
@@ -84,7 +149,9 @@ public class ConfirmationPopup extends PopupPanel {
     super.doAttachChildren();
     ((Label) panel.getWidget(0)).setText(getMessage());
     FlowPanel buttonBar = (FlowPanel) panel.getWidget(1);
-    ((Button) buttonBar.getWidget(0)).setFocus(true);
+    FlowPanel buttonSet = (FlowPanel) buttonBar.getWidget(0);
+    Button cancel = (Button) buttonSet.getWidget(0);
+    cancel.setFocus(true);
   }
 
 }
