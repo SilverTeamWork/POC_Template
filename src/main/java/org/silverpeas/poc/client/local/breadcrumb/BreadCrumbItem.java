@@ -41,6 +41,7 @@ public abstract class BreadCrumbItem<BCI> implements HasContentChangeHandlers {
 
   public void setEnabled(final boolean enabled) {
     this.enabled = enabled;
+    resolveIfDefined();
   }
 
   protected String getTargetPageName() {
@@ -84,11 +85,15 @@ public abstract class BreadCrumbItem<BCI> implements HasContentChangeHandlers {
   protected void resolveIfDefined() {
     if (StringUtil.isDefined(label) && parameters != null &&
         StringUtil.isDefined(toPageName)) {
-      if (defined.isPending()) {
-        defined.resolve(null);
-      }
-      ContentChangeEvent.fire(this);
+      resolve();
     }
+  }
+
+  protected final void resolve() {
+    if (defined.isPending()) {
+      defined.resolve(null);
+    }
+    ContentChangeEvent.fire(this);
   }
 
   @SuppressWarnings("unchecked")
@@ -99,7 +104,7 @@ public abstract class BreadCrumbItem<BCI> implements HasContentChangeHandlers {
       public void onDone(final Void result) {
         Log.debug("Adding breadcrumb item: with label " + getLabel() + " for page " +
             getTargetPageName() + " with parameters " + getTransitionParameters().toString());
-        BreadCrumbWidget.addItem(me);
+        BreadCrumbWidget.push(me);
       }
     });
     return (BCI) this;

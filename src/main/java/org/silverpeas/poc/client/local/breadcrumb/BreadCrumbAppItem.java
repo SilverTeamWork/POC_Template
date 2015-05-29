@@ -49,4 +49,8 @@ public class BreadCrumbAppItem extends BreadCrumbItem<BreadCrumbAppItem> {
     event.fire(new SelectedApplicationInstance(instance));
   }
 
+  @Override
+  protected void resolveIfDefined() {
+    resolve();
+  }
 }

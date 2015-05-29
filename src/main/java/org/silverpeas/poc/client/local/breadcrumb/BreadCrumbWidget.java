@@ -14,8 +14,8 @@ public class BreadCrumbWidget implements IsWidget {
     return getBreadCrumbComposite();
   }
 
-  public static void addItem(BreadCrumbItem newItem) {
-    getBreadCrumbComposite().addItem(newItem);
+  public static void push(BreadCrumbItem newItem) {
+    getBreadCrumbComposite().push(newItem);
   }
 
   private static BreadCrumbComposite getBreadCrumbComposite() {

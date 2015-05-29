@@ -49,4 +49,9 @@ public class BreadCrumbSpaceItem extends BreadCrumbItem<BreadCrumbSpaceItem> {
     Event<SelectedSpace> event = eventsProvider.getSpaceSelectionEvent();
     event.fire(new SelectedSpace(space));
   }
+
+  @Override
+  protected void resolveIfDefined() {
+    resolve();
+  }
 }
