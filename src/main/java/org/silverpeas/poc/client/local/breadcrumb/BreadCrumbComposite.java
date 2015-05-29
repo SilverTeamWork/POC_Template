@@ -133,6 +133,8 @@ public class BreadCrumbComposite extends Composite {
       backContainer.setVisible(true);
       BreadCrumbItem item = items.get(items.size() - 2);
       backButton.initHref(item.getTargetPageName(), item.getTransitionParameters());
+    } else {
+      backContainer.setVisible(false);
     }
     int lastIndex = items.size() - 1;
     if (lastIndex > 0) {
