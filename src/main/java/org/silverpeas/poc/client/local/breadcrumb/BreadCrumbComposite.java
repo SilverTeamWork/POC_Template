@@ -15,6 +15,7 @@ import org.silverpeas.poc.client.local.application.event.LoadedApplicationInstan
 import org.silverpeas.poc.client.local.space.Space;
 import org.silverpeas.poc.client.local.space.SpaceContent;
 import org.silverpeas.poc.client.local.space.event.LoadedSpace;
+import org.silverpeas.poc.client.local.space.event.SelectedSpace;
 import org.silverpeas.poc.client.local.util.CommonTranslations;
 import org.silverpeas.poc.client.local.util.HomeSpaceProvider;
 import org.silverpeas.poc.client.local.widget.SilverpeasHtmlPanel;
@@ -69,6 +70,12 @@ public class BreadCrumbComposite extends Composite {
         refreshView();
       }
     });
+  }
+
+  private void onSpaceSelected(@Observes SelectedSpace event) {
+    Space space = event.getResource();
+    Log.debug("BreadCrumbWidget - onSpaceSelected - {0} (id={1})", space.getLabel(), space.getId());
+    backContainer.setVisible(false);
   }
 
   private void onSpaceLoaded(@Observes LoadedSpace event) {

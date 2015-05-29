@@ -65,7 +65,7 @@ public class OperationWidget extends Composite {
       Image image = new Image();
       image.setAltText(I18n.format(CommonTranslations.ACTION_MODIFICATION, ""));
       image.setTitle(I18n.format(CommonTranslations.ACTION_MODIFICATION, ""));
-      image.setUrl("/img/update.gif");
+      image.setUrl("img/update.gif");
       modify.setHTML(image.toString());
       panel.add(modify);
     }
@@ -75,7 +75,7 @@ public class OperationWidget extends Composite {
     Image image = new Image();
     image.setAltText(I18n.format(CommonTranslations.ACTION_DELETION, ""));
     image.setTitle(I18n.format(CommonTranslations.ACTION_DELETION, ""));
-    image.setUrl("/img/delete.gif");
+    image.setUrl("img/delete.gif");
     delete.setHTML(image.toString());
     delete.addClickHandler(new ClickHandler() {
       @Override

@@ -71,14 +71,14 @@ public class CommentWidget extends Composite implements HasModel<Comment> {
           if (canBeUpdated || (comment.author.id === "'" + authorId + "'")) {
             return true;
           } else return false;
-        }, icon : '/img/update.gif', altText : 'update'
+        }, icon : 'img/update.gif', altText : 'update'
       },
       deletion : {
         activated : function(comment) {
           if (canBeUpdated || (comment.author.id === "'" + authorId + "'")) {
             return true;
           } else return false;
-        }, confirmation : @org.silverpeas.poc.api.util.I18n::format(*)(@org.silverpeas.poc.client.local.util.Messages::COMMENT_DELETE_CONFIRMATION, ""), icon : '/img/delete.gif', altText : 'delete'
+        }, confirmation : @org.silverpeas.poc.api.util.I18n::format(*)(@org.silverpeas.poc.client.local.util.Messages::COMMENT_DELETE_CONFIRMATION, ""), icon : 'img/delete.gif', altText : 'delete'
       },
       updateBox : {title : @org.silverpeas.poc.api.util.I18n::format(*)(@org.silverpeas.poc.client.local.util.Messages::COMMENT_COMMENT, "")},
       editionBox : {
@@ -94,7 +94,7 @@ public class CommentWidget extends Composite implements HasModel<Comment> {
         }
         return false;
       },
-      mandatory : '/img/mandatoryField.gif',
+      mandatory : 'img/mandatoryField.gif',
       mandatoryText : @org.silverpeas.poc.api.util.I18n::format(*)(@org.silverpeas.poc.client.local.util.Messages::GML_REQUIRED_FIELD, "")
     });
     $wnd.jQuery('#commentaires').comment('edition', function() {

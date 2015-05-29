@@ -111,7 +111,7 @@ public class PostItemWidget extends Composite implements HasModel<Post> {
 
   @EventHandler
   private void onPostItemClick(ClickEvent event) {
-    if (!title.isEditModeFocused()) {
+    if (!title.isEditModeFocused() && getModel() != null) {
       NavigationProvider.get().goTo(BlogPostPage.class, ImmutableMultimap
           .of("instanceId", getModel().getAppInstanceId(), "postId", getModel().getId()));
     }
