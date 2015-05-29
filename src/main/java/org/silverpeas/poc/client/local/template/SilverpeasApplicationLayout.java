@@ -126,13 +126,13 @@ public class SilverpeasApplicationLayout extends SilverpeasComposite {
 
   @Override
   public void onPageShowing() {
-    breadcrumbPanel.clear();
     breadcrumbPanel.add(new BreadCrumbWidget());
   }
 
   @Override
   public void onPageHidden() {
     super.onPageHidden();
+    breadcrumbPanel.clear();
     menu.clear();
     rightPanel.clear();
     footerPanel.clear();
