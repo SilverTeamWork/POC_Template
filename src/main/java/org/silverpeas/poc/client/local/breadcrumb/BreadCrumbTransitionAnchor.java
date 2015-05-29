@@ -3,7 +3,7 @@ package org.silverpeas.poc.client.local.breadcrumb;
 import com.google.gwt.event.dom.client.ClickHandler;
 import org.jboss.errai.ui.client.widget.HasModel;
 import org.silverpeas.poc.api.navigation.SilverpeasTransitionAnchor;
-import org.silverpeas.poc.api.util.Log;
+import org.silverpeas.poc.api.util.StringUtil;
 
 /**
  * @author miguel
@@ -29,7 +29,7 @@ public class BreadCrumbTransitionAnchor extends SilverpeasTransitionAnchor
   @Override
   public void setModel(final BreadCrumbItem model) {
     this.item = model;
-    setText(this.item.getLabel());
+    setText(StringUtil.truncate(this.item.getLabel(), 53));
     setStyleName(this.item.getStyleClass());
     setEnabled(this.item.isEnabled());
     initHref(this.item.getTargetPageName(), this.item.getTransitionParameters());
@@ -37,6 +37,6 @@ public class BreadCrumbTransitionAnchor extends SilverpeasTransitionAnchor
 
   @Override
   protected void onClickEvent() {
-    this.item.fireEvent();
+    this.item.fireItemEvent();
   }
 }

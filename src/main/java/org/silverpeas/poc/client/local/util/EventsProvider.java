@@ -1,11 +1,10 @@
 package org.silverpeas.poc.client.local.util;
 
 import org.silverpeas.poc.api.ioc.BeanManager;
-import org.silverpeas.poc.client.local.application.event.DisplayedInternalApplicationInstancePage;
 import org.silverpeas.poc.client.local.application.event.LoadedApplicationInstance;
 import org.silverpeas.poc.client.local.application.event.SelectedApplicationInstance;
-import org.silverpeas.poc.client.local.space.event.LoadedSpaceContent;
 import org.silverpeas.poc.client.local.space.event.LoadedRootSpaces;
+import org.silverpeas.poc.client.local.space.event.LoadedSpaceContent;
 import org.silverpeas.poc.client.local.space.event.SelectedSpace;
 
 import javax.enterprise.event.Event;
@@ -35,10 +34,6 @@ public class EventsProvider {
   @Inject
   private Event<LoadedApplicationInstance> loadedApplicationInstanceEvent;
 
-  @Inject
-  private Event<DisplayedInternalApplicationInstancePage>
-      displayedInternalApplicationInstancePageEvent;
-
   public Event<SelectedSpace> getSpaceSelectionEvent() {
     return spaceSelectionEvent;
   }
@@ -57,10 +52,5 @@ public class EventsProvider {
 
   public Event<LoadedApplicationInstance> getApplicationInstanceLoadedEvent() {
     return loadedApplicationInstanceEvent;
-  }
-
-  public Event<DisplayedInternalApplicationInstancePage>
-  getDisplayedInternalApplicationInstancePageEvent() {
-    return displayedInternalApplicationInstancePageEvent;
   }
 }

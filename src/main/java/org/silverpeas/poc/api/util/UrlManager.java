@@ -7,6 +7,7 @@ import org.jboss.errai.ui.nav.client.local.Navigation;
  * @author Yohann Chastagnier
  */
 public class UrlManager {
+  private static final String JSON_DATA_SERVER = "/silverpeas/services/";
 
   /**
    * Gets the server URL of the resource at the given path.
@@ -28,6 +29,15 @@ public class UrlManager {
    */
   public static String getSilverpeasUrl(String path) {
     return Window.Location.createUrlBuilder().setPort(8000).setPath(path).buildString();
+  }
+
+  /**
+   * Gets the server URL of the resource at the given path.
+   * @param path the path from which the server URL must be computed.
+   * @return the server URL of the resource at the given path.
+   */
+  public static String getSilverpeasServiceUrl(String path) {
+    return getSilverpeasUrl(JSON_DATA_SERVER) + path;
   }
 
   /**

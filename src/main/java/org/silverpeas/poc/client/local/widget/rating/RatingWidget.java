@@ -18,6 +18,7 @@ import org.silverpeas.poc.api.http.HttpResponse;
 import org.silverpeas.poc.api.http.JsonHttp;
 import org.silverpeas.poc.api.http.JsonResponse;
 import org.silverpeas.poc.api.util.I18n;
+import org.silverpeas.poc.api.util.Log;
 import org.silverpeas.poc.client.local.rating.Rating;
 import org.silverpeas.poc.client.local.rating.RatingCriteria;
 import org.silverpeas.poc.client.local.widget.SilverpeasHtmlPanel;
@@ -25,6 +26,7 @@ import org.silverpeas.poc.client.local.widget.rating.event.RatingChange;
 
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
+import java.math.BigDecimal;
 
 /**
  * @author miguel
@@ -99,17 +101,29 @@ public class RatingWidget extends Composite
   }
 
   private void updateRatingNoteImages() {
+    double ratingNote = readonly ? rating.getAverageValue() : (double) rating.getUserRating();
+    if (Math.ceil(ratingNote) != ratingNote) {
+      ratingNote += 1;
+    }
+    double ceil = Math.ceil(ratingNote);
     for (int note = 1; note <= NOTE_COUNT; note++) {
       Image image = (Image) panel.getWidget(note - 1);
       ImageResource resource;
       String style = DEFAULT_RATING_NOTE_STYLE + " ";
       if (rating != null) {
-        double ceil = Math.ceil(rating.getAverageValue());
         if (hoverRatingNote == 0) {
-          if (note <= rating.getAverageValue()) {
-            if (ceil != rating.getAverageValue() && note == (ceil - 1)) {
-              resource = resources.noteHalfSelected();
-              style += HALF_SELECTED_RATING_NOTE_STYLE;
+          if (note <= ratingNote) {
+            if (ceil != ratingNote && note == (ceil - 1)) {
+              double rounded =
+                  new BigDecimal(String.valueOf(ratingNote)).setScale(0, BigDecimal.ROUND_DOWN)
+                      .doubleValue();
+              if ((ratingNote - rounded) > 0.25) {
+                resource = resources.noteHalfSelected();
+                style += HALF_SELECTED_RATING_NOTE_STYLE;
+              } else {
+                resource = resources.noteUnselected();
+                style += UNSELECTED_RATING_NOTE_STYLE;
+              }
             } else {
               resource = resources.noteSelected();
               style += SELECTED_RATING_NOTE_STYLE;
@@ -161,10 +175,10 @@ public class RatingWidget extends Composite
       public void process(final HttpResponse response) {
         Rating newRating = response.parseJsonEntity();
         setModel(newRating);
+        ratingChangeEvent.fire(new RatingChange(rating));
       }
     }).withValue(note).post(
         RatingCriteria.forPublication(rating.getAppInstanceId(), rating.getNotedContributionId()));
-    ratingChangeEvent.fire(new RatingChange(rating));
   }
 
   /**

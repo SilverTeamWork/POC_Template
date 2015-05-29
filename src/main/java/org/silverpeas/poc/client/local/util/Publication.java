@@ -1,5 +1,9 @@
 package org.silverpeas.poc.client.local.util;
 
+import com.google.gwt.core.client.JsonUtils;
+import org.silverpeas.poc.api.util.I18n;
+import org.silverpeas.poc.client.local.application.ApplicationInstance;
+
 import java.util.Date;
 
 /**
@@ -8,6 +12,21 @@ import java.util.Date;
  * @author miguel
  */
 public class Publication extends Contribution {
+
+  /**
+   * The key provider that provides the unique ID of a post.
+   */
+  public static Publication newInstance(ApplicationInstance applicationInstance) {
+    Publication publication = JsonUtils.safeEval("{\"uri\":\"\",\"id\":\"\",\"componentId\":\"\"," +
+        "\"title\":\"\",\"content\":\"\",\"dateEvent\":0,\"nbComments\":0,\"createDate\":0," +
+        "\"creator\":\"\",\"updateDate\":0,\"updater\":\"\",\"links\":[]}");
+    publication.setAppInstanceId("blog" + applicationInstance.getId());
+    publication.setTitle(I18n.format(Messages.POST_NEW_TITLE_LABEL));
+    publication.setContent("");
+    publication.setCreationTimestamp(new Date().getTime());
+    return publication;
+  }
+
   protected Publication() {
   }
 
@@ -31,6 +50,10 @@ public class Publication extends Contribution {
     return this.createDate;
   }-*/;
 
+  public final native void setCreationTimestamp(double time) /*-{
+    this.createDate = time;
+  }-*/;
+
   public final native String getCreator() /*-{
     return this.creator;
   }-*/;
@@ -44,10 +67,10 @@ public class Publication extends Contribution {
   }-*/;
 
   public final Date getCreationDate() {
-    return new Date((long)this.getCreationTimestamp());
+    return new Date((long) this.getCreationTimestamp());
   }
 
   public final Date getUpdateDate() {
-    return new Date((long)this.getUpdateTimestamp());
+    return new Date((long) this.getUpdateTimestamp());
   }
 }

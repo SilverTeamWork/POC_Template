@@ -13,7 +13,7 @@ import javax.enterprise.event.Event;
 /**
  * @author miguel
  */
-public class BreadCrumbAppItem extends BreadCrumbItem {
+public class BreadCrumbAppItem extends BreadCrumbItem<BreadCrumbAppItem> {
 
   private final ApplicationInstance instance;
 
@@ -42,7 +42,7 @@ public class BreadCrumbAppItem extends BreadCrumbItem {
   }
 
   @Override
-  protected void fireEvent() {
+  protected void fireItemEvent() {
     EventsProvider eventsProvider = BeanManager.getInstanceOf(EventsProvider.class);
     Event<SelectedApplicationInstance> event =
         eventsProvider.getApplicationInstanceSelectionEvent();

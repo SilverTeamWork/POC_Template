@@ -12,9 +12,9 @@ import org.silverpeas.poc.api.util.StringUtil;
 import org.silverpeas.poc.client.local.application.ApplicationInstance;
 import org.silverpeas.poc.client.local.application.event.LoadedApplicationInstance;
 import org.silverpeas.poc.client.local.breadcrumb.BreadCrumbWidget;
-import org.silverpeas.poc.client.local.widget.menu.MenuWidget;
 import org.silverpeas.poc.client.local.space.SpaceContentMenuWidget;
 import org.silverpeas.poc.client.local.widget.SilverpeasHtmlPanel;
+import org.silverpeas.poc.client.local.widget.menu.MenuWidget;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
@@ -33,8 +33,8 @@ public class SilverpeasApplicationLayout extends SilverpeasComposite {
   private SilverpeasMainLayout mainLayout;
 
   @Inject
-  @DataField
-  private BreadCrumbWidget breadcrumb;
+  @DataField("breadcrumb")
+  private SilverpeasHtmlPanel breadcrumbPanel;
 
   @Inject
   @DataField("nav-gauche")
@@ -126,6 +126,8 @@ public class SilverpeasApplicationLayout extends SilverpeasComposite {
 
   @Override
   public void onPageShowing() {
+    breadcrumbPanel.clear();
+    breadcrumbPanel.add(new BreadCrumbWidget());
   }
 
   @Override

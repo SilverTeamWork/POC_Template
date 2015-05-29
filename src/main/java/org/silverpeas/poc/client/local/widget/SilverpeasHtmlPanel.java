@@ -8,7 +8,7 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 public class SilverpeasHtmlPanel extends HTMLPanel {
 
   public enum TYPE {
-    DIV, H1, H2, H3, P, ASIDE, SPAN
+    DIV, H1, H2, H3, P, ASIDE, SPAN, FOOTER, A
   }
 
   public SilverpeasHtmlPanel() {

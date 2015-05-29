@@ -11,7 +11,6 @@ import org.jboss.errai.ui.shared.api.annotations.Templated;
 import org.silverpeas.poc.api.http.HttpResponse;
 import org.silverpeas.poc.api.http.JsonHttp;
 import org.silverpeas.poc.api.http.JsonResponse;
-import org.silverpeas.poc.api.navigation.NavigationProvider;
 import org.silverpeas.poc.client.local.application.ApplicationInstance;
 import org.silverpeas.poc.client.local.blog.Post;
 import org.silverpeas.poc.client.local.blog.PostCriteria;
@@ -79,9 +78,14 @@ public class BlogHomePage extends BlogPageComposite {
           JsonHttp.onSuccess(new JsonResponse() {
             @Override
             public void process(final HttpResponse response) {
-              List<Post> newPosts = response.<ContributionList<Post>>parseJsonEntity().getEntities();
+              List<Post> newPosts =
+                  response.<ContributionList<Post>>parseJsonEntity().getEntities();
               postsView.getValue().addAll(newPosts);
               page += POSTS_COUNT_PER_SCROLL;
+            }
+          }).onFinally(new JsonResponse() {
+            @Override
+            public void process(final HttpResponse response) {
               parallelLock = false;
             }
           }).get(PostCriteria.fromBlog(instance.getId()).paginatedBy(page, POSTS_COUNT_PER_SCROLL));
@@ -95,8 +99,7 @@ public class BlogHomePage extends BlogPageComposite {
     createPostAction =
         getMenuWidget().addPrivilegedToPageAction().ofType(CREATION, BlogBundle.msg().post("a"))
             .toPage(BlogPostPage.class);
-    createPostAction.getParameters().putAll(NavigationProvider.get().getCurrentPageState());
-    createPostAction.getParameters().get("postId").clear();
+    createPostAction.getParameters().put("instanceId", instance.getId());
     createPostAction.getParameters().put("postId", "new");
 
     getRightPanel().add(blogDatePickerWidget);

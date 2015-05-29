@@ -28,8 +28,8 @@ public class SilverpeasSpaceLayout extends SilverpeasComposite {
   private SilverpeasMainLayout mainLayout;
 
   @Inject
-  @DataField
-  private BreadCrumbWidget breadcrumb;
+  @DataField("breadcrumb")
+  private SilverpeasHtmlPanel breadcrumbPanel;
 
   @Inject
   @DataField("nav-gauche")
@@ -71,5 +71,7 @@ public class SilverpeasSpaceLayout extends SilverpeasComposite {
 
   @Override
   public void onPageShowing() {
+    breadcrumbPanel.clear();
+    breadcrumbPanel.add(new BreadCrumbWidget());
   }
 }

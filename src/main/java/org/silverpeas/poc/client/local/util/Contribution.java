@@ -24,6 +24,10 @@ public abstract class Contribution extends JavaScriptObject {
     return this.componentId;
   }-*/;
 
+  public final native void setAppInstanceId(String appInstanceId) /*-{
+    this.componentId = appInstanceId;
+  }-*/;
+
   public final native WebLink[] getLinks() /*-{
     return this.links;
   }-*/;

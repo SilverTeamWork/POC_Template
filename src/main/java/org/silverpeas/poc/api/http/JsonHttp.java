@@ -19,12 +19,11 @@ import java.util.Map;
  */
 public class JsonHttp {
 
-  private static final String JSON_DATA_SERVER = "/silverpeas/services/";
-
   private static JsonResponse unauthorizedCallback;
 
   private final JsonResponse successCallback;
   private JsonResponse errorCallback;
+  private JsonResponse finallyCallback;
   private JavaScriptObject dataToSend = null;
   private Object objectToSend = null;
   private boolean showWaiting = false;
@@ -43,6 +42,11 @@ public class JsonHttp {
 
   public JsonHttp onError(JsonResponse callback) {
     this.errorCallback = callback;
+    return this;
+  }
+
+  public JsonHttp onFinally(JsonResponse callback) {
+    this.finallyCallback = callback;
     return this;
   }
 
@@ -117,8 +121,8 @@ public class JsonHttp {
 
         @Override
         public void onResponseReceived(final Request request, final Response response) {
+          HttpResponse httpResponse = new HttpResponse(response);
           try {
-            HttpResponse httpResponse = new HttpResponse(response);
             int status = httpResponse.getStatusCode();
             Log.debug("HTTP status: " + status);
             if (status == Response.SC_OK || status == Response.SC_CREATED ||
@@ -128,10 +132,16 @@ public class JsonHttp {
                 unauthorizedCallback != null) {
               unauthorizedCallback.process(httpResponse);
             } else if (errorCallback != null) {
-                  errorCallback.process(httpResponse);
+              errorCallback.process(httpResponse);
             }
           } finally {
-            hideWaiting();
+            try {
+              if (finallyCallback != null) {
+                finallyCallback.process(httpResponse);
+              }
+            } finally {
+              hideWaiting();
+            }
           }
         }
 
@@ -148,7 +158,7 @@ public class JsonHttp {
 
   private String normalizeUri(String uri) {
     if (!uri.toLowerCase().startsWith("http")) {
-      uri = UrlManager.getSilverpeasUrl(JSON_DATA_SERVER) + uri;
+      uri = UrlManager.getSilverpeasServiceUrl(uri);
     }
     return uri;
   }

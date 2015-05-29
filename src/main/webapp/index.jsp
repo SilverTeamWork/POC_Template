@@ -8,8 +8,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="gwt:property" content="locale=fr">
   <link rel="<%=contextPath%>/apple-touch-icon" href="apple-touch-icon.png"/>
-  <link rel="icon" href="<%=contextPath%>/favicon.ico" sizes="16x16" type="image/vnd.microsoft.icon">
-  <link media="all" type="text/css" href="<%=contextPath%>/css/jquery/jquery-ui-1.10.3.custom.css" rel="stylesheet" >
+  <link rel="icon" href="<%=contextPath%>/favicon.ico" sizes="16x16" type="image/vnd.microsoft.icon"/>
+  <link media="all" type="text/css" href="<%=contextPath%>/css/jquery/jquery-ui-1.10.3.custom.css" rel="stylesheet"/>
   <link rel="stylesheet/less" type="text/css" href="<%=contextPath%>/css/knacss.less"/>
   <script src="<%=contextPath%>/js/less.min.js"></script>
   <script src="<%=contextPath%>/js/main.js"></script>

@@ -60,6 +60,9 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
   @TranslationKey(defaultValue = "Validate")
   String GML_VALIDATE = "GML.validate";
 
+  @TranslationKey(defaultValue = "")
+  String POST_NEW_TITLE_LABEL = "blog.title.new.label";
+
 
   /**
    * GWT i18n framework

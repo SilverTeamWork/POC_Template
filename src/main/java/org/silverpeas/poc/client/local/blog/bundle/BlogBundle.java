@@ -13,5 +13,4 @@ public class BlogBundle {
   public static Messages msg() {
     return me.messageBundle;
   }
-
 }

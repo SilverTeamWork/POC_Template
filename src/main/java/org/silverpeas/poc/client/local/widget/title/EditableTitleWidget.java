@@ -28,12 +28,13 @@ public class EditableTitleWidget extends Composite
   private InlineLabel title;
   private TextBox textBox = new TextBox();
   private Publication publication;
-  private SilverpeasHtmlPanel panel = new SilverpeasHtmlPanel(SilverpeasHtmlPanel.TYPE.DIV);
+  private SilverpeasHtmlPanel panel = new SilverpeasHtmlPanel(SilverpeasHtmlPanel.TYPE.A);
   private Anchor transition;
   private ValueChangeHandler<String> handler = null;
 
   public EditableTitleWidget() {
     initWidget(panel);
+    panel.getElement().setAttribute("href", "#");
     title = new InlineLabel();
     title.setStyleName("text");
   }

@@ -14,7 +14,7 @@ import javax.enterprise.event.Event;
 /**
  * @author miguel
  */
-public class BreadCrumbSpaceItem extends BreadCrumbItem {
+public class BreadCrumbSpaceItem extends BreadCrumbItem<BreadCrumbSpaceItem> {
 
   private final Space space;
 
@@ -44,10 +44,9 @@ public class BreadCrumbSpaceItem extends BreadCrumbItem {
   }
 
   @Override
-  protected void fireEvent() {
+  protected void fireItemEvent() {
     EventsProvider eventsProvider = BeanManager.getInstanceOf(EventsProvider.class);
     Event<SelectedSpace> event = eventsProvider.getSpaceSelectionEvent();
     event.fire(new SelectedSpace(space));
   }
-
 }

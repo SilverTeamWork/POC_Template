@@ -4,15 +4,47 @@ package org.silverpeas.poc.api.util;
  * @author Yohann Chastagnier
  */
 public class StringUtil {
+  private static final String TRUNCATED_TEXT_SUFFIX = "...";
+
+  /**
+   * Indicates if the given string can be parsed as an integer.
+   * @param string the string to verify.
+   * @return true if it can be parsed as an integer, false otherwise
+   */
+  public static boolean isInteger(String string) {
+    try {
+      Integer.parseInt(string);
+      return true;
+    } catch (Exception e) {
+      return false;
+    }
+  }
+
+  /**
+   * @param text The string to truncate if its size is greater than the maximum length given as
+   * parameter.
+   * @param maxLength The maximum length required.
+   * @return The truncated string followed by '...' if needed. Returns the string itself if its
+   * length is smaller than the required maximum length.
+   */
+  public static String truncate(String text, int maxLength) {
+    if (text == null || text.length() <= maxLength) {
+      return text;
+    } else if (maxLength <= TRUNCATED_TEXT_SUFFIX.length()) {
+      return TRUNCATED_TEXT_SUFFIX;
+    } else {
+      return text.substring(0, maxLength - TRUNCATED_TEXT_SUFFIX.length()) + TRUNCATED_TEXT_SUFFIX;
+    }
+  }
 
   /**
    * Indicates if the given string is defined.<br/>
    * A string is defined if it is:
    * <ul>
-   *   <li>not null</li>
-   *   <li>and not empty</li>
-   *   <li>and not composed only with spaces</li>
-   *   <li>and not equals to "null" string</li>
+   * <li>not null</li>
+   * <li>and not empty</li>
+   * <li>and not composed only with spaces</li>
+   * <li>and not equals to "null" string</li>
    * </ul>
    * @param string the string to verify.
    * @return true if defined, false otherwise.

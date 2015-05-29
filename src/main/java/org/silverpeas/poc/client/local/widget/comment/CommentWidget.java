@@ -27,7 +27,7 @@ public class CommentWidget extends Composite implements HasModel<Comment> {
   }
 
   public CommentWidget() {
-
+    // Necessary for injection
   }
 
   /**
@@ -59,8 +59,8 @@ public class CommentWidget extends Composite implements HasModel<Comment> {
       }
     });
     $wnd.jQuery('#commentaires').comment({
-      uri : "http://localhost:8000/silverpeas/services/comments/" + blogAppId + "/Publication/" +
-      postId,
+      uri : @org.silverpeas.poc.api.util.UrlManager::getSilverpeasServiceUrl(*)("comments/" +
+          blogAppId + "/Publication/" + postId),
       author : {
         avatar : avatarUrl,
         id : "'" + authorId + "'",

@@ -1,9 +1,9 @@
 package org.silverpeas.poc.client.local.widget.menu;
 
+import com.google.common.collect.ImmutableMultimap;
 import org.jboss.errai.ui.client.widget.HasModel;
 import org.silverpeas.poc.api.navigation.NavigationProvider;
 import org.silverpeas.poc.api.navigation.SilverpeasAnchor;
-import org.silverpeas.poc.api.util.Log;
 import org.silverpeas.poc.api.util.StringUtil;
 import org.silverpeas.poc.api.web.components.common.Message;
 
@@ -22,7 +22,8 @@ public class MenuAnchor extends SilverpeasAnchor implements HasModel<MenuAction>
     if (menuAction instanceof ToPageAction) {
       ToPageAction toPageAction = (ToPageAction) menuAction;
       if (StringUtil.isDefined(toPageAction.getPageName())) {
-        NavigationProvider.get().goTo(toPageAction.getPageName(), toPageAction.getParameters());
+        NavigationProvider.get().goTo(toPageAction.getPageName(),
+            ImmutableMultimap.copyOf(toPageAction.getParameters()));
       } else {
         Message.notifies(format("Action '{0}' is not yet handled", toPageAction.getLabel()))
             .warning();
