@@ -13,7 +13,7 @@ import javax.inject.Inject;
  */
 @Page
 @Templated
-@ApplicationScoped
+//@ApplicationScoped
 public class Page2 extends Composite {
 
   @Inject
