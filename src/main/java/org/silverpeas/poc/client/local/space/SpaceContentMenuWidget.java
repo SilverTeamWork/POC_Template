@@ -2,7 +2,6 @@ package org.silverpeas.poc.client.local.space;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import io.reinert.gdeferred.DoneCallback;
@@ -14,13 +13,10 @@ import org.silverpeas.poc.client.local.application.ApplicationInstance;
 import org.silverpeas.poc.client.local.application.event.LoadedApplicationInstance;
 import org.silverpeas.poc.client.local.space.event.LoadedSpace;
 import org.silverpeas.poc.client.local.space.event.SelectedSpace;
-import org.silverpeas.poc.client.local.widget.SilverpeasHtmlPanel;
 
 import javax.enterprise.event.Event;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
-
-import static org.silverpeas.poc.client.local.widget.SilverpeasHtmlPanel.TYPE.ASIDE;
 
 /**
  * @author Yohann Chastagnier

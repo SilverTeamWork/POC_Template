@@ -1,15 +1,12 @@
 package org.silverpeas.poc.client.local;
 
-import com.google.gwt.user.client.ui.Composite;
 import io.reinert.gdeferred.Deferred;
 import io.reinert.gdeferred.Promise;
 import io.reinert.gdeferred.impl.DeferredObject;
 import org.jboss.errai.ioc.client.api.AfterInitialization;
 import org.jboss.errai.ioc.client.api.EntryPoint;
 import org.jboss.errai.ui.nav.client.local.DefaultNavigationErrorHandler;
-import org.jboss.errai.ui.nav.client.local.DefaultPage;
 import org.jboss.errai.ui.nav.client.local.Navigation;
-import org.jboss.errai.ui.nav.client.local.Page;
 import org.jboss.errai.ui.nav.client.local.UniquePageRole;
 import org.silverpeas.poc.api.Callback;
 import org.silverpeas.poc.api.http.HttpResponse;
@@ -20,11 +17,8 @@ import org.silverpeas.poc.api.util.I18n;
 import org.silverpeas.poc.api.util.Log;
 import org.silverpeas.poc.api.web.components.common.Message;
 import org.silverpeas.poc.client.local.user.CurrentUser;
-import org.silverpeas.poc.client.local.util.HomeSpaceProvider;
 import org.silverpeas.poc.client.local.util.Messages;
 
-import javax.annotation.PostConstruct;
-import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 /**
