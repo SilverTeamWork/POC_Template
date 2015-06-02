@@ -56,6 +56,12 @@ public class BlogDatePickerWidget implements IsWidget {
     }).get(PostCriteria.fromBlog(instance.getId()));
   }
 
+  public void displayOnlyCurrentPost(Post curPost) {
+    final Set<Date> postDates = new HashSet<>();
+    postDates.add(curPost.getDateEvent());
+    datePickerWidget.setDatesToHighlight(postDates);
+  }
+
   @Override
   public Widget asWidget() {
     return datePickerWidget;

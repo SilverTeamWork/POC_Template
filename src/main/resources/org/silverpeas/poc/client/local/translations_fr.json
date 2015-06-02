@@ -25,5 +25,6 @@
   "message.contribution.update.error": "La mise-à-jour de votre {0} a échouée lamentablement",
   "title.label": "Titre",
   "post": "billet",
-  "blog.title.new.label": "Nouveau billet ..."
+  "blog.title.new.label": "Nouveau billet ...",
+  "post.date.event" : "Date de l'événement"
 }

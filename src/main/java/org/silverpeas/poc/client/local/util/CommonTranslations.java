@@ -44,4 +44,7 @@ public interface CommonTranslations {
   String TITLE_LABEL = "title.label";
   @TranslationKey(defaultValue = "")
   String POST = "post";
+  @TranslationKey(defaultValue = "")
+  String POST_DATE_EVENT = "post.date.event";
+
 }

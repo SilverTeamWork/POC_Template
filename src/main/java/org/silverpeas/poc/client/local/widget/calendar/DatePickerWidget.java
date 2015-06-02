@@ -40,6 +40,14 @@ public class DatePickerWidget extends Composite {
     getDatePicker().removeStyleFromDates(DATE_HIGHLIGHT_STYLE, this.datesToHighlight);
     this.datesToHighlight = datesToHighlight;
     getDatePicker().addStyleToDates(DATE_HIGHLIGHT_STYLE, datesToHighlight);
+    if (datesToHighlight.size() == 1) {
+      getDatePicker().onLoad();
+      getDatePicker().setCurrentMonth(datesToHighlight.iterator().next());
+    }
+  }
+
+  public void setCurrentMonth(final Date date) {
+    getDatePicker().setCurrentMonth(date);
   }
 
   private DatePicker getDatePicker() {

@@ -26,5 +26,6 @@
   "message.contribution.update.error": "The update of your {0} has failed",
   "title.label": "Title",
   "post": "post",
-  "blog.title.new.label": "New post ..."
+  "blog.title.new.label": "New post ...",
+  "post.date.event" : "Event date"
 }

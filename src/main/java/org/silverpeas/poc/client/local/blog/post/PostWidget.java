@@ -4,8 +4,10 @@ import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.FocusHandler;
+import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.datepicker.client.DateBox;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
 import org.silverpeas.poc.api.event.widget.ResourceSaveEvent;
@@ -19,8 +21,10 @@ import org.silverpeas.poc.api.util.UrlManager;
 import org.silverpeas.poc.api.widget.ResourceComposite;
 import org.silverpeas.poc.client.local.blog.Post;
 import org.silverpeas.poc.client.local.blog.PostCriteria;
+import org.silverpeas.poc.client.local.blog.widget.BlogDatePickerWidget;
 import org.silverpeas.poc.client.local.user.CurrentUser;
 import org.silverpeas.poc.client.local.util.CommonTranslations;
+import org.silverpeas.poc.client.local.util.Messages;
 import org.silverpeas.poc.client.local.widget.NotificationWidget;
 import org.silverpeas.poc.client.local.widget.SilverpeasHtmlPanel;
 import org.silverpeas.poc.client.local.widget.WysiwygEditor;
@@ -28,11 +32,12 @@ import org.silverpeas.poc.client.local.widget.comment.CommentWidget;
 import org.silverpeas.poc.client.local.widget.contribution.PublicationFooterWidget;
 
 import javax.inject.Inject;
+import java.util.Date;
 
 /**
  * @author ebonnet
  */
-@Templated("Post.html#blogPost")
+@Templated("PostWidget.html#blogPost")
 public class PostWidget extends ResourceComposite<Post> {
 
   @Inject
@@ -52,6 +57,9 @@ public class PostWidget extends ResourceComposite<Post> {
   private PublicationFooterWidget footer;
 
   private TextBox titleInput = new TextBox();
+
+  @Inject
+  private DateBox eventDate;
 
   private boolean edition = false;
   private WysiwygEditor editor = null;
@@ -137,14 +145,9 @@ public class PostWidget extends ResourceComposite<Post> {
     content.clear();
     if (isInEdition()) {
       // Adding a title
-      SilverpeasHtmlPanel titlePanel = new SilverpeasHtmlPanel(SilverpeasHtmlPanel.TYPE.DIV);
-      titlePanel.setStyleName("edition-form-line");
-      SilverpeasHtmlPanel titleLabel = new SilverpeasHtmlPanel(SilverpeasHtmlPanel.TYPE.SPAN);
-      titleLabel.getElement().setInnerHTML(I18n.format(CommonTranslations.TITLE_LABEL));
-      titlePanel.add(titleLabel);
-      titleInput.setText(getModel().getTitle());
-      titlePanel.add(titleInput);
+      SilverpeasHtmlPanel titlePanel = initializeTitlePanel();
       content.add(titlePanel);
+      content.add(getDatePanel());
       // Loading WYSIWYG editor
       loadWysiwygEditor();
     } else {
@@ -152,9 +155,38 @@ public class PostWidget extends ResourceComposite<Post> {
         editor.removeFromParent();
         editor = null;
       }
+      eventDate.setEnabled(false);
       HTML text = new HTML(getModel().getContent());
       content.add(text);
     }
+  }
+
+  private SilverpeasHtmlPanel initializeTitlePanel() {
+    SilverpeasHtmlPanel titlePanel = new SilverpeasHtmlPanel(SilverpeasHtmlPanel.TYPE.DIV);
+    titlePanel.setStyleName("edition-form-line");
+    SilverpeasHtmlPanel titleLabel = new SilverpeasHtmlPanel(SilverpeasHtmlPanel.TYPE.SPAN);
+    titleLabel.getElement().setInnerHTML(I18n.format(CommonTranslations.TITLE_LABEL));
+    titlePanel.add(titleLabel);
+    titleInput.setText(getModel().getTitle());
+    titlePanel.add(titleInput);
+    return titlePanel;
+  }
+
+  private SilverpeasHtmlPanel getDatePanel() {
+    SilverpeasHtmlPanel datePanel = new SilverpeasHtmlPanel(SilverpeasHtmlPanel.TYPE.DIV);
+    datePanel.setStyleName("edition-form-line-date");
+    SilverpeasHtmlPanel dateLabel = new SilverpeasHtmlPanel(SilverpeasHtmlPanel.TYPE.SPAN);
+    dateLabel.getElement().setInnerHTML(I18n.format(CommonTranslations.POST_DATE_EVENT));
+    datePanel.add(dateLabel);
+
+    // Initialize value
+    DateTimeFormat dateFormat = DateTimeFormat.getFormat(I18n.format(Messages.DATE_FORMAT));
+    eventDate.setFormat(new DateBox.DefaultFormat(dateFormat));
+    Date jsEventDate = new Date(Long.parseLong("" + getModel().getDateEventTimestamp()));
+    eventDate.getDatePicker().setValue(jsEventDate, true);
+    eventDate.setEnabled(true);
+    datePanel.add(eventDate);
+    return datePanel;
   }
 
   private WysiwygEditor loadWysiwygEditor() {
@@ -166,6 +198,10 @@ public class PostWidget extends ResourceComposite<Post> {
           if (!getModel().getContent().equals(text) ||
               !getModel().getTitle().equals(titleInput.getText())) {
             getModel().setTitle(titleInput.getText());
+            if (getModel().getDateEventTimestamp() != eventDate.getValue().getTime()) {
+              getModel().setDateEventTimestamp(eventDate.getValue().getTime());
+              // Need to update BlogDatePickerWidget
+            }
             getModel().setContent(text);
             final boolean isCreation = isNewPost();
             JsonHttp jsonHttp = JsonHttp.onSuccess(new JsonResponse() {

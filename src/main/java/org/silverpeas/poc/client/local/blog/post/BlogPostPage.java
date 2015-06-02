@@ -93,12 +93,14 @@ public class BlogPostPage extends BlogPageComposite {
     if ("new".equals(postId)) {
       Post post = Post.newInstance(instance);
       setModel(post);
+      blogDatePickerWidget.displayOnlyCurrentPost(post);
     } else {
       JsonHttp.onSuccess(new JsonResponse() {
         @Override
         public void process(final HttpResponse response) {
           final Post post = response.parseJsonEntity();
           setModel(post);
+          blogDatePickerWidget.displayOnlyCurrentPost(post);
         }
       }).onError(new JsonResponse() {
         @Override
@@ -116,7 +118,7 @@ public class BlogPostPage extends BlogPageComposite {
     }
 
     // Posts to indicate into the calendar
-    blogDatePickerWidget.loadFor(instance);
+    //blogDatePickerWidget.loadFor(instance);
   }
 
   private void setModel(Post post) {
@@ -140,5 +142,9 @@ public class BlogPostPage extends BlogPageComposite {
     postPageCrumbItem.withParameters(
         ImmutableMultimap.of("instanceId", getApplicationInstance().getId(), "postId", postId))
         .withLabel(postWidget.getModel().getTitle());
+  }
+
+  private void updateDateWidgetFromModel(Post post) {
+    blogDatePickerWidget.displayOnlyCurrentPost(post);
   }
 }
