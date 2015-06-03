@@ -1,0 +1,33 @@
+{
+  "name": "silverpeas-web",
+  "version": "1.0.0",
+  "homepage": "https://github.com/SilverTeamWork/POC_Template",
+  "authors": [
+    "Miguel Moquillon <miguel.moquillon@silverpeas.org>",
+    "Yohann Chastagnier <yohann.chastagnier@silverpeas.org>",
+    "Etienne Bonnet <etienne.bonnet@silverpeas.org>"
+  ],
+  "description": "Silverpeas Web UI based upon Polymer",
+  "main": "main.js",
+  "keywords": [
+    "Silverpeas",
+    "Web",
+    "Polymer",
+    "POC"
+  ],
+  "license": "AGPL-3.0",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#^1.0.0",
+    "iron-elements": "PolymerElements/iron-elements#1.0.0",
+    "paper-elements": "PolymerElements/paper-elements#1.0.1",
+    "platinum-elements": "PolymerElements/platinum-elements#1.0.0",
+    "page": "visionmedia/page.js#~1.6.3"
+  }
+}

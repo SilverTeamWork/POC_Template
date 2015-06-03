@@ -8,15 +8,21 @@
 
   <meta name="description" content=""/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="application-name" content="Silverpeas Web">
 
-  <link rel="apple-touch-icon" href="apple-touch-icon.png"/>
+  <!-- Tile icon for Win8 (144x144 + tile color) -->
+  <meta name="msapplication-TileImage" content="images/touch/ms-touch-icon-144x144-precomposed.png">
+
+  <!-- Web Application Manifest -->
+  <link rel="manifest" href="manifest.json">
+
+  <link rel="apple-touch-icon" href="images/touch/apple-touch-icon.png"/>
   <link rel="icon" href="favicon.ico" sizes="16x16" type="image/vnd.microsoft.icon">
 
-  <link rel="stylesheet/less" type="text/css" href="css/knacss.less"/>
+  <link rel="stylesheet/less" type="text/css" href="styles/knacss.less"/>
 
-  <!-- a voir si on utilise �a  <script src="js/vendor/modernizr-2.8.3-respond-1.4.2.min.js"></script>-->
-  <script src="js/less.min.js"></script>
-  <script src="js/main.js"></script>
+  <script src="scripts/less.min.js"></script>
+  <script src="scripts/main.js"></script>
 
 </head>
 <body class="page-login w100 flexbox-v">
@@ -59,5 +65,6 @@
     2015 Silverpeas Represente ! Tac tac
   </footer>
 </div>
+
 </body>
 </html>
