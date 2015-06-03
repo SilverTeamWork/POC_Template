@@ -142,6 +142,7 @@ public class BlogPostPage extends BlogPageComposite {
     postPageCrumbItem.withParameters(
         ImmutableMultimap.of("instanceId", getApplicationInstance().getId(), "postId", postId))
         .withLabel(postWidget.getModel().getTitle());
+    updateDateWidgetFromModel(post);
   }
 
   private void updateDateWidgetFromModel(Post post) {

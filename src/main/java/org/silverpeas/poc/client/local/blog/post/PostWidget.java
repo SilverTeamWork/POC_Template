@@ -196,12 +196,10 @@ public class PostWidget extends ResourceComposite<Post> {
         @Override
         public void onTextSave(final String text) {
           if (!getModel().getContent().equals(text) ||
-              !getModel().getTitle().equals(titleInput.getText())) {
+              !getModel().getTitle().equals(titleInput.getText()) ||
+              getModel().getDateEventTimestamp() != eventDate.getValue().getTime()) {
             getModel().setTitle(titleInput.getText());
-            if (getModel().getDateEventTimestamp() != eventDate.getValue().getTime()) {
-              getModel().setDateEventTimestamp(eventDate.getValue().getTime());
-              // Need to update BlogDatePickerWidget
-            }
+            getModel().setDateEventTimestamp(eventDate.getValue().getTime());
             getModel().setContent(text);
             final boolean isCreation = isNewPost();
             JsonHttp jsonHttp = JsonHttp.onSuccess(new JsonResponse() {
