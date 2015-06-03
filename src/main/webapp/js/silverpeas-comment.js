@@ -79,6 +79,7 @@
    * means the field is mandatory.
    */
   var settings = {
+    serverUrl : 'http://localhost/',
     url: 'http://localhost/comments',
     author: {
       id: null,
@@ -250,7 +251,7 @@
     }
     var actionsPane = $("<div>").addClass("action").appendTo(commentBox);
     var avatarUrl = comment.author.avatar;
-    $("<img>").attr("src", "http://localhost:8000" + avatarUrl).appendTo($("<div>").addClass("avatar").appendTo(commentBox));
+    $("<img>").attr("src", settings.serverUrl + avatarUrl).appendTo($("<div>").addClass("avatar").appendTo(commentBox));
     if (settings.author && ((settings.author.id == comment.author.id) || settings.author.anonymous))
       $("<span>").addClass("date").text(" - " + comment.creationDate).appendTo($("<p>").addClass("author").text(comment.author.fullName).appendTo(commentBox));
     else
