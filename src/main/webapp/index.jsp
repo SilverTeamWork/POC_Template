@@ -12,6 +12,7 @@
   <link media="all" type="text/css" href="<%=contextPath%>/css/jquery/jquery-ui-1.10.3.custom.css" rel="stylesheet"/>
   <link rel="stylesheet/less" type="text/css" href="<%=contextPath%>/css/knacss.less"/>
   <script src="<%=contextPath%>/js/less.min.js"></script>
+  <script src="config.jsp"></script>
   <script src="<%=contextPath%>/js/main.js"></script>
   <script src="<%=contextPath%>/js/jquery/jquery-1.10.2.min.js" type="text/javascript" charset="utf-8"></script>
   <script src="<%=contextPath%>/js/jquery/jquery-ui-1.10.3.custom.min.js" type="text/javascript" charset="utf-8"></script>

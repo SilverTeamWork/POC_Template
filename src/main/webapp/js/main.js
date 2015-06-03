@@ -34,7 +34,7 @@ var cache = new function() {
  * succeeds or otherwise an error.
  */
 var authenticate = function(login, password) {
-  var url = 'http://localhost:8000/silverpeas/services/authentication';
+  var url = silverpeas + '/services/authentication';
   return new Promise(function(resolve, reject) {
     var req = new XMLHttpRequest();
     req.open('POST', url, false);
