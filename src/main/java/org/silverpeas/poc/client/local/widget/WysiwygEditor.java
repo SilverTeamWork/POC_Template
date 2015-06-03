@@ -35,7 +35,7 @@ public class WysiwygEditor extends Composite implements TakesValue<String> {
    * @param text the text that should be displayed by the editor.
    */
   public WysiwygEditor(String text) {
-    editorPanel = new FormPanel();
+    editorPanel = new FormPanel("");
     editorPanel.setAction("javascript:save();");
     initWidget(editorPanel);
     TextArea content = new TextArea();

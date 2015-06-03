@@ -214,7 +214,7 @@ public class PostWidget extends ResourceComposite<Post> {
                 NotificationWidget.notifError(I18n.format(CommonTranslations.MESSAGE_UPDATE_ERROR,
                     I18n.format(CommonTranslations.POST)));
               }
-            }).withData(getModel());
+            }).waitingMessage().withData(getModel());
 
             if (StringUtil.isNotDefined(getModel().getId())) {
               jsonHttp.post(PostCriteria.fromPost(getModel()));
