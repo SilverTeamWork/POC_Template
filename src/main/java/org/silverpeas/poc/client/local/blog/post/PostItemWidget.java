@@ -93,7 +93,7 @@ public class PostItemWidget extends Composite implements HasModel<Post> {
           public void process(final HttpResponse response) {
             getModel().setTitle(previousValue);
           }
-        }).withData(getModel()).put(PostCriteria.fromPost(getModel()));
+        }).withData(getModel()).waitingMessage().put(PostCriteria.fromPost(getModel()));
       }
     });
     operation.setDeletionHandler(new ClickHandler() {
@@ -104,17 +104,15 @@ public class PostItemWidget extends Composite implements HasModel<Post> {
           public void process(final HttpResponse response) {
             removeFromParent();
           }
-        }).delete(PostCriteria.fromPost(getModel()));
+        }).waitingMessage().delete(PostCriteria.fromPost(getModel()));
       }
     });
   }
 
   @EventHandler
   private void onPostItemClick(ClickEvent event) {
-    if (!title.isEditModeFocused() && getModel() != null) {
-      NavigationProvider.get().goTo(BlogPostPage.class, ImmutableMultimap
-          .of("instanceId", getModel().getAppInstanceId(), "postId", getModel().getId()));
-    }
+    NavigationProvider.get().goTo(BlogPostPage.class, ImmutableMultimap
+        .of("instanceId", getModel().getAppInstanceId(), "postId", getModel().getId()));
   }
 
   @Override
@@ -145,9 +143,9 @@ public class PostItemWidget extends Composite implements HasModel<Post> {
     AccessController.on(this.post).doOnlyIfPrivileged(new AccessController.Action() {
       @Override
       public void run() {
-        operation.setEditionPage(BlogPostPage.class,
-            ImmutableMultimap.of("instanceId", getModel().getAppInstanceId(), "postId",
-                getModel().getId(), "state", "edition"));
+        operation.setEditionPage(BlogPostPage.class, ImmutableMultimap
+                .of("instanceId", getModel().getAppInstanceId(), "postId", getModel().getId(),
+                    "state", "edition"));
       }
     }).doOnlyIfUnprivileged(new AccessController.Action() {
       @Override

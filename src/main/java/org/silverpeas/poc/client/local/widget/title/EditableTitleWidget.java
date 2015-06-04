@@ -1,12 +1,6 @@
 package org.silverpeas.poc.client.local.widget.title;
 
-import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.dom.client.KeyPressEvent;
-import com.google.gwt.event.dom.client.KeyPressHandler;
-import com.google.gwt.event.dom.client.MouseOutEvent;
-import com.google.gwt.event.dom.client.MouseOutHandler;
-import com.google.gwt.event.dom.client.MouseOverEvent;
-import com.google.gwt.event.dom.client.MouseOverHandler;
+import com.google.gwt.event.dom.client.*;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.InlineLabel;
@@ -23,7 +17,7 @@ import org.silverpeas.poc.client.local.widget.SilverpeasHtmlPanel;
  * @author miguel
  */
 public class EditableTitleWidget extends Composite
-    implements HasModel<Publication>, MouseOverHandler, MouseOutHandler {
+    implements HasModel<Publication>, MouseOutHandler, MouseMoveHandler {
 
   private InlineLabel title;
   private TextBox textBox = new TextBox();
@@ -74,8 +68,15 @@ public class EditableTitleWidget extends Composite
     AccessController.on(publication).doOnlyIfPrivileged(new AccessController.Action() {
       @Override
       public void run() {
-        addDomHandler(EditableTitleWidget.this, MouseOverEvent.getType());
+        addDomHandler(EditableTitleWidget.this, MouseMoveEvent.getType());
         addDomHandler(EditableTitleWidget.this, MouseOutEvent.getType());
+      }
+    });
+    textBox.addClickHandler(new ClickHandler() {
+      @Override
+      public void onClick(final ClickEvent event) {
+        event.preventDefault();
+        event.stopPropagation();
       }
     });
   }
@@ -98,10 +99,10 @@ public class EditableTitleWidget extends Composite
       public void run() {
         textBox.setStyleName("input text");
         textBox.setWidth("80%");
-        textBox.addKeyPressHandler(new KeyPressHandler() {
+        textBox.addKeyDownHandler(new KeyDownHandler() {
           @Override
-          public void onKeyPress(final KeyPressEvent event) {
-            if (event.getCharCode() == KeyCodes.KEY_ENTER) {
+          public void onKeyDown(final KeyDownEvent event) {
+            if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
               if (handler != null) {
                 String newTitle = textBox.getText();
                 if (!newTitle.equals(publication.getTitle())) {
@@ -138,20 +139,22 @@ public class EditableTitleWidget extends Composite
   }
 
   /**
-   * Called when MouseOverEvent is fired.
-   * @param event the {@link MouseOverEvent} that was fired
+   * Called when MouseMoveEvent is fired.
+   * @param event the {@link MouseMoveEvent} that was fired
    */
   @Override
-  public void onMouseOver(final MouseOverEvent event) {
-    AccessController.on(publication).doOnlyIfPrivileged(new AccessController.Action() {
-      @Override
-      public void run() {
-        textBox.setText(publication.getTitle());
-        panel.clear();
-        panel.add(textBox);
-        textBox.setFocus(true);
-      }
-    });
+  public void onMouseMove(final MouseMoveEvent event) {
+    if (!isEditModeFocused()) {
+      AccessController.on(publication).doOnlyIfPrivileged(new AccessController.Action() {
+        @Override
+        public void run() {
+          textBox.setText(publication.getTitle());
+          panel.clear();
+          panel.add(textBox);
+          textBox.setFocus(true);
+        }
+      });
+    }
   }
 
   /**
