@@ -233,7 +233,7 @@ public class PostWidget extends ResourceComposite<Post> {
     if (!commentLoadDone) {
       commentLoadDone = true;
       CommentWidget.initCommentWidget(getModel().getAppInstanceId(), getModel().getId(),
-          CurrentUser.get().getId(), UrlManager.getSilverpeasUrl(CurrentUser.get().getAvatar()),
+          CurrentUser.get().getId(), UrlManager.getSilverpeasRootUrl(CurrentUser.get().getAvatar()),
           true, CurrentUser.token());
     }
   }

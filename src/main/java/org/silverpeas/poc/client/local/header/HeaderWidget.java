@@ -104,7 +104,7 @@ public class HeaderWidget extends Composite {
       spaceLoader.loadRootSpaces();
       User currentUser = CurrentUser.get();
       name.setInnerText(currentUser.getName());
-      avatar.setUrl(UrlManager.getSilverpeasUrl(currentUser.getAvatar()));
+      avatar.setUrl(UrlManager.getSilverpeasRootUrl(currentUser.getAvatar()));
       avatar.setAltText("Avatar " + currentUser.getName());
       disconnection.addClickHandler(new ClickHandler() {
         @Override

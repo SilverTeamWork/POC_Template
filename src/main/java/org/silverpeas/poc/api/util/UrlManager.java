@@ -7,7 +7,7 @@ import org.jboss.errai.ui.nav.client.local.Navigation;
  * @author Yohann Chastagnier
  */
 public class UrlManager {
-  private static final String JSON_DATA_SERVER = "/silverpeas/services/";
+  private static final String JSON_DATA_SERVER = "/services/";
 
   /**
    * Gets the server URL of the resource at the given path.
@@ -27,9 +27,41 @@ public class UrlManager {
    * @param path the path from which the server URL must be computed.
    * @return the server URL of the resource at the given path.
    */
-  public static String getSilverpeasUrl(String path) {
-    return Window.Location.createUrlBuilder().setPort(8000).setPath(path).buildString();
-  }
+  public static native String getSilverpeasRootUrl(String path) /*-{
+    if (!$wnd.silverpeasServerRootUrl) {
+      $wnd.silverpeasServerRootUrl = $wnd.silverpeas.replace(/\/[^\/]*$/gi, '');
+    }
+    var silverpeasUrl = $wnd.silverpeasServerRootUrl;
+    if (path && path.length > 0) {
+      if (path.charAt(0) === '/') {
+        silverpeasUrl += path;
+      } else {
+        silverpeasUrl += '/' + path;
+      }
+    } else {
+      silverpeasUrl += '/';
+    }
+    return silverpeasUrl;
+  }-*/;
+
+  /**
+   * Gets the server URL of the resource at the given path.
+   * @param path the path from which the server URL must be computed.
+   * @return the server URL of the resource at the given path.
+   */
+  public static native String getSilverpeasUrl(String path) /*-{
+    var silverpeasUrl = $wnd.silverpeas;
+    if (path && path.length > 0) {
+      if (path.charAt(0) === '/') {
+        silverpeasUrl += path;
+      } else {
+        silverpeasUrl += '/' + path;
+      }
+    } else {
+      silverpeasUrl += '/';
+    }
+    return silverpeasUrl;
+  }-*/;
 
   /**
    * Gets the server URL of the resource at the given path.

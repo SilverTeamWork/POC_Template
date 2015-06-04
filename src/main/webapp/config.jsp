@@ -1,1 +1,1 @@
-var silverpeas = '<%= request.getScheme() + "://" + request.getLocalAddr() + ":" + request.getLocalPort() + "/silverpeas" %>';
+var silverpeas = '<%= request.getScheme() + "://" + request.getLocalAddr() + ":8000/silverpeas" %>';

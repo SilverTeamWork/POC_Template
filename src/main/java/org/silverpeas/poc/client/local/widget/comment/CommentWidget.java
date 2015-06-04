@@ -59,7 +59,7 @@ public class CommentWidget extends Composite implements HasModel<Comment> {
       }
     });
     $wnd.jQuery('#commentaires').comment({
-      serverUrl : @org.silverpeas.poc.api.util.UrlManager::getSilverpeasUrl(*)(""),
+      serverUrl : @org.silverpeas.poc.api.util.UrlManager::getSilverpeasRootUrl(*)(""),
       uri : @org.silverpeas.poc.api.util.UrlManager::getSilverpeasServiceUrl(*)("comments/" +
           blogAppId + "/Publication/" + postId),
       author : {

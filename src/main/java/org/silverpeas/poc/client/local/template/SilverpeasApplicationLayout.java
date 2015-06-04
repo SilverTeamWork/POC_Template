@@ -6,8 +6,10 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Panel;
 import org.jboss.errai.ioc.client.api.AfterInitialization;
+import org.jboss.errai.ui.shared.TemplateUtil;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
+import org.silverpeas.poc.api.util.Log;
 import org.silverpeas.poc.api.util.StringUtil;
 import org.silverpeas.poc.client.local.application.ApplicationInstance;
 import org.silverpeas.poc.client.local.application.event.LoadedApplicationInstance;
@@ -38,7 +40,7 @@ public class SilverpeasApplicationLayout extends SilverpeasComposite {
 
   @Inject
   @DataField("nav-gauche")
-  private SpaceContentMenuWidget spaceContentMenu;
+  private SilverpeasHtmlPanel spaceContentMenu;
 
   @DataField("app-section")
   private Element appSection = DOM.createElement("section");
@@ -126,12 +128,14 @@ public class SilverpeasApplicationLayout extends SilverpeasComposite {
 
   @Override
   public void onPageShowing() {
+    spaceContentMenu.add(new SpaceContentMenuWidget());
     breadcrumbPanel.add(new BreadCrumbWidget());
   }
 
   @Override
   public void onPageHidden() {
     super.onPageHidden();
+    spaceContentMenu.clear();
     breadcrumbPanel.clear();
     menu.clear();
     rightPanel.clear();

@@ -33,7 +33,7 @@ public class SilverpeasSpaceLayout extends SilverpeasComposite {
 
   @Inject
   @DataField("nav-gauche")
-  private SpaceContentMenuWidget spaceContentMenu;
+  private SilverpeasHtmlPanel spaceContentMenu;
 
   @DataField
   private Element mainTitle = DOM.createSpan();
@@ -71,12 +71,14 @@ public class SilverpeasSpaceLayout extends SilverpeasComposite {
 
   @Override
   public void onPageShowing() {
+    spaceContentMenu.add(new SpaceContentMenuWidget());
     breadcrumbPanel.add(new BreadCrumbWidget());
   }
 
   @Override
   public void onPageHidden() {
     super.onPageHidden();
+    spaceContentMenu.clear();
     breadcrumbPanel.clear();
   }
 }
