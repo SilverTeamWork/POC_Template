@@ -7,20 +7,20 @@ var cache = new function() {
   var userProfileKey = 'user-profile';
   this.putSessionId = function(token) {
     localStorage.setItem(sessionTokenKey, token);
-  }
+  };
 
   this.getSessionId = function() {
     return localStorage.getItem(sessionTokenKey);
-  }
+  };
 
   this.putCurrentUser = function(userProfile) {
     localStorage.setItem(userProfileKey, JSON.stringify(userProfile));
-  }
+  };
 
   this.getCurrentUser = function() {
     return JSON.parse(localStorage.getItem(userProfileKey));
-  }
-}
+  };
+}();
 
 /**
  * Authenticates the user behind Silverpeas.
@@ -40,7 +40,7 @@ var authenticate = function(login, password) {
         var user = {
           token: req.getResponseHeader('X-Silverpeas-Session'),
           profile: JSON.parse(req.responseText)
-        }
+        };
         console.log('Session Token: ' + user.token);
         console.log('User Profile: ' + JSON.stringify(user.profile));
         resolve(user);
@@ -53,7 +53,7 @@ var authenticate = function(login, password) {
     };
     req.send();
   });
-}
+};
 
 /**
  * Gets the resource in JSON located at the specified URL.
@@ -80,11 +80,11 @@ var get = function(url) {
     };
     req.send();
   });
-}
+};
 
 var reportError = function(message) {
   document.querySelector('#error').textContent = message;
-}
+};
 
 /**
  * Logins to Silverpeas. The user is first authenticated. If the authentication succeeds, then the

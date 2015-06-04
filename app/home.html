@@ -7,9 +7,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <link rel="apple-touch-icon" href="images/touch/apple-touch-icon.png"/>
   <link rel="icon" href="favicon.ico" sizes="16x16" type="image/vnd.microsoft.icon">
-  <link rel="stylesheet/less" type="text/css" href="css/knacss.less"/>
-  <script src="js/less.min.js"></script>
-  <script src="js/main.js"></script>
+  <link rel="stylesheet" type="text/css" href="styles/styles.css"/>
+  <script src="scripts/main.js"></script>
 
   <script>
     var header = document.getElementById("header");
@@ -29,9 +28,9 @@
 <body class="page-home w100 flexbox-v">
 <div class="header-container">
   <header id="header" class="wrapper clearfix txtcenter">
-    <h1 class="title"><img src="img/logo-header.png" alt="silverpeas"/></h1>
+    <h1 class="title"><img src="images/logo-header.png" alt="silverpeas"/></h1>
     <div class="current-user">
-    	<img class="avatar" src="img/aurore.allibe.png" alt="" />
+    	<img class="avatar" src="images/aurore.allibe.png" alt="" />
     	<span class="name">Aurore ALLIBE</span>
         <div><a href="#">Se déconnecter</a></div>
     </div>
@@ -199,6 +198,7 @@
   // just to test the session id that was retrieved is valid
   get('http://localhost:8000/silverpeas/services/profile/users/me').then(function(user) {
     var text = document.querySelector('.titleCenter').innerHTML;
+    document.querySelector('.name').innerHTML = user.firstName + ' ' + user.lastName;
     document.querySelector('.titleCenter').innerHTML =
         text + ' ' + user.firstName + ' ' + user.lastName;
   }, function(error) {
