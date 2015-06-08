@@ -1,0 +1,47 @@
+<script>
+  (function() {
+    var SESSION_TOKEN = 'user-auth-token';
+    var CURRENT_USER = 'user-profile';
+    var LOGIN_PAGE = '/index.html';
+    window.SessionBehavior = {
+      /**
+       * Fires an event if the current user session is valid.
+       *
+       * @param {Object} currentUser
+       * @param {String} currentUser.token the current user session token
+       * @param {Object} currentUser.profile the current user profile
+       * @event user-session-loaded
+       */
+      properties : {
+        loginPage : {
+          type : String,
+          value : LOGIN_PAGE
+        },
+        user: {
+          type: Object,
+          notify: true,
+        }
+      },
+      ready : function() {
+        var sessionKey = localStorage.getItem(SESSION_TOKEN);
+        if (!sessionKey) {
+          console.log("no user session key!");
+          this._redirectToLoginPage();
+        } else {
+          console.log('user session found: ' + sessionKey);
+          this.user = JSON.parse(localStorage.getItem(CURRENT_USER));
+          this.fire('user-session-loaded', this.user);
+        }
+      },
+      closeSession: function() {
+        localStorage.removeItem(SESSION_TOKEN);
+        localStorage.removeItem(CURRENT_USER);
+        this._redirectToLoginPage();
+      },
+      _redirectToLoginPage: function() {
+        console.log("redirect to " + this.loginPage);
+        document.location = this.loginPage;
+      }
+    };
+  })();
+</script>

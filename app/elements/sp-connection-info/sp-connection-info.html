@@ -1,0 +1,44 @@
+<dom-module id="sp-connection-info">
+  <style>
+    paper-button.sp-connection-info {
+      cursor: pointer;
+      text-decoration: underline;
+    }
+  </style>
+  <template>
+    <div class="current-user">
+      <img class="avatar" src="{{_avatar}}" alt=""/>
+      <span class="name">{{_fullName}}</span>
+      <div><paper-button on-click="disconnect">Se déconnecter</paper-button></div>
+    </div>
+  </template>
+</dom-module>
+
+<script>
+  (function() {
+    Polymer({
+      is: 'sp-connection-info',
+      behaviors: [SessionBehavior],
+      properties: {
+        _fullName: {
+          type: String,
+          computed: '_computeFullNameOf(user)'
+        },
+        _avatar: {
+          type: String,
+          computed: '_computeAvatarUrlOf(user)'
+        }
+      },
+      _computeFullNameOf: function(user) {
+        return (user == null ? '':user.firstName + ' ' + user.lastName);
+      },
+      _computeAvatarUrlOf: function(user) {
+        return (user == null ? '':'http://localhost:8000/' + user.avatar);
+      },
+      disconnect: function() {
+        console.log('disconnection asked by ' + this._fullName);
+        this.closeSession();
+      }
+    });
+  })();
+</script>
