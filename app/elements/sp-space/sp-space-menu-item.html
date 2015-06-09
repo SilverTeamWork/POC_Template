@@ -1,0 +1,68 @@
+<dom-module id="sp-space-menu-item">
+  <template>
+    <sp-json-ajax uri="[[space.spacesURI]]"
+               last-response="{{spaces}}"
+               auto></sp-json-ajax>
+    <sp-json-ajax uri="[[space.componentsURI]]"
+               last-response="{{components}}"
+               auto></sp-json-ajax>
+    <li>
+      <a href="{{_spacePageUrl(space)}}">{{space.label}}</a>
+      <template is="dom-if" if="[[spaces.length]]">
+        <ul>
+          <template is="dom-repeat" items="[[spaces]]">
+            <template is="dom-if" if="{{_isSubLevel()}}">
+              <sp-space-menu-item space="{{item}}" to-sub-level="{{_nextSubLevel()}}"></sp-space-menu-item>
+            </template>
+            <template is="dom-if" if="{{!_isSubLevel()}}">
+              <li><a href="{{_spacePageUrl(item)}}">{{item.label}}</a></li>
+            </template>
+          </template>
+        </ul>
+      </template>
+      <template is="dom-if" if="[[components.length]]">
+        <ul>
+          <template is="dom-repeat" items="[[components]]">
+            <li><a href="{{_componentPageUrl(space, item)}}">{{item.label}}</a></li>
+          </template>
+        </ul>
+      </template>
+    </li>
+  </template>
+</dom-module>
+<script>
+  (function() {
+
+    Polymer({
+      is : 'sp-space-menu-item',
+
+      properties : {
+        space : {
+          type : Object, value : function() {
+            return {
+              label : 'unknown'
+            };
+          }
+        }, toSubLevel : {
+          type : Number, value : 0
+        }
+      },
+
+      _spacePageUrl : function(space) {
+        return "/spaces/" + space.id;
+      },
+
+      _componentPageUrl : function(space, component) {
+        return "/" + component.name + "/" + component.name + component.id;
+      },
+
+      _isSubLevel : function() {
+        return this.toSubLevel && this.toSubLevel > 0;
+      },
+
+      _nextSubLevel : function() {
+        return this.toSubLevel - 1;
+      }
+    });
+  })();
+</script>

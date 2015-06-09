@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+  <meta charset="UTF-8">
+  <title>PolyYoCha</title>
+
+  <meta name="description" content=""/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="application-name" content="Silverpeas Web">
+
+  <!-- Tile icon for Win8 (144x144 + tile color) -->
+  <meta name="msapplication-TileImage" content="images/touch/ms-touch-icon-144x144-precomposed.png">
+
+  <!-- Web Application Manifest -->
+  <link rel="manifest" href="manifest.json">
+
+  <link rel="apple-touch-icon" href="images/touch/apple-touch-icon.png"/>
+  <link rel="icon" href="favicon.ico" sizes="16x16" type="image/vnd.microsoft.icon">
+
+  <link rel="stylesheet" type="text/css" href="styles/styles.css"/>
+
+  <!-- <script src="scripts/less.min.js"></script> -->
+
+  <!-- build:js bower_components/webcomponentsjs/webcomponents.min.js -->
+  <script src="bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+  <!-- endbuild -->
+
+  <!-- will be replaced with elements/elements.vulcanized.html -->
+  <link rel="import" href="elements/elements.html">
+  <!-- endreplace-->
+</head>
+<body>
+<template is="dom-bind" id="app">
+  <sp-space-header-menu></sp-space-header-menu>
+</template>
+
+<!-- build:js scripts/app.js -->
+<script src="scripts/main.js"></script>
+<!-- endbuild-->
+</body>
+</html>

@@ -14,33 +14,33 @@
        */
       properties : {
         loginPage : {
-          type : String,
-          value : LOGIN_PAGE
-        },
-        user: {
-          type: Object,
-          notify: true,
+          type : String, value : LOGIN_PAGE
+        }, user : {
+          type : Object, notify : true
         }
       },
+
       ready : function() {
         var sessionKey = this.sessionKey;
         if (!sessionKey) {
           console.log("no user session key!");
           this._redirectToLoginPage();
         } else {
-          console.log('user session found: ' + sessionKey);
           this.user = JSON.parse(localStorage.getItem(CURRENT_USER));
           this.fire('user-session-loaded', this.user);
         }
       },
-      closeSession: function() {
+
+      closeSession : function() {
         localStorage.removeItem(SESSION_TOKEN);
         localStorage.removeItem(CURRENT_USER);
         this._redirectToLoginPage();
       },
+
       get sessionKey() {
         return localStorage.getItem(SESSION_TOKEN);
       },
+
       _redirectToLoginPage: function() {
         console.log("redirect to " + this.loginPage);
         document.location = this.loginPage;

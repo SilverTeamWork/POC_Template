@@ -1,0 +1,30 @@
+<dom-module id="sp-space-header-menu">
+  <template>
+    <sp-json-ajax uri="spaces"
+               last-response="{{spaces}}"
+               auto></sp-json-ajax>
+    <iron-localstorage name="root-spaces" value="{{spaces}}"></iron-localstorage>
+    <nav>
+      <ul>
+        <li class="selected"><a href="/">Home sweet home</a></li>
+        <template is="dom-repeat" items="[[spaces]]">
+          <sp-space-menu-item space="[[item]]"></sp-space-menu-item>
+        </template>
+      </ul>
+    </nav>
+  </template>
+</dom-module>
+<script>
+  (function() {
+
+    Polymer({
+      is : 'sp-space-header-menu',
+
+      properties : {
+        spaces : {
+          type : Array, notify : true
+        }
+      }
+    });
+  })();
+</script>

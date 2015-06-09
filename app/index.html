@@ -18,11 +18,7 @@
     <header id="header" class="wrapper clearfix txtcenter">
       <h1 class="title"><img src="images/logo-header.png" alt="silverpeas"/></h1>
       <sp-connection-info login-page='/login.html' user="{{currentUser}}"></sp-connection-info>
-      <nav>
-          <ul>
-            <li class="selected"><a href="/home.html">Home sweet home</a></li>
-          </ul>
-      </nav>
+      <sp-space-header-menu></sp-space-header-menu>
     </header>
   </div>
   <div class="main-container flexitem-fluid">
@@ -39,6 +35,7 @@
   <div class="footer-container pam">
     <footer class="wrapper"> 2015 Silverpeas Represente ! Tac tac</footer>
   </div>
+  <a id="transition" style="display: none"></a>
 </template>
 <script>
   (function(document) {
@@ -91,6 +88,9 @@
           console.log("blog selected: " + data.params.id);
           app.params = data.params;
           app.route = 'blog-home';
+        });
+
+        page('/yocha.html', function() {
         });
 
         // add #! before urls
