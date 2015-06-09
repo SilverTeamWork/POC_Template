@@ -1,0 +1,29 @@
+<script>
+  (function() {
+    var DAYS_FR = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'];
+    var MONTHS_FR = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août',
+      'Octobre', 'Septembre', 'Novembre', 'Décembre'];
+    window.DateBehavior = {
+      _dayAsString: function(milliseconds) {
+        return DAYS_FR[new Date(milliseconds).getDay()];
+      },
+      _monthAsString: function(milliseconds) {
+        return MONTHS_FR[new Date(milliseconds).getMonth()];
+      },
+      _iso8601: function(milliseconds) {
+        return new Date(milliseconds).toISOString();
+      },
+      _dayOfMonth: function(milliseconds) {
+        var dayOfMonth = new Date(milliseconds).getDate();
+        return (dayOfMonth < 10 ? '0' + dayOfMonth: '' + dayOfMonth);
+      },
+      _year: function(milliseconds) {
+        return new Date(milliseconds).getFullYear();
+      },
+      _localeDateTime: function(milliseconds) {
+        var date = new Date(milliseconds);
+        return date.toLocaleString();
+      }
+    };
+  })();
+</script>

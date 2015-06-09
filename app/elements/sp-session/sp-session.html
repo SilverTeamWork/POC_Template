@@ -23,7 +23,7 @@
         }
       },
       ready : function() {
-        var sessionKey = localStorage.getItem(SESSION_TOKEN);
+        var sessionKey = this.sessionKey;
         if (!sessionKey) {
           console.log("no user session key!");
           this._redirectToLoginPage();
@@ -37,6 +37,9 @@
         localStorage.removeItem(SESSION_TOKEN);
         localStorage.removeItem(CURRENT_USER);
         this._redirectToLoginPage();
+      },
+      get sessionKey() {
+        return localStorage.getItem(SESSION_TOKEN);
       },
       _redirectToLoginPage: function() {
         console.log("redirect to " + this.loginPage);

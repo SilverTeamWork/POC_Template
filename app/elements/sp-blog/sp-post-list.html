@@ -1,0 +1,93 @@
+<dom-module id="sp-post-snippet">
+  <template>
+    <div class="content-from-wysiwyg"></div>
+  </template>
+</dom-module>
+
+<dom-module id="sp-post-list">
+  <template>
+    <iron-ajax
+        id="postsFetcher"
+        handle-as="json"
+        on-response="_handleResponse"
+        debounce-duration="300">
+    </iron-ajax>
+    <template is="dom-repeat" items="{{posts}}" as="post">
+      <article>
+        <header>
+          <time class="calendar-presentation" datetime$="{{_iso8601(post.createDate)}}"><span class="day">{{_dayAsString(post.createDate)}}</span> <span class="number">{{_dayOfMonth(post.createDate)}}</span> <span class="month">{{_monthAsString(post.createDate)}}</span> <span class="year">{{_year(post.createDate)}}</span></time>
+          <h3><a class="link-article" href="billet.html"><span class="editable input text">{{post.title}}</span></a></h3>
+          <p class="post-info">
+            <img src="../../images/note-magie.png" alt="3 sur 5" /> <a href="billet.html#commentaires" class="nb-comment"><img src="../../images/talk2user.gif" alt="commentaire"/> 0</a>
+          </p>
+        </header>
+        <sp-post-snippet post="{{post}}"></sp-post-snippet>
+        <footer>
+          <p class="publication-detail">
+            <span class="publication">Publiée le <time datetime="{{_iso8601(post.dateEvent)}}">{{_localeDateTime(post.dateEvent)}}</time> <span class="auteur">par <span>{{post.creator}}</span></span></span>
+            <span class="sep"> - </span>
+            <span class="modification">Modifié le <time datetime="{{_iso8601(post.updateDate)}}">{{_localeDateTime(post.updateDate)}}</time> <span class="auteur">par <span>{{post.updater}}</span></span></span>
+          </p>
+          <div class="operation">
+            <a title="Modifier" href="update-billet.html"><img title="Modifier" alt="Modifier" src="../../images/update.gif"  /></a>
+            <a title="Supprimer" href="javascript:onclick=confirmDelete('90511759-2f00-4879-b027-10dc6e25e35e', 'Etes-vous sûr(e) de vouloir supprimer définitivement cette actualité ?')">
+              <img title="Supprimer" alt="Supprimer" src="../../images/delete.gif"  />
+            </a>
+          </div>
+        </footer>
+        </article>
+    </template>
+  </template>
+</dom-module>
+
+<script>
+  (function() {
+    Polymer({
+      is: 'sp-post-snippet',
+      properties: {
+        post: {
+          type: Object
+        }
+      },
+      ready: function() {
+        this.$$('.content-from-wysiwyg').innerHTML = this._snippet(this.post);
+      },
+      _snippet : function(post) {
+        var snippet = post.content;
+        var idx = snippet.length;
+        for (var i = snippet.indexOf(". ", 0), p = 0; p < 10 && i != -1; i =
+            snippet.indexOf(". ", idx)) {
+          idx = i + 1;
+        }
+        snippet = snippet.substring(0, idx);
+        return snippet + '<br/><br/>';
+      }
+    });
+
+    Polymer({
+      is : 'sp-post-list',
+      behaviors : [SessionBehavior, DateBehavior],
+      properties : {
+        blog: {
+          type: String,
+          notify: true,
+          observer: '_onBlogChange'
+        },
+        posts : {
+          type : Array, notify : true
+        }
+      },
+      _onBlogChange: function() {
+        console.log('query posts of blog ' + this.blog);
+        this.$.postsFetcher.headers = {"X-Silverpeas-Session": this.sessionKey};
+        this.$.postsFetcher.url = 'http://localhost:8000/silverpeas/services/blogs/' + this.blog + '/posts';
+        console.log('ajax is ' + this.$.postsFetcher);
+        this.$.postsFetcher.generateRequest();
+      },
+      _handleResponse : function(event) {
+        this.posts = event.detail.response.entities;
+        console.log('Receive ' + this.posts.length + ' posts in blog ' + this.blog);
+      }
+    });
+  })();
+</script>

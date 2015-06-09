@@ -1,0 +1,22 @@
+<dom-module id="sp-blog-home">
+  <template>
+    <div class="main wrapper flexitem-fluid application">
+      <section class="blog with-aside-app">
+        <sp-post-list blog="{{blog}}"></sp-post-list>
+      </section>
+    </div>
+  </template>
+</dom-module>
+
+<script>
+  (function() {
+    Polymer({
+      is: 'sp-blog-home',
+      properties: {
+        blog: {
+          type: String
+        }
+      }
+    });
+  })();
+</script>

@@ -26,19 +26,19 @@
     </header>
   </div>
   <div class="main-container flexitem-fluid">
-  <div class="main wrapper clearfix">
     <iron-pages attr-for-selected="data-route" selected="{{route}}">
       <page-material data-route="home" elevation="1">
         <sp-home-page></sp-home-page>
       </page-material>
+      <page-material data-route="blog-home" elevation="1">
+        <sp-blog-home blog="{{params.id}}"></sp-blog-home>
+      </page-material>
     </iron-pages>
   </div>
-  <!-- #main -->
-</div>
-<!-- #main-container -->
-<div class="footer-container pam">
-  <footer class="wrapper"> 2015 Silverpeas Represente ! Tac tac</footer>
-</div>
+  <!-- #main-container -->
+  <div class="footer-container pam">
+    <footer class="wrapper"> 2015 Silverpeas Represente ! Tac tac</footer>
+  </div>
 </template>
 <script>
   (function(document) {
@@ -83,14 +83,19 @@
 
         page('/spaces/:id', function(data) {
           console.log("space selected: " + data.params.id);
-          console.log('previous route: ' + app.route);
           app.params = data.params;
           app.route = 'space-info'
         });
 
+        page('/blog/:id', function(data) {
+          console.log("blog selected: " + data.params.id);
+          app.params = data.params;
+          app.route = 'blog-home';
+        });
+
         // add #! before urls
         page({
-          hashbang : false
+          hashbang : true
         });
 
         console.log("routing loaded!");
