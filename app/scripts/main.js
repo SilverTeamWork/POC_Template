@@ -38,8 +38,8 @@ var authenticate = function(login, password) {
     req.onload = function() {
       if (req.status == 200) {
         var user = {
-          token: req.getResponseHeader('X-Silverpeas-Session'),
-          profile: JSON.parse(req.responseText)
+          token : req.getResponseHeader('X-Silverpeas-Session'),
+          profile : JSON.parse(req.responseText)
         };
         console.log('Session Token: ' + user.token);
         console.log('User Profile: ' + JSON.stringify(user.profile));
@@ -101,7 +101,8 @@ function loginToSilverpeas(loginFormSelector, idSelector, passwordSelector) {
     cache.putSessionId(user.token);
     cache.putCurrentUser(user.profile);
     console.log('Authentication Success');
-    document.querySelector(loginFormSelector).submit();
+    var form = document.querySelector(loginFormSelector);
+    document.querySelector('a', form).click();
   }, function(error) {
     console.log('Authentication Failure: ' + error);
     reportError(error);
