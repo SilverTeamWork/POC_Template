@@ -6,12 +6,10 @@
 
 <dom-module id="sp-post-list">
   <template>
-    <iron-ajax
+    <sp-json-ajax
         id="postsFetcher"
-        handle-as="json"
-        on-response="_handleResponse"
-        debounce-duration="300">
-    </iron-ajax>
+        on-response="_handleResponse">
+    </sp-json-ajax>
     <div id="blog-posts-list">
     <template is="dom-repeat" items="{{posts}}" as="post">
       <article>
@@ -46,8 +44,6 @@
   'use strict';
   
   (function() {
-    var SILVERPEAS_HOST = "http://localhost:8000/silverpeas/services/blogs/";
-
     Polymer({
       is: 'sp-post-snippet',
       properties: {
@@ -90,33 +86,37 @@
         'blog-posts-list.mouseout': '_removeListenerOnScrolling'
       },
       ready: function() {
-        this.scrollHandler = this._onScroll.bind(this);
+        this._scrollHandler = this._onScroll.bind(this);
       },
       _onBlogChange: function() {
         console.log('query posts of blog ' + this.blog);
         this._setPosts([]);
-        this.page = 5;
-        this.$.postsFetcher.headers = {"X-Silverpeas-Session": this.sessionKey};
-        this.$.postsFetcher.url = SILVERPEAS_HOST + this.blog + '/posts?page=1;5';
-        this.$.postsFetcher.generateRequest();
+        this._fullLoaded = false;
+        this._page = 5;
+        this.$.postsFetcher.uri = 'blogs/' + this.blog + '/posts?page=1;5';
+        this.$.postsFetcher.send();
       },
       _handleResponse : function(event) {
-        this._setPosts(this.posts.concat(event.detail.response.entities));
+        var newPosts = event.detail.response.entities;
+        if (newPosts.length > 0)
+          this._setPosts(this.posts.concat(event.detail.response.entities));
+        else
+          this._fullLoaded = true;
       },
       _addListenerOnScrolling: function() {
-        window.addEventListener('scroll', this.scrollHandler);
+        window.addEventListener('scroll', this._scrollHandler);
       },
       _removeListenerOnScrolling: function() {
-        window.removeEventListener('scroll', this.scrollHandler);
+        window.removeEventListener('scroll', this._scrollHandler);
       },
       _onScroll: function() {
         var scrollMaxY = (window.scrollMaxY ? window.scrollMaxY :
           document.documentElement.scrollHeight - document.documentElement.clientHeight + 1);
-        if ((scrollMaxY - window.scrollY) <= 100) {
+        if ((scrollMaxY - window.scrollY) <= 100 && !this._fullLoaded) {
           console.log("I'm fetching additional posts dude! ");
-          this.page += 1;
-          this.$.postsFetcher.url = SILVERPEAS_HOST + this.blog + '/posts?page=' + this.page + ';1';
-          this.$.postsFetcher.generateRequest();
+          this._page += 1;
+          this.$.postsFetcher.uri = 'blogs/' + this.blog + '/posts?page=' + this._page + ';1';
+          this.$.postsFetcher.send();
         }
       }
     });
