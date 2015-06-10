@@ -25,7 +25,15 @@
     </header>
   </div>
   <div class="main-container flexitem-fluid">
-    <neon-animated-pages attr-for-selected="data-route" selected="{{route}}"
+    <iron-pages attr-for-selected="data-route" selected="{{route}}">
+      <pager-material data-route="home" elevation="1">
+        <sp-home-page></sp-home-page>
+      </pager-material>
+      <paper-material data-route="blog-home" elevation="1">
+        <sp-blog-home blog="{{params.id}}"></sp-blog-home>
+      </paper-material>
+    </iron-pages>
+    <!--<neon-animated-pages attr-for-selected="data-route" selected="{{route}}"
                          entry-animation="fade-in-animation" exit-animation="fade-out-animation">
       <neon-animatable data-route="home" elevation="1">
         <sp-home-page></sp-home-page>
@@ -33,11 +41,11 @@
       <neon-animatable data-route="blog-home" elevation="1">
         <sp-blog-home blog="{{params.id}}"></sp-blog-home>
       </neon-animatable>
-    </neon-animated-pages>
+    </neon-animated-pages>-->
   </div>
 <!-- #main-container -->
   <div class="footer-container pam">
-    <footer class="wrapper"><div id="footerContent" data-i18n="[html]silverpeas.footer.copyright;"></div></footer>
+    <footer class="wrapper"><div id="footerContent" data-i18n="[html]silverpeas.footer.copyright"></div></footer>
   </div>
   <a id="transition" style="display: none"></a>
 </template>
