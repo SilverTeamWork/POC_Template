@@ -38,8 +38,11 @@
       <neon-animatable data-route="home" elevation="1">
         <sp-home-page></sp-home-page>
       </neon-animatable>
-      <neon-animatable data-route="blog-home" elevation="1">
-        <sp-blog-home blog="{{params.id}}"></sp-blog-home>
+      <neon-animatable data-route="space-home" elevation="1">
+        <sp-space space-id="{{params.id}}"></sp-space>
+      </neon-animatable>
+      <neon-animatable data-route="instance-home" elevation="1">
+        <sp-app-instance instance-id="{{params.id}}"></sp-app-instance>
       </neon-animatable>
     </neon-animated-pages>-->
   </div>
@@ -78,16 +81,13 @@
         page('/spaces/:id', function(data) {
           console.log("space selected: " + data.params.id);
           app.params = data.params;
-          app.route = 'space-info'
+          app.route = 'space-home'
         });
 
-        page('/blog/:id', function(data) {
-          console.log("blog selected: " + data.params.id);
+        page('/instances/:id', function(data) {
+          console.log("instance selected: " + data.params.id);
           app.params = data.params;
-          app.route = 'blog-home';
-        });
-
-        page('/yocha.html', function() {
+          app.route = 'instance-home';
         });
 
         page('*', function(data) {
@@ -98,6 +98,9 @@
         // add #! before urls
         page({
           hashbang : false
+        });
+
+        page('/yocha.html', function() {
         });
 
         console.log("routing loaded!");

@@ -1,0 +1,19 @@
+<dom-module id="sp-app-instance">
+  <template>
+    <span>{{instanceId}}</span>
+  </template>
+</dom-module>
+<script>
+  (function() {
+
+    Polymer({
+      is : 'sp-app-instance',
+
+      properties : {
+        instanceId : {
+          type : String, value : ''
+        }
+      }
+    });
+  })();
+</script>

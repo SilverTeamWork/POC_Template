@@ -40,7 +40,7 @@
       },
 
       send : function() {
-        if (!this.uri && this.uri !== '') {
+        if (typeof this.uri !== 'string' || this.uri.length == 0) {
           return;
         }
         var self = this;
