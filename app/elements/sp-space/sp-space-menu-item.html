@@ -1,33 +1,31 @@
 <dom-module id="sp-space-menu-item">
   <template>
     <sp-json-ajax uri="[[space.spacesURI]]"
-               last-response="{{spaces}}"
-               auto></sp-json-ajax>
+                  last-response="{{spaces}}"
+                  auto></sp-json-ajax>
     <sp-json-ajax uri="[[space.componentsURI]]"
-               last-response="{{components}}"
-               auto></sp-json-ajax>
-    <li>
-      <a href="{{_spacePageUrl(space)}}">{{space.label}}</a>
-      <template is="dom-if" if="[[spaces.length]]">
-        <ul>
-          <template is="dom-repeat" items="[[spaces]]">
-            <template is="dom-if" if="{{_isSubLevel()}}">
-              <sp-space-menu-item space="{{item}}" to-sub-level="{{_nextSubLevel()}}"></sp-space-menu-item>
-            </template>
-            <template is="dom-if" if="{{!_isSubLevel()}}">
-              <li><a href="{{_spacePageUrl(item)}}">{{item.label}}</a></li>
-            </template>
+                  last-response="{{components}}"
+                  auto></sp-json-ajax>
+    <a href="{{_spacePageUrl(space)}}">{{space.label}}</a>
+    <template is="dom-if" if="[[spaces.length]]">
+      <ul>
+        <template is="dom-repeat" items="[[spaces]]">
+          <template is="dom-if" if="{{_isSubLevel()}}">
+            <li><sp-space-menu-item space="{{item}}" to-sub-level="{{_nextSubLevel()}}"></sp-space-menu-item></li>
           </template>
-        </ul>
-      </template>
-      <template is="dom-if" if="[[components.length]]">
-        <ul>
-          <template is="dom-repeat" items="[[components]]">
-            <li><a href="{{_componentPageUrl(space, item)}}">{{item.label}}</a></li>
+          <template is="dom-if" if="{{!_isSubLevel()}}">
+            <li><a href="{{_spacePageUrl(item)}}">{{item.label}}</a></li>
           </template>
-        </ul>
-      </template>
-    </li>
+        </template>
+      </ul>
+    </template>
+    <template is="dom-if" if="[[components.length]]">
+      <ul>
+        <template is="dom-repeat" items="[[components]]">
+          <li><a href="{{_componentPageUrl(space, item)}}">{{item.label}}</a></li>
+        </template>
+      </ul>
+    </template>
   </template>
 </dom-module>
 <script>
