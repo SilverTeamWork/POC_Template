@@ -25,14 +25,15 @@
     </header>
   </div>
   <div class="main-container flexitem-fluid">
-    <iron-pages attr-for-selected="data-route" selected="{{route}}">
-      <page-material data-route="home" elevation="1">
+    <neon-animated-pages attr-for-selected="data-route" selected="{{route}}"
+                         entry-animation="fade-in-animation" exit-animation="fade-out-animation">
+      <neon-animatable data-route="home" elevation="1">
         <sp-home-page></sp-home-page>
-      </page-material>
-      <page-material data-route="blog-home" elevation="1">
+      </neon-animatable>
+      <neon-animatable data-route="blog-home" elevation="1">
         <sp-blog-home blog="{{params.id}}"></sp-blog-home>
-      </page-material>
-    </iron-pages>
+      </neon-animatable>
+    </neon-animated-pages>
   </div>
 <!-- #main-container -->
   <div class="footer-container pam">
