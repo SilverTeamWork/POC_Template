@@ -37,6 +37,10 @@ gulp.task('elements', function() {
   return styleTask('elements', ['**/*.less']);
 });
 
+gulp.task('locales', function() {
+  return styleTask('locales', ['**/*.less']);
+});
+
 // Lint JavaScript
 gulp.task('jshint', function() {
   return gulp.src(['app/scripts/**/*.js', 'app/elements/**/*.js', 'app/elements/**/*.html'])
@@ -68,6 +72,9 @@ gulp.task('copy', function() {
   var elements = gulp.src(['app/elements/**/*.html'])
       .pipe(gulp.dest('dist/elements'));
 
+  var bundles = gulp.src(['app/locales/**/*.json'])
+      .pipe(gulp.dest('dist/locales'));
+
   var swBootstrap = gulp.src(['bower_components/platinum-sw/bootstrap/*.js'])
       .pipe(gulp.dest('dist/elements/bootstrap'));
 
@@ -78,7 +85,7 @@ gulp.task('copy', function() {
       .pipe($.rename('elements.vulcanized.html'))
       .pipe(gulp.dest('dist/elements'));
 
-  return merge(app, bower, elements, vulcanized, swBootstrap, swToolbox)
+  return merge(app, bower, elements, bundles, vulcanized, swBootstrap, swToolbox)
       .pipe($.size({title : 'copy'}));
 });
 
@@ -120,7 +127,7 @@ gulp.task('vulcanize', function() {
 gulp.task('precache', function(callback) {
   var dir = 'dist';
 
-  glob('{elements,scripts,styles}/**/*.*', {cwd : dir}, function(error, files) {
+  glob('{elements,scripts,styles,locales}/**/*.*', {cwd : dir}, function(error, files) {
     if (error) {
       callback(error);
     } else {
@@ -135,7 +142,7 @@ gulp.task('precache', function(callback) {
 gulp.task('clean', del.bind(null, ['.tmp', 'dist']));
 
 // Watch Files For Changes & Reload
-gulp.task('serve', ['styles', 'elements', 'images'], function() {
+gulp.task('serve', ['styles', 'elements', 'images', 'locales'], function() {
   browserSync({
     notify : false, // Run as an https by uncommenting 'https: true'
     // Note: this uses an unsigned certificate which on first access
@@ -153,6 +160,7 @@ gulp.task('serve', ['styles', 'elements', 'images'], function() {
   gulp.watch(['app/elements/**/*.{css}'], ['elements', reload]);
   gulp.watch(['app/{scripts,elements}/**/*.js'], ['jshint']);
   gulp.watch(['app/images/**/*'], reload);
+  gulp.watch(['app/locales/**/*.json'], ['locales', reload]);
 });
 
 // Build and serve the output from the dist build

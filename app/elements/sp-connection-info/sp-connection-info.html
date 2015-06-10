@@ -9,11 +9,14 @@
     <div class="current-user">
       <img class="avatar" src="{{_avatar}}" alt=""/>
       <span class="name">{{_fullName}}</span>
-      <div><paper-button on-click="disconnect">Se déconnecter</paper-button></div>
+      <div><paper-button on-click="disconnect"><div data-i18n="[html]silverpeas.header.logout;"></div></paper-button></div>
     </div>
   </template>
 </dom-module>
 
+<script type="text/javascript" src="../../scripts/jquery/jquery-1.10.2.min.js"></script>
+<script type="text/javascript" src="../../bower_components/i18next/i18next.js"></script>
+<link rel="import" href="../../locales/fr/translation.json">
 <script>
   (function() {
     Polymer({
@@ -38,6 +41,9 @@
       disconnect: function() {
         console.log('disconnection asked by ' + this._fullName);
         this.closeSession();
+      },
+      ready: function() {
+        console.log('element ready!');
       }
     });
   })();
