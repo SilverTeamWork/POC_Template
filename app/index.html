@@ -67,21 +67,6 @@
       // load routing rules.
       (function() {
 
-        page('/', function() {
-          console.log("home root asked");
-          app.route = 'home';
-        });
-
-        page('/index.html', function() {
-          console.log("home root asked");
-          app.route = 'home';
-        });
-
-        page('/home.html', function() {
-          console.log("home root asked");
-          app.route = 'home';
-        });
-
         page('/spaces/:id', function(data) {
           console.log("space selected: " + data.params.id);
           app.params = data.params;
@@ -97,9 +82,14 @@
         page('/yocha.html', function() {
         });
 
+        page('*', function(data) {
+          console.log("Unknown path, redirect to home");
+          app.route = 'home';
+        });
+
         // add #! before urls
         page({
-          hashbang : true
+          hashbang : false
         });
 
         console.log("routing loaded!");
