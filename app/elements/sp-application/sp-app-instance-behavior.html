@@ -1,0 +1,42 @@
+<script>
+  (function() {
+    window.ApplicationInstanceBehavior = {
+
+      /**
+       * Gets the URI to get json data of application instance represented by the given parameter.
+       * @param applicationInstance a application instance object or a its identifier.
+       * @returns {string} an URI.
+       */
+      getApplicationInstanceUri : function(applicationInstance) {
+        return "components/" + this._getObjectId(applicationInstance);
+      },
+
+      /**
+       * Indicates if the given content json object represents a space.
+       * @param applicationInstance a json object that represents an application instance.
+       * @param applicationNameToVerify the application name to verify.
+       * @returns {boolean} an URI.
+       */
+      isApplicationNameEqualTo : function(applicationInstance, applicationNameToVerify) {
+        return applicationInstance.name === applicationNameToVerify;
+      },
+
+      /**
+       * Gets the id attribute of the given parameter.
+       * @param object an object or a string.
+       * @returns {*} the string identifier.
+       * @private
+       */
+      _getObjectId : function(object) {
+        var objectId = object;
+        if (typeof object !== 'string') {
+          objectId = object.id;
+          if (object.type === 'component') {
+            objectId = object.name + objectId;
+          }
+        }
+        return objectId;
+      }
+    };
+  })();
+</script>

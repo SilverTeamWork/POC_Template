@@ -3,8 +3,12 @@
     'use strict';
 
     Polymer({
-      is : 'sp-json-ajax', behaviors : [SessionBehavior], properties : {
-        uri : {
+      is : 'sp-service-ajax',
+
+      behaviors : [SessionBehavior],
+
+      properties : {
+        path : {
           type : String, value : ''
         }, method : {
           type : String, value : 'GET'
@@ -30,22 +34,31 @@
          */
         lastResponse : {
           type : Object, notify : true, readOnly : true
+        },
+
+        /**
+         * Will be set to the most recent error that resulted from a request
+         * that originated from this iron-ajax element.
+         */
+        lastError : {
+          type : Object, notify : true, readOnly : true
         }
       },
 
-      observers : ['_requestOptionsChanged(uri, method, params, auto)'],
+      observers : ['_requestOptionsChanged(path, method, params, auto)'],
 
       created : function() {
         this.silverpeasServiceBaseUrl = 'http://localhost:8000/silverpeas/services/'
       },
 
       send : function() {
-        if (typeof this.uri !== 'string' || this.uri.length == 0) {
+        if (typeof this.path !== 'string' || this.path.length == 0) {
           return;
         }
         var self = this;
         var ajax = document.createElement("iron-ajax");
-        ajax.url = ((this.uri.indexOf("http") < 0 ? this.silverpeasServiceBaseUrl : '') + this.uri).replace(/[^:]\/{2,}/gi, '/');
+        ajax.url = ((this.path.indexOf("http") < 0 ? this.silverpeasServiceBaseUrl : '') +
+        this.path).replace(/[^:]\/{2,}/gi, '/');
         ajax.params = (typeof this.params === 'object' ? this.params : {});
 
         var sessionId = this._getSessionId();
@@ -59,6 +72,7 @@
         });
 
         ajax.addEventListener('error', function(e) {
+          self._setLastError(ajax.lastError);
           self.fire('error', e.detail)
         });
 

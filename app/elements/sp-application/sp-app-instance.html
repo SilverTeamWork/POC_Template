@@ -1,6 +1,23 @@
 <dom-module id="sp-app-instance">
   <template>
-    <span>{{instanceId}}</span>
+    <sp-service-ajax id="requester"
+                     path="[[getApplicationInstanceUri(instanceId)]]"
+                     last-response="{{applicationInstance}}"
+                     last-error="{{lastError}}"
+                     on-response="_applicationInstanceLoaded"
+                     auto></sp-service-ajax>
+    <template is="dom-if" if="{{isApplicationNameEqualTo(applicationInstance, 'blog')}}">
+      <sp-blog-home blog="{{instanceId}}"></sp-blog-home>
+    </template>
+
+    <template is="dom-if" if="{{_applicationNotHandled(applicationInstance)}}">
+      <div>Application <b><span>{{applicationInstance.name}}</span></b> is not yet handled.</div>
+    </template>
+
+    <template is="dom-if" if="{{_applicationNotFound(lastError)}}">
+      <div>Application with identifier <b><span>{{instanceId}}</span></b> does not exist, asshole.
+      </div>
+    </template>
   </template>
 </dom-module>
 <script>
@@ -9,10 +26,32 @@
     Polymer({
       is : 'sp-app-instance',
 
+      behaviors : [ApplicationInstanceBehavior],
+
       properties : {
+
         instanceId : {
           type : String, value : ''
         }
+      },
+
+      created : function() {
+        this.handledApplications = [];
+        var map = this.handledApplications;
+        map['blog'] = true;
+      },
+
+      _applicationNotHandled : function(applicationInstance) {
+        return (typeof applicationInstance === 'object') &&
+            !this.handledApplications[applicationInstance.name];
+      },
+
+      _applicationNotFound : function(lastError) {
+        return (typeof lastError === 'object');
+      },
+
+      _applicationInstanceLoaded : function() {
+        this.lastError = undefined;
       }
     });
   })();

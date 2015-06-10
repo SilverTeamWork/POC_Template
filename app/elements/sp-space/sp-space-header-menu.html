@@ -1,8 +1,8 @@
 <dom-module id="sp-space-header-menu">
   <template>
-    <sp-json-ajax uri="spaces"
+    <sp-service-ajax path="spaces"
                   last-response="{{spaces}}"
-                  auto></sp-json-ajax>
+                  auto></sp-service-ajax>
     <nav>
       <ul>
         <li class="selected"><a href="/">Home sweet home</a></li>

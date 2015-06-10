@@ -6,10 +6,10 @@
 
 <dom-module id="sp-post-list">
   <template>
-    <sp-json-ajax
+    <sp-service-ajax
         id="postsFetcher"
         on-response="_handleResponse">
-    </sp-json-ajax>
+    </sp-service-ajax>
     <div id="blog-posts-list">
     <template is="dom-repeat" items="{{posts}}" as="post">
       <article>
@@ -93,7 +93,7 @@
         this._setPosts([]);
         this._fullLoaded = false;
         this._page = 5;
-        this.$.postsFetcher.uri = 'blogs/' + this.blog + '/posts?page=1;5';
+        this.$.postsFetcher.path = 'blogs/' + this.blog + '/posts?page=1;5';
         this.$.postsFetcher.send();
       },
       _handleResponse : function(event) {
@@ -115,7 +115,7 @@
         if ((scrollMaxY - window.scrollY) <= 100 && !this._fullLoaded) {
           console.log("I'm fetching additional posts dude! ");
           this._page += 1;
-          this.$.postsFetcher.uri = 'blogs/' + this.blog + '/posts?page=' + this._page + ';1';
+          this.$.postsFetcher.path = 'blogs/' + this.blog + '/posts?page=' + this._page + ';1';
           this.$.postsFetcher.send();
         }
       }

@@ -1,8 +1,8 @@
 <dom-module id="sp-space-menu-item">
   <template>
-    <sp-json-ajax uri="[[getSpaceContentUri(space)]]"
+    <sp-service-ajax path="[[getSpaceContentUri(space)]]"
                   last-response="{{spaceContent}}"
-                  auto></sp-json-ajax>
+                  auto></sp-service-ajax>
     <a href="{{getSpacePageUrl(space)}}">{{space.label}}</a>
     <template is="dom-if" if="[[spaceContent.length]]">
       <ul>
