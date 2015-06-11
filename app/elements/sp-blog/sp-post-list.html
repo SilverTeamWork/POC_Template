@@ -17,7 +17,7 @@
           <time class="calendar-presentation" datetime$="{{_iso8601(post.createDate)}}"><span class="day">{{_dayAsString(post.createDate)}}</span> <span class="number">{{_dayOfMonth(post.createDate)}}</span> <span class="month">{{_monthAsString(post.createDate)}}</span> <span class="year">{{_year(post.createDate)}}</span></time>
           <h3><a class="link-article" href="billet.html"><span class="editable input text">{{post.title}}</span></a></h3>
           <p class="post-info">
-            <img src="../../images/note-magie.png" alt="3 sur 5" /> <a href="billet.html#commentaires" class="nb-comment"><img src="../../images/talk2user.gif" alt="commentaire"/> 0</a>
+            <sp-rating appid="{{post.componentId}}" contributionid="{{post.id}}"></sp-rating> <a href="billet.html#commentaires" class="nb-comment"><img src="../../images/talk2user.gif" alt="commentaire"/> 0</a>
           </p>
         </header>
         <sp-post-snippet post="{{post}}"></sp-post-snippet>
@@ -120,5 +120,6 @@
         }
       }
     });
+
   })();
 </script>

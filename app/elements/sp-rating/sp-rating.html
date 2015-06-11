@@ -1,0 +1,161 @@
+<dom-module id="sp-rating">
+  <style>
+  </style>
+  <template>
+    <iron-ajax
+        id="ratingFetcher"
+        handle-as="json"
+        on-response="_handleResponse"
+        debounce-duration="300">
+    </iron-ajax>
+    <span id="ratingSpanId">
+      <img id="ratingStar1" width="16" height="16" class="silverpeas-rating-note silverpeas-rating-note-unselected" title="Mauvais" alt="1" src="../../images/rating/star_empty.png"/>
+      <img id="ratingStar2" width="16" height="16" class="silverpeas-rating-note silverpeas-rating-note-unselected" title="Passable" alt="2" src="../../images/rating/star_empty.png"/>
+      <img id="ratingStar3" width="16" height="16" class="silverpeas-rating-note silverpeas-rating-note-unselected" title="Assez bien" alt="3" src="../../images/rating/star_empty.png"/>
+      <img id="ratingStar4" width="16" height="16" class="silverpeas-rating-note silverpeas-rating-note-unselected" title="Bien" alt="4" src="../../images/rating/star_empty.png"/>
+      <img id="ratingStar5" width="16" height="16" class="silverpeas-rating-note silverpeas-rating-note-unselected" title="Très bien" alt="5" src="../../images/rating/star_empty.png"/>
+      <img id="ratingStarDelete" width="16" height="16" class="" src="../../images/rating/star_delete2.png" title="Supprimer mon avis" hidden/>
+    </span>
+  </template>
+</dom-module>
+
+<script>
+  (function() {
+
+    var RATING_STYLE = "silverpeas-rating";
+    var DEFAULT_RATING_NOTE_STYLE = "silverpeas-rating-note";
+    var UNSELECTED_RATING_NOTE_STYLE = "silverpeas-rating-note-unselected";
+    var SELECTED_RATING_NOTE_STYLE = "silverpeas-rating-note-selected";
+    var HALF_SELECTED_RATING_NOTE_STYLE = "silverpeas-rating-note-half";
+    var HOVER_RATING_NOTE_STYLE = "silverpeas-rating-note-hover";
+
+    var NOTE_SELECTED_SRC = "../../images/rating/star.png";
+    var NOTE_HALF_SELECTED_SRC = "../../images/rating/star_half.png";
+    var NOTE_UNSELECTED_SRC = "../../images/rating/star_empty.png";
+    var NOTE_HOVER_SRC = "../../images/rating/red_star.png";
+    var NOTE_CLEAR_RATING_SRC = "../../images/rating/star_delete2.png";
+
+    Polymer({
+      is : 'sp-rating', behaviors : [SessionBehavior],
+      properties : {
+        readonly : {
+          type : Boolean,
+          value: false
+        },
+        appid : {
+          type : String
+        },
+        contributionid : {
+          type: String
+        },
+        count :    {
+          type : Number,
+          value : 5
+        },
+        ratingUri : {
+          type: String,
+          computed: '_computeRatingUri(appid, contributionid)'
+        },
+        rating: {
+          type : Object, notify : false
+        },
+        imgsrc : {
+          type: String,
+          value: function () {
+            return "http://" + location.host + "/images/note-magie.png";
+          }
+        },
+        _hoverRatingNote : {
+          type : Number,
+          value : 0
+        }, _readonly : {
+          type : Boolean, value : false
+        }, onHovered : {
+          type: Event
+        }
+      },
+      created : function() {
+      },
+      _computeRatingUri: function(appid, contributionid) {
+        return "rating/" + this.appid + "/Publication/" + this.contributionid;
+      },
+      ready : function() {
+        console.log('sp-rating element ready! appid=' + this.appid + " and contributionId = " + this.contributionid);
+        // Get rating from ajax call (xml http request)
+        this.$.ratingFetcher.headers = {"X-Silverpeas-Session": this.sessionKey};
+        this.$.ratingFetcher.url = "http://localhost:8000/silverpeas/services/" + this.ratingUri;
+        this.$.ratingFetcher.generateRequest();
+        this.$.ratingStarDelete.style="display:none";
+      },
+      _handleResponse : function(event) {
+        // Handle rating ajax response
+        this.rating = event.detail.response;
+        console.log('Receive ' + this.rating.contributionId + ' Object for ' + this.appid + ' and contribution ' + this.contributionid);
+        this._render(this.rating);
+      },
+      hovered: false,
+      onHovered: function() {
+        this.hovered = true;
+        console.log('onHovered!');
+      },
+      onUnhovered: function() {
+        this.hovered = false;
+        console.log('onUnhovered!');
+      },
+      _render : function (rating) {
+        var ratingNote = this._readonly ? rating.ratingAverage : rating.raterRatingValue;
+        if (Math.ceil(ratingNote) != ratingNote) {
+          ratingNote += 1;
+        }
+        if (ratingNote.isRatingDone) {
+          this.$.ratingStarDelete.style="display:block";
+          this.$.ratingStarDelete.removeAttribute('hidden');
+        }
+        var ceil = Math.ceil(ratingNote);
+        for (note = 1; note <= this.count; note++) {
+          var img = Polymer.dom(this.$.ratingSpanId).querySelector("#ratingStar" + note);
+
+          var resource = '';
+          var style = DEFAULT_RATING_NOTE_STYLE + " ";
+          if (rating != null) {
+            if (this._hoverRatingNote == 0) {
+              if (note <= ratingNote) {
+                if (ceil != ratingNote && note == (ceil - 1)) {
+                  var rounded = Math.round(ratingNote * 100) / 100 ;
+                  if ((ratingNote - rounded) > 0.25) {
+                    resource = NOTE_HALF_SELECTED_SRC;
+                    style += HALF_SELECTED_RATING_NOTE_STYLE;
+                  } else {
+                    resource = NOTE_UNSELECTED_SRC;
+                    style += UNSELECTED_RATING_NOTE_STYLE;
+                  }
+                } else {
+                  console.log("set note selected src for contribution " + this.contributionid)
+                  resource = NOTE_SELECTED_SRC + '?' + Math.random();
+                  style += SELECTED_RATING_NOTE_STYLE;
+                }
+              } else {
+                resource = NOTE_UNSELECTED_SRC;
+                style += UNSELECTED_RATING_NOTE_STYLE;
+              }
+            } else {
+              if (note <= hoverRatingNote) {
+                resource = NOTE_HOVER_SRC;
+                style += HOVER_RATING_NOTE_STYLE;
+              } else {
+                resource = NOTE_UNSELECTED_SRC;
+                style += UNSELECTED_RATING_NOTE_STYLE;
+              }
+            }
+          } else {
+            resource = NOTE_UNSELECTED_SRC;
+            style += UNSELECTED_RATING_NOTE_STYLE;
+          }
+          Polymer.dom(img).setAttribute("src", resource);
+          Polymer.dom(img).setAttribute("class", style);
+        }
+      }
+    });
+  })();
+</script>
+
