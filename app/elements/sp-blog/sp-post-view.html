@@ -15,8 +15,10 @@
           </ul>
         </div>
       </aside>
-      <p class="post-info"><img src="../../images/note-magie.png" alt="3 sur 5"/><!-- PLUGIN NOTE -->
-        <a href="#commentaires" class="nb-comment"><img src="../../images/talk2user.gif" alt="commentaire"/>&nbsp;<span>[[post.nbComments]]</span></a></p>
+      <p class="post-info">
+        <sp-rating appid="[[post.componentId]]" contributionid="[[post.id]]"></sp-rating>
+        <a href="#commentaires" class="nb-comment"><img src="../../images/talk2user.gif" alt="commentaire"/>&nbsp;<span>[[post.nbComments]]</span></a>
+      </p>
     </header>
     <sp-post-content post="[[post]]"></sp-post-content>
     <aside class="commentaires" id="commentaires">
