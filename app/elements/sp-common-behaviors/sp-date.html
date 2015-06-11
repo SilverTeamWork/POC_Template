@@ -1,0 +1,23 @@
+<script>
+  (function() {
+    var DAYS_FR = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'];
+    var MONTHS_FR = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août',
+      'Octobre', 'Septembre', 'Novembre', 'Décembre'];
+    window.DateBehavior = {
+      _date: function(milliseconds) {
+        var jsDate = new Date(milliseconds)
+        var dayOfMonth = jsDate.getDate();
+        var monthOfYear = jsDate.getMonth() + 1;
+        return {
+          milliseconds : milliseconds,
+          day : DAYS_FR[jsDate.getDay()],
+          month : MONTHS_FR[jsDate.getMonth()],
+          dayOfMonth : (dayOfMonth < 10 ? '0' + dayOfMonth : '' + dayOfMonth),
+          monthOfYear : (monthOfYear < 10 ? '0' + monthOfYear : '' + monthOfYear),
+          toIso8601 : jsDate.toISOString(),
+          toLocaleDateTime : jsDate.toLocaleString()
+        };
+      }
+    };
+  })();
+</script>

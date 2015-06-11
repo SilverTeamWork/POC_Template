@@ -1,0 +1,15 @@
+<script>
+  (function() {
+    // TODO find a way to fetch url of Silverpeas (backend) by conf
+    var SILVERPEAS_HOST = 'http://localhost:8000';
+    var SILVERPEAS_CONTEXT = 'silverpeas'
+    window.SilverpeasUrl = {
+      get silverpeasHost() {
+        return SILVERPEAS_HOST;
+      },
+      get silverpeasUrl() {
+        return SILVERPEAS_HOST + '/' + SILVERPEAS_CONTEXT;
+      }
+    };
+  })();
+</script>

@@ -4,6 +4,40 @@
   </template>
 </dom-module>
 
+<dom-module id="sp-post-item">
+  <template>
+    <article on-click="_selectPost">
+      <header>
+        <time class="calendar-presentation" datetime$="[[creationDate.toIso8601]]">
+          <span class="day">[[creationDate.day]]</span> <span class="number">[[creationDate.dayOfMonth]]</span>
+          <span class="month">[[creationDate.month]]</span> <span class="year">[[creationDate.year]]</span>
+        </time>
+        <h3><a class="link-article" href="billet.html"><span class="editable input text">[[post.title]]</span></a>
+        </h3>
+
+        <p class="post-info">
+          <sp-rating appid="[[post.componentId]]" contributionid="[[post.id]]"></sp-rating>
+          <a href="billet.html#commentaires" class="nb-comment"><img src="../../images/talk2user.gif" alt="commentaire"/>[[post.nbComments]]</a>
+        </p>
+      </header>
+      <sp-post-snippet post="[[post]]"></sp-post-snippet>
+      <footer>
+        <p class="publication-detail">
+          <span class="publication">Publié le <time datetime$="[[publicationDate.toIso8601]]">[[publicationDate.toLocaleDateTime]]</time> <span class="auteur">par <span>[[post.creator]]</span></span></span>
+          <span class="sep"> - </span>
+          <span class="modification">Modifié le <time datetime$="[[modificationDate.toIso8601]]">[[modificationDate.toLocaleDateTime]]</time> <span class="auteur">par <span>[[post.updater]]</span></span></span>
+        </p>
+        <div class="operation">
+          <a title="Modifier" href="update-billet.html"><img title="Modifier" alt="Modifier" src="../../images/update.gif"/></a>
+          <a title="Supprimer" href="javascript:onclick=confirmDelete('90511759-2f00-4879-b027-10dc6e25e35e', 'Etes-vous sûr(e) de vouloir supprimer définitivement cette actualité ?')">
+            <img title="Supprimer" alt="Supprimer" src="../../images/delete.gif"/>
+          </a>
+        </div>
+      </footer>
+    </article>
+  </template>
+</dom-module>
+
 <dom-module id="sp-post-list">
   <template>
     <sp-service-ajax
@@ -11,30 +45,8 @@
         on-response="_handleResponse">
     </sp-service-ajax>
     <div id="blog-posts-list">
-    <template is="dom-repeat" items="{{posts}}" as="post">
-      <article>
-        <header>
-          <time class="calendar-presentation" datetime$="{{_iso8601(post.createDate)}}"><span class="day">{{_dayAsString(post.createDate)}}</span> <span class="number">{{_dayOfMonth(post.createDate)}}</span> <span class="month">{{_monthAsString(post.createDate)}}</span> <span class="year">{{_year(post.createDate)}}</span></time>
-          <h3><a class="link-article" href="billet.html"><span class="editable input text">{{post.title}}</span></a></h3>
-          <p class="post-info">
-            <sp-rating appid="{{post.componentId}}" contributionid="{{post.id}}"></sp-rating> <a href="billet.html#commentaires" class="nb-comment"><img src="../../images/talk2user.gif" alt="commentaire"/> 0</a>
-          </p>
-        </header>
-        <sp-post-snippet post="{{post}}"></sp-post-snippet>
-        <footer>
-          <p class="publication-detail">
-            <span class="publication">Publié le <time datetime="{{_iso8601(post.dateEvent)}}">{{_localeDateTime(post.dateEvent)}}</time> <span class="auteur">par <span>{{post.creator}}</span></span></span>
-            <span class="sep"> - </span>
-            <span class="modification">Modifié le <time datetime="{{_iso8601(post.updateDate)}}">{{_localeDateTime(post.updateDate)}}</time> <span class="auteur">par <span>{{post.updater}}</span></span></span>
-          </p>
-          <div class="operation">
-            <a title="Modifier" href="update-billet.html"><img title="Modifier" alt="Modifier" src="../../images/update.gif"  /></a>
-            <a title="Supprimer" href="javascript:onclick=confirmDelete('90511759-2f00-4879-b027-10dc6e25e35e', 'Etes-vous sûr(e) de vouloir supprimer définitivement cette actualité ?')">
-              <img title="Supprimer" alt="Supprimer" src="../../images/delete.gif"  />
-            </a>
-          </div>
-        </footer>
-        </article>
+    <template is="dom-repeat" items="[[posts]]" as="post">
+      <sp-post-item post="[[post]]"></sp-post-item>
     </template>
     </div>
   </template>
@@ -42,8 +54,9 @@
 
 <script>
   'use strict';
-  
+
   (function() {
+    // the snippet of a given post
     Polymer({
       is: 'sp-post-snippet',
       properties: {
@@ -66,9 +79,28 @@
       }
     });
 
+    // a brief presentation of a given post within a list
+    Polymer({
+      is : 'sp-post-item',
+      behaviors : [DateBehavior],
+      properties : {
+        post : {
+          type : Object
+        }
+      },
+      ready: function() {
+        this.creationDate = this._date(this.post.createDate);
+        this.publicationDate = this._date(this.post.dateEvent);
+        this.modificationDate = this._date(this.post.updateDate);
+      },
+      _selectPost : function() {
+        this.fire('post-selected', {post: this.post})
+      }
+    });
+
+    // a list of posts of a given post
     Polymer({
       is : 'sp-post-list',
-      behaviors : [SessionBehavior, DateBehavior],
       properties : {
         blog: {
           type: String,
@@ -86,6 +118,7 @@
         'blog-posts-list.mouseout': '_removeListenerOnScrolling'
       },
       ready: function() {
+        console.log("List posts of blog " + this.blog);
         this._scrollHandler = this._onScroll.bind(this);
       },
       _onBlogChange: function() {

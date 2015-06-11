@@ -5,7 +5,7 @@
     Polymer({
       is : 'sp-service-ajax',
 
-      behaviors : [SessionBehavior],
+      behaviors : [SessionBehavior, SilverpeasUrl],
 
       properties : {
         path : {
@@ -48,7 +48,7 @@
       observers : ['_requestOptionsChanged(path, method, params, auto)'],
 
       created : function() {
-        this.silverpeasServiceBaseUrl = 'http://localhost:8000/silverpeas/services/'
+        this.silverpeasServiceBaseUrl = this.silverpeasUrl + '/services/';
       },
 
       send : function() {

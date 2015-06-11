@@ -1,9 +1,14 @@
 <dom-module id="sp-blog-home">
   <template>
-    <div class="main wrapper flexitem-fluid application">
-      <section class="blog with-aside-app">
-        <sp-post-list blog="{{blog}}"></sp-post-list>
-      </section>
+    <div class="main wrapper flexitem-fluid application" on-post-selected="_viewPost">
+      <iron-pages attr-for-selected="data-page" selected="{{page}}" activate-event="">
+        <section data-page="blog-home" class="blog with-aside-app">
+          <sp-post-list blog="[[blog]]"></sp-post-list>
+        </section>
+        <section data-page="post-info" class="blog with-aside-app">
+          <sp-post-view post="[[selectedPost]]"></sp-post-view>
+        </section>
+      </iron-pages>
     </div>
   </template>
 </dom-module>
@@ -14,8 +19,21 @@
       is: 'sp-blog-home',
       properties: {
         blog: {
-          type: String
+          type: String,
+          observer: '_onBlogChange'
         }
+      },
+      ready: function() {
+        this._viewPost = this._goToPostInfo.bind(this);
+        this.page = 'blog-home';
+      },
+      _onBlogChange: function() {
+        this.page = 'blog-home';
+      },
+      _goToPostInfo: function(e) {
+        e.stopPropagation();
+        this.selectedPost = e.detail.post;
+        this.page = 'post-info';
       }
     });
   })();

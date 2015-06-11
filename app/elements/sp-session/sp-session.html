@@ -16,7 +16,7 @@
         loginPage : {
           type : String, value : LOGIN_PAGE
         }, user : {
-          type : Object, notify : true
+          type : Object, notify : true, readOnly: true
         }
       },
 
@@ -26,7 +26,7 @@
           console.log("no user session key!");
           this._redirectToLoginPage();
         } else {
-          this.user = JSON.parse(localStorage.getItem(CURRENT_USER));
+          this._setUser(this.currentUser);
           this.fire('user-session-loaded', this.user);
         }
       },
@@ -39,6 +39,10 @@
 
       get sessionKey() {
         return localStorage.getItem(SESSION_TOKEN);
+      },
+
+      get currentUser() {
+        return JSON.parse(localStorage.getItem(CURRENT_USER));
       },
 
       _redirectToLoginPage: function() {

@@ -26,18 +26,18 @@
   </div>
   <div class="main-container flexitem-fluid">
     <iron-pages attr-for-selected="data-route" selected="{{route}}">
-      <pager-material data-route="home" elevation="1">
+      <paper-material data-route="home" elevation="1">
         <sp-home-page></sp-home-page>
-      </pager-material>
+      </paper-material>
       <paper-material data-route="space-home" elevation="1">
         <sp-space space-id="{{space.id}}"></sp-space>
       </paper-material>
       <paper-material data-route="instance-home" elevation="1">
-        <sp-app-instance instance-id="{{instance.id}}"></sp-app-instance>
+        <sp-app-instance instance-id="[[instance.id]]"></sp-app-instance>
       </paper-material>
     </iron-pages>
     <!--<neon-animated-pages attr-for-selected="data-route" selected="{{route}}"
-                         entry-animation="fade-in-animation" exit-animation="fade-out-animation">
+                         &entry-animation="fade-in-animation" exit-animation="fade-out-animation">
       <neon-animatable data-route="home" elevation="1">
         <sp-home-page></sp-home-page>
       </neon-animatable>

@@ -1,0 +1,83 @@
+<dom-module id="sp-post-content">
+  <template>
+    <div class="content-from-wysiwyg"></div>
+  </template>
+</dom-module>
+
+<dom-module id="sp-post-view">
+  <template>
+    <header>
+      <h2 class="title">[[post.title]]</h2>
+      <aside class="menu actions">
+        <div><a class="button select" href="#">Plus</a>
+          <ul>
+            <li><a href="#">Modifier ce billet</a></li>
+          </ul>
+        </div>
+      </aside>
+      <p class="post-info"><img src="../../images/note-magie.png" alt="3 sur 5"/><!-- PLUGIN NOTE -->
+        <a href="#commentaires" class="nb-comment"><img src="../../images/talk2user.gif" alt="commentaire"/>&nbsp;<span>[[post.nbComments]]</span></a></p>
+    </header>
+    <sp-post-content post="[[post]]"></sp-post-content>
+    <aside class="commentaires" id="commentaires">
+      <div class="commentaire flexbox-h add">
+        <label for="add-my-comment" class="w100">Ajouter un commentaire</label>
+
+        <div class="commentaire-meta"><img src$="[[_userAvatarUrl()]]" class="avatar" alt="">
+        </div>
+        <div class="talkbubble flexitem-fluid">
+          <textarea id="add-my-comment" class="w100 text"></textarea>
+
+          <div class="buttons pas txtcenter">
+            <button class="submit">Valider</button>
+          </div>
+        </div>
+
+      </div>
+      <sp-comment-list></sp-comment-list>
+    </aside>
+    <footer>
+      <p class="publication-detail"> <span class="publication">Publiée le <time datetime$="[[publicationDate.toIso8601]]">[[publicationDate.toLocaleDateTime]]</time>
+          <span class="auteur">par <span>[[post.creator]]</span></span></span>
+        <span class="sep"> - </span> <span class="modification">Modifié le <time datetime$="[[modificationDate.toIso8601]]">[[modificationDate.toLocaleDateTime]]</time>
+          <span class="auteur">par <span>[[post.updater]]</span></span></span></p>
+    </footer>
+  </template>
+</dom-module>
+
+<script>
+  (function() {
+    Polymer({
+      is: 'sp-post-content',
+      properties: {
+        post: {
+          type: Object,
+          observer: '_onPostChange'
+        }
+      },
+      _onPostChange: function() {
+        this.$$('.content-from-wysiwyg').innerHTML = this.post.content;
+      }
+    });
+
+    Polymer({
+      is: 'sp-post-view',
+      behaviors : [DateBehavior, SessionBehavior, SilverpeasUrl],
+      properties: {
+        post: {
+          type: Object,
+          observer: '_onPostChange'
+        }
+      },
+      _onPostChange: function() {
+        console.log("view post " + this.post.id + ": " + this.post.title);
+        this.creationDate = this._date(this.post.createDate);
+        this.publicationDate = this._date(this.post.dateEvent);
+        this.modificationDate = this._date(this.post.updateDate);
+      },
+      _userAvatarUrl: function() {
+        return this.silverpeasHost + this.currentUser.avatar;
+      }
+    });
+  })();
+</script>
