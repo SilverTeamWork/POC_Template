@@ -1,5 +1,22 @@
+<!--
+The `sp-rating` element exposes silverpeas rating functionality.
+
+    <sp-rating
+        appid="blog2"
+        contributionid="58"
+        readonly></sp-rating>
+
+With `readonly` set to `true`, the element only display current user rating and don't allow
+user to interact with
+-->
+
 <dom-module id="sp-rating">
   <style>
+    .silverpeas-rating img {
+      width: 16px!important;
+      height: 16px!important;
+      border: none;
+    }
   </style>
   <template>
     <iron-ajax
@@ -8,13 +25,33 @@
         on-response="_handleResponse"
         debounce-duration="300">
     </iron-ajax>
-    <span id="ratingSpanId">
-      <img id="ratingStar1" width="16" height="16" class="silverpeas-rating-note silverpeas-rating-note-unselected" title="Mauvais" alt="1" src="../../images/rating/star_empty.png"/>
-      <img id="ratingStar2" width="16" height="16" class="silverpeas-rating-note silverpeas-rating-note-unselected" title="Passable" alt="2" src="../../images/rating/star_empty.png"/>
-      <img id="ratingStar3" width="16" height="16" class="silverpeas-rating-note silverpeas-rating-note-unselected" title="Assez bien" alt="3" src="../../images/rating/star_empty.png"/>
-      <img id="ratingStar4" width="16" height="16" class="silverpeas-rating-note silverpeas-rating-note-unselected" title="Bien" alt="4" src="../../images/rating/star_empty.png"/>
-      <img id="ratingStar5" width="16" height="16" class="silverpeas-rating-note silverpeas-rating-note-unselected" title="Très bien" alt="5" src="../../images/rating/star_empty.png"/>
-      <img id="ratingStarDelete" width="16" height="16" class="" src="../../images/rating/star_delete2.png" title="Supprimer mon avis" hidden/>
+    <iron-ajax
+        id="ratingPusher"
+        handle-as="json"
+        contentType="application/x-www-form-urlencoded"
+        method="POST"
+        on-response="_handlePostResponse"
+        debounce-duration="300">
+    </iron-ajax>
+    <span id="ratingSpanId" class="silverpeas-rating">
+      <img id="ratingStar1" width="16" height="16" class="silverpeas-rating-note silverpeas-rating-note-unselected"
+           title="Mauvais" alt="1" src="../../images/rating/star_empty.png"
+           on-mouseout="onMouseOut" on-mouseover="onMouseOver" on-click="onMouseClick"/>
+      <img id="ratingStar2" width="16" height="16" class="silverpeas-rating-note silverpeas-rating-note-unselected"
+           title="Passable" alt="2" src="../../images/rating/star_empty.png"
+           on-mouseout="onMouseOut" on-mouseover="onMouseOver" on-click="onMouseClick"/>
+      <img id="ratingStar3" width="16" height="16" class="silverpeas-rating-note silverpeas-rating-note-unselected"
+           title="Assez bien" alt="3" src="../../images/rating/star_empty.png"
+           on-mouseout="onMouseOut" on-mouseover="onMouseOver" on-click="onMouseClick"/>
+      <img id="ratingStar4" width="16" height="16" class="silverpeas-rating-note silverpeas-rating-note-unselected"
+           title="Bien" alt="4" src="../../images/rating/star_empty.png"
+           on-mouseout="onMouseOut" on-mouseover="onMouseOver" on-click="onMouseClick"/>
+      <img id="ratingStar5" width="16" height="16" class="silverpeas-rating-note silverpeas-rating-note-unselected"
+           title="Très bien" alt="5" src="../../images/rating/star_empty.png"
+           on-mouseout="onMouseOut" on-mouseover="onMouseOver" on-click="onMouseClick"/>
+      <img id="ratingStarDelete" width="16" height="16" class="silverpeas-rating-note silverpeas-rating-note-unselected"
+           src="../../images/rating/star_delete2.png" title="Supprimer mon avis"
+           on-click="onMouseClick"/>
     </span>
   </template>
 </dom-module>
@@ -22,7 +59,6 @@
 <script>
   (function() {
 
-    var RATING_STYLE = "silverpeas-rating";
     var DEFAULT_RATING_NOTE_STYLE = "silverpeas-rating-note";
     var UNSELECTED_RATING_NOTE_STYLE = "silverpeas-rating-note-unselected";
     var SELECTED_RATING_NOTE_STYLE = "silverpeas-rating-note-selected";
@@ -38,78 +74,118 @@
     Polymer({
       is : 'sp-rating', behaviors : [SessionBehavior],
       properties : {
+        /**
+         * if true, user cannot only view current contribution rating
+         * if false, user can modify its own contribution rating
+         */
         readonly : {
           type : Boolean,
-          value: false
+          value : false
         },
+        /**
+         * the current application identifier
+         */
         appid : {
           type : String
         },
+        /**
+         * the current contribution identifier
+         */
         contributionid : {
-          type: String
-        },
-        count :    {
-          type : Number,
-          value : 5
-        },
-        ratingUri : {
-          type: String,
-          computed: '_computeRatingUri(appid, contributionid)'
-        },
-        rating: {
+          type : String
+        }, count : {
+          type : Number, value : 5
+        }, ratingUri : {
+          type : String, computed : '_computeRatingUri(appid, contributionid)'
+        }, rating : {
           type : Object, notify : false
-        },
-        imgsrc : {
-          type: String,
-          value: function () {
-            return "http://" + location.host + "/images/note-magie.png";
-          }
-        },
-        _hoverRatingNote : {
-          type : Number,
-          value : 0
-        }, _readonly : {
-          type : Boolean, value : false
+        }, _hoverRatingNote : {
+          type : Number, value : 0, notify: true
         }, onHovered : {
-          type: Event
+          type : Event
         }
-      },
-      created : function() {
-      },
-      _computeRatingUri: function(appid, contributionid) {
+      }, created : function() {
+      }, _computeRatingUri : function(appid, contributionid) {
         return "rating/" + this.appid + "/Publication/" + this.contributionid;
+      }, ready : function() {
+        console.log('sp-rating element ready! appid=' + this.appid + " and contributionId = " +
+            this.contributionid);
+        this._retrieveContributionRating();
       },
-      ready : function() {
-        console.log('sp-rating element ready! appid=' + this.appid + " and contributionId = " + this.contributionid);
+      /**
+       * This method retrieve current contribution rating
+       */
+      _retrieveContributionRating: function() {
         // Get rating from ajax call (xml http request)
-        this.$.ratingFetcher.headers = {"X-Silverpeas-Session": this.sessionKey};
+        this.$.ratingFetcher.headers = {"X-Silverpeas-Session" : this.sessionKey};
         this.$.ratingFetcher.url = "http://localhost:8000/silverpeas/services/" + this.ratingUri;
         this.$.ratingFetcher.generateRequest();
-        this.$.ratingStarDelete.style="display:none";
-      },
-      _handleResponse : function(event) {
+      }, _handleResponse : function(event) {
         // Handle rating ajax response
         this.rating = event.detail.response;
-        console.log('Receive ' + this.rating.contributionId + ' Object for ' + this.appid + ' and contribution ' + this.contributionid);
+        console.log('Retrieve rating from ' + this.appid + ' and contribution ' + this.contributionid);
         this._render(this.rating);
+      }, hovered : false
+      , unsetHoverRatingNote : function() {
+        this._hoverRatingNote = 0;
       },
-      hovered: false,
-      onHovered: function() {
+      /**
+       * Handle on mouse over event on targeted image
+       * @param e the event
+       */
+      onMouseOver : function(e) {
         this.hovered = true;
-        console.log('onHovered!');
+        e.stopPropagation();
+        if (!this.readonly) {
+          var curImageTarget = e.target;
+          this._hoverRatingNote = parseInt(curImageTarget.alt);
+          this._render(this.rating);
+        }
       },
-      onUnhovered: function() {
+      /**
+       * Handle on mouse out event on targeted image
+       * @param e the event
+       */
+      onMouseOut : function(e) {
         this.hovered = false;
-        console.log('onUnhovered!');
+        e.stopPropagation();
+        if (!this.readonly) {
+          this.unsetHoverRatingNote();
+          this._render(this.rating);
+        }
       },
-      _render : function (rating) {
-        var ratingNote = this._readonly ? rating.ratingAverage : rating.raterRatingValue;
+      /**
+       * Handle on mouse click event on targeted image
+       * @param e the event
+       */
+      onMouseClick : function(e) {
+        console.log('onMouseClick : register new user rating');
+        e.stopPropagation();
+        if (!this.readonly) {
+          var curImageTarget = e.target;
+          this.unsetHoverRatingNote();
+          if (curImageTarget == this.$.ratingStarDelete) {
+            this.postNewRating(null);
+          } else {
+            this.postNewRating(parseInt(curImageTarget.alt));
+          }
+        }
+      },
+
+      /**
+       * Render graphical display of the rating given in parameter
+       * @param rating the rating to display
+       */
+      _render : function(rating) {
+        var ratingNote = rating.numberOfRaterRatings > 0 ? rating.ratingAverage : rating.raterRatingValue;
         if (Math.ceil(ratingNote) != ratingNote) {
           ratingNote += 1;
         }
-        if (ratingNote.isRatingDone) {
-          this.$.ratingStarDelete.style="display:block";
+        if (!this.readonly && rating.isRatingDone && rating.raterRatingValue != 0) {
+          this.$.ratingStarDelete.style = "display:block";
           this.$.ratingStarDelete.removeAttribute('hidden');
+        } else {
+          this.$.ratingStarDelete.setAttribute('hidden', true);
         }
         var ceil = Math.ceil(ratingNote);
         for (note = 1; note <= this.count; note++) {
@@ -121,8 +197,8 @@
             if (this._hoverRatingNote == 0) {
               if (note <= ratingNote) {
                 if (ceil != ratingNote && note == (ceil - 1)) {
-                  var rounded = Math.round(ratingNote * 100) / 100 ;
-                  if ((ratingNote - rounded) > 0.25) {
+                  var rounded = Math.round(ratingNote);
+                  if (Math.abs(ratingNote - rounded) > 0.25) {
                     resource = NOTE_HALF_SELECTED_SRC;
                     style += HALF_SELECTED_RATING_NOTE_STYLE;
                   } else {
@@ -130,8 +206,7 @@
                     style += UNSELECTED_RATING_NOTE_STYLE;
                   }
                 } else {
-                  console.log("set note selected src for contribution " + this.contributionid)
-                  resource = NOTE_SELECTED_SRC + '?' + Math.random();
+                  resource = NOTE_SELECTED_SRC;
                   style += SELECTED_RATING_NOTE_STYLE;
                 }
               } else {
@@ -139,7 +214,7 @@
                 style += UNSELECTED_RATING_NOTE_STYLE;
               }
             } else {
-              if (note <= hoverRatingNote) {
+              if (note <= this._hoverRatingNote) {
                 resource = NOTE_HOVER_SRC;
                 style += HOVER_RATING_NOTE_STYLE;
               } else {
@@ -154,6 +229,25 @@
           Polymer.dom(img).setAttribute("src", resource);
           Polymer.dom(img).setAttribute("class", style);
         }
+      },
+      /**
+       * Post a new rating on the current rating component identified by appid an contributionid
+       * @param note the note to set
+       */
+      postNewRating : function(note) {
+        console.log('postNewRating for appid=' + this.appid + " and contributionId = " +
+            this.contributionid + ' with value =' + note);
+        this.rating.raterRatingValue = note;
+        // Get rating from ajax call (xml http request)
+        this.$.ratingPusher.headers = {"X-Silverpeas-Session" : this.sessionKey};
+        this.$.ratingPusher.url = "http://localhost:8000/silverpeas/services/" + this.ratingUri;
+        this.$.ratingPusher.body = note;
+        this.$.ratingPusher.contentType = 'text/plain';
+        this.$.ratingPusher.generateRequest();
+      }, _handlePostResponse: function(event) {
+        // Handle post rating ajax response
+        console.log("post rating response=" + event.detail.response);
+        this._retrieveContributionRating(this.rating);
       }
     });
   })();
