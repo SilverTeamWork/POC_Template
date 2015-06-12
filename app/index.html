@@ -116,6 +116,10 @@
 
       document.querySelector('body').removeAttribute('unresolved');
 
+      Polymer.dom(document).querySelector('h1').addEventListener('click', function(e) {
+        document.location = "/yocha.html";
+      });
+
       var i18nOptions = {
         lng : "fr",
         preload: ['en'],
