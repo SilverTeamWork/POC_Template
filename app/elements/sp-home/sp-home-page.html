@@ -1,4 +1,4 @@
-  <dom-module id="sp-home-page">
+<dom-module id="sp-home-page">
   <template>
     <div class="main wrapper clearfix">
       <section class="pal ">
@@ -169,12 +169,12 @@
 <script>
   (function() {
     Polymer({
-      is: 'sp-home-page',
+      is : 'sp-home-page',
 
-      ready: function() {
+      ready : function() {
         Polymer.dom(this.root).querySelector('h2').addEventListener('click', function(e) {
           document.location = "/yocha.html";
-        })
+        });
       }
     });
   })();

@@ -1,11 +1,14 @@
 <dom-module id="sp-space-header-menu">
   <template>
+    <iron-signals on-iron-signal-last-accessed-space="_lastAccessedSpaceChanged"></iron-signals>
     <sp-service-ajax path="spaces"
-                  last-response="{{spaces}}"
-                  auto></sp-service-ajax>
+                     last-response="{{spaces}}"
+                     auto></sp-service-ajax>
     <nav>
       <ul>
-        <li class="selected"><a href="/">Home sweet home</a></li>
+        <li class="selected">
+          <sp-space-menu-item id="spaceHomepage" space="[[homeSpace]]" on-click="_homePage"></sp-space-menu-item>
+        </li>
         <template is="dom-repeat" items="[[spaces]]">
           <li>
             <sp-space-menu-item space="[[item]]"></sp-space-menu-item>
@@ -21,10 +24,67 @@
     Polymer({
       is : 'sp-space-header-menu',
 
+      behaviors : [SpaceBehavior],
+
       properties : {
         spaces : {
-          type : Array, notify : true
+          type : Array, notify : true, observer : '_spacesLoaded'
+        },
+
+        homeSpace : {
+          type : Object, notify : true, readOnly : true, value : function() {
+            return {"type" : "space", "id" : "-1", "label" : "Home sweet home"};
+          }
         }
+      },
+
+      created : function() {
+        this._whenReady_ = new Promise(function(resolve, reject) {
+          this.resolveCompletes = resolve;
+          this.rejectCompletes = reject;
+        }.bind(this));
+      },
+
+      _spacesLoaded : function() {
+        this.resolveCompletes(this);
+      },
+
+      _lastAccessedSpaceChanged : function(signal) {
+        this._markAsSelected(signal.detail);
+      },
+
+      _homePage : function() {
+        this._markAsSelected(this.homeSpace);
+      },
+
+      _markAsSelected : function(lastAccessedSpace) {
+        var self = this;
+        this._whenReady_.then(function() {
+
+          // Clearings the current selection
+          Polymer.dom(self.root).querySelectorAll('sp-space-menu-item').forEach(function(item) {
+            item.parentNode.classList.remove('selected');
+          });
+
+          // Guess the new one
+          if (self.homeSpace === lastAccessedSpace) {
+
+            // Home space
+            self.$.spaceHomepage.parentNode.classList.add('selected');
+
+          } else if (self.isValidSpace(lastAccessedSpace.space)) {
+
+            // Valid space
+            Polymer.dom(self.root).querySelectorAll('sp-space-menu-item').forEach(function(item) {
+              if (item.space.id === lastAccessedSpace.space.id) {
+                item.parentNode.classList.add('selected');
+              }
+            });
+
+          } else {
+            // Space that does not exist
+          }
+        });
       }
     });
   })();

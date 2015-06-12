@@ -10,12 +10,69 @@
       properties : {
         path : {
           type : String, value : ''
-        }, method : {
-          type : String, value : 'GET'
-        }, params : {
+        },
+
+        /**
+         * An object that contains query parameters to be appended to the
+         * specified `url` when generating a request. If you wish to set the body
+         * content when making a POST request, you should use the `body` property
+         * instead.
+         */
+        params : {
           type : Object, value : function() {
             return {};
           }
+        },
+
+        /**
+         * The HTTP method to use such as 'GET', 'POST', 'PUT', or 'DELETE'.
+         * Default is 'GET'.
+         */
+        method : {
+          type : String, value : 'GET'
+        },
+
+        /**
+         * HTTP request headers to send.
+         *
+         * Example:
+         *
+         *     <iron-ajax
+         *         auto
+         *         url="http://somesite.com"
+         *         headers='{"X-Requested-With": "XMLHttpRequest"}'
+         *         handle-as="json"
+         *         last-response-changed="{{handleResponse}}"></iron-ajax>
+         *
+         * Note: setting a `Content-Type` header here will override the value
+         * specified by the `contentType` property of this element.
+         */
+        headers : {
+          type : Object, value : function() {
+            return {};
+          }
+        },
+
+        /**
+         * Content type to use when sending data. If the `contentType` property
+         * is set and a `Content-Type` header is specified in the `headers`
+         * property, the `headers` property value will take precedence.
+         */
+        contentType : {
+          type : String, value : 'application/x-www-form-urlencoded'
+        },
+
+        /**
+         * Optional raw body content to send when method === "POST".
+         *
+         * Example:
+         *
+         *     <iron-ajax method="POST" auto url="http://somesite.com"
+         *         body='{"foo":1, "bar":2}'>
+         *     </iron-ajax>
+         */
+        body : {
+          type : String, value : ''
         },
 
         /**
@@ -57,25 +114,39 @@
         }
         var self = this;
         var ajax = document.createElement("iron-ajax");
-        ajax.url = ((this.path.indexOf("http") < 0 ? this.silverpeasServiceBaseUrl : '') +
-        this.path).replace(/[^:]\/{2,}/gi, '/');
-        ajax.params = (typeof this.params === 'object' ? this.params : {});
 
+        // Wiring all parameters
+        ajax.params = this.params;
+        ajax.method = this.method;
+        ajax.headers = this.headers;
+        ajax.contentType = this.contentType;
+        ajax.body = this.body;
+
+        // Settings the session
         var sessionId = this._getSessionId();
         if (typeof sessionId === 'string' && sessionId.length > 0) {
-          ajax.headers = {"X-Silverpeas-Session" : sessionId};
+          ajax.headers["X-Silverpeas-Session"] = sessionId;
         }
 
+        // Wiring events
         ajax.addEventListener('response', function(e) {
           self._setLastResponse(ajax.lastResponse);
           self.fire('response', e.detail)
         });
-
         ajax.addEventListener('error', function(e) {
           self._setLastError(ajax.lastError);
           self.fire('error', e.detail)
         });
 
+        // URL
+        var normalizedUrl = this.path;
+        if (this.path.indexOf("http") < 0) {
+          normalizedUrl = this.silverpeasServiceBaseUrl + normalizedUrl;
+          normalizedUrl = normalizedUrl.replace(/[^:]\/{2,}/gi, '/')
+        }
+        ajax.url = normalizedUrl;
+
+        ajax.debounceDuration = 300;
         return ajax.generateRequest();
       },
 

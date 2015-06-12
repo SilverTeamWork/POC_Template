@@ -22,6 +22,13 @@
       },
 
       /**
+       * Indicates if the given object represents a valid identifier of application instance.
+       */
+      isValidApplicationInstanceId : function(instanceId) {
+        return (typeof instanceId === 'string') && instanceId.length > 0;
+      },
+
+      /**
        * Gets the id attribute of the given parameter.
        * @param object an object or a string.
        * @returns {*} the string identifier.

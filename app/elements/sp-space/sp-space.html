@@ -1,6 +1,24 @@
 <dom-module id="sp-space">
   <template>
-    Space identifier: <span>{{spaceId}}</span>
+    <sp-service-ajax id="requester"
+                     path="[[getSpaceUri(spaceId)]]"
+                     last-response="{{currentSpace}}"
+                     on-error="_spaceNotFound"></sp-service-ajax>
+    <div class="main-container flexitem-fluid flexbox-h">
+      <div class="flexbox-v"></div>
+      <div class="main wrapper flexitem-fluid">
+        <nav></nav>
+        <section class="space">
+          <template is="dom-if" if="[[isSpaceFound]]">
+            <h2 class="title"><span>Chez Silverpeas</span></h2>
+            Space identifier: <span id="spaceId">{{currentSpace.label}}</span>
+          </template>
+          <template is="dom-if" if="[[!isSpaceFound]]">
+            Space with identifier <b><span>{{spaceId}}</span></b> does not exist, asshole.
+          </template>
+        </section>
+      </div>
+    </div>
   </template>
 </dom-module>
 <script>
@@ -9,10 +27,41 @@
     Polymer({
       is : 'sp-space',
 
+      behaviors : [SpaceBehavior],
+
       properties : {
+
         spaceId : {
-          type : String, value : ''
+          type : String, notify : true, observer : '_spaceIdChanged'
+        },
+
+        currentSpace : {
+          type : Object, notify : true, observer : '_currentSpaceChanged'
+        },
+
+        isSpaceFound : {
+          type : Boolean, notify : true, readOnly : true
         }
+      },
+
+      _spaceIdChanged : function() {
+        if (this.isValidSpaceId(this.spaceId)) {
+          this.$.requester.send();
+        }
+      },
+
+      _spaceNotFound : function() {
+        this.currentSpace = null;
+        this._currentSpaceChanged();
+      },
+
+      _currentSpaceChanged : function() {
+        this._setIsSpaceFound(this.isValidSpace(this.currentSpace));
+        this.fire('iron-signal', {
+          name : 'last-accessed-space', data : {
+            space : this.currentSpace
+          }
+        });
       }
     });
   })();

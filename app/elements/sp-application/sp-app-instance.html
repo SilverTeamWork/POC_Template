@@ -4,17 +4,16 @@
                      path="[[getApplicationInstanceUri(instanceId)]]"
                      last-response="{{applicationInstance}}"
                      last-error="{{lastError}}"
-                     on-response="_applicationInstanceLoaded"
-                     auto></sp-service-ajax>
+                     on-response="_applicationInstanceLoaded"></sp-service-ajax>
     <template is="dom-if" if="{{isApplicationNameEqualTo(applicationInstance, 'blog')}}">
       <sp-blog-home blog="{{instanceId}}"></sp-blog-home>
     </template>
 
-    <template is="dom-if" if="{{_applicationNotHandled(applicationInstance)}}">
+    <template is="dom-if" if="{{_isApplicationNotHandled(applicationInstance)}}">
       <div>Application <b><span>{{applicationInstance.name}}</span></b> is not yet handled.</div>
     </template>
 
-    <template is="dom-if" if="{{_applicationNotFound(lastError)}}">
+    <template is="dom-if" if="{{_isApplicationNotFound(lastError)}}">
       <div>Application with identifier <b><span>{{instanceId}}</span></b> does not exist, asshole.
       </div>
     </template>
@@ -31,7 +30,7 @@
       properties : {
 
         instanceId : {
-          type : String, value : ''
+          type : String, notify : true, observer : '_instanceIdChanged'
         }
       },
 
@@ -41,12 +40,18 @@
         map['blog'] = true;
       },
 
-      _applicationNotHandled : function(applicationInstance) {
+      _instanceIdChanged : function() {
+        if (this.isValidApplicationInstanceId(this.instanceId)) {
+          this.$.requester.send();
+        }
+      },
+
+      _isApplicationNotHandled : function(applicationInstance) {
         return (typeof applicationInstance === 'object') &&
             !this.handledApplications[applicationInstance.name];
       },
 
-      _applicationNotFound : function(lastError) {
+      _isApplicationNotFound : function(lastError) {
         return (typeof lastError === 'object');
       },
 

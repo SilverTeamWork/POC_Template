@@ -23,18 +23,24 @@
       /**
        * Indicates if the given content json object represents a space.
        * @param content a json object.
-       * @returns {string} an URI.
+       * @returns {boolean} true if it represents a space, false otherwise.
        */
       isContentTypeOfSpace : function(content) {
-        return content && content.type === 'space';
+        return content != null && (typeof content === 'object') && content.type === 'space';
       },
 
       /**
        * Gets the page URL of space represented by the given parameter.
+       * This method handles the special case of home page. If the identifier of the space is
+       * equals to '-1', then the homepage page URL is returned.
        * @param space a space object or a spaceId
        * @returns {string} a page URL.
        */
       getSpacePageUrl : function(space) {
+        var spaceId = this._getObjectId(space);
+        if (spaceId === '-1') {
+          return '/';
+        }
         return "/spaces/" + this._getObjectId(space);
       },
 
@@ -48,6 +54,21 @@
       },
 
       /**
+       * Indicates if the given object represents a valid identifier of space.
+       */
+      isValidSpaceId : function(spaceId) {
+        return (typeof  spaceId === 'string') && spaceId.length > 0 && spaceId !== '-1';
+      },
+
+      /**
+       * Indicates if the given object represents a valid space object.
+       */
+      isValidSpace : function(object) {
+        return this.isContentTypeOfSpace(object) && (typeof object.id === 'string') &&
+            object.id.length > 0;
+      },
+
+      /**
        * Gets the id attribute of the given parameter.
        * @param object an object or a string.
        * @returns {*} the string identifier.
@@ -55,7 +76,7 @@
        */
       _getObjectId : function(object) {
         var objectId = object;
-        if (typeof object !== 'string') {
+        if (object && typeof object !== 'string') {
           objectId = object.id;
           if (object.type === 'component') {
             objectId = object.name + objectId;

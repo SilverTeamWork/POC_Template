@@ -98,6 +98,8 @@
         page('*', function(data) {
           console.log("Unknown path, redirect to home");
           app.route = 'home';
+          app.space = {};
+          app.instance = {};
           app.fire('route-changed', {target: 'home', id: null});
         });
 

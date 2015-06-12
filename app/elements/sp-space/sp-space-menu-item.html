@@ -1,8 +1,8 @@
 <dom-module id="sp-space-menu-item">
   <template>
-    <sp-service-ajax path="[[getSpaceContentUri(space)]]"
-                  last-response="{{spaceContent}}"
-                  auto></sp-service-ajax>
+    <sp-service-ajax id="requester"
+                     path="[[getSpaceContentUri(space)]]"
+                     last-response="{{spaceContent}}"></sp-service-ajax>
     <a href="{{getSpacePageUrl(space)}}">{{space.label}}</a>
     <template is="dom-if" if="[[spaceContent.length]]">
       <ul>
@@ -35,13 +35,23 @@
 
       properties : {
         space : {
-          type : Object, value : function() {
+          type : Object, notify : true, value : function() {
             return {
               label : 'unknown'
             };
           }
-        }, toSubLevel : {
+        },
+
+        toSubLevel : {
           type : Number, value : 0
+        }
+      },
+
+      ready : function() {
+        if (this.space.id != '-1') {
+          this.$.requester.send();
+        } else {
+          this.spaceContent = [];
         }
       },
 
