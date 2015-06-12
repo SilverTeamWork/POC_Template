@@ -29,12 +29,28 @@
         </p>
         <div class="operation">
           <a title="Modifier" href="update-billet.html"><img title="Modifier" alt="Modifier" src="../../images/update.gif"/></a>
-          <a title="Supprimer" href="javascript:onclick=confirmDelete('90511759-2f00-4879-b027-10dc6e25e35e', 'Etes-vous sûr(e) de vouloir supprimer définitivement cette actualité ?')">
+          <button-paper id="postDeletion" label="Supprimer" on-click="_toggleConfirm">
             <img title="Supprimer" alt="Supprimer" src="../../images/delete.gif"/>
-          </a>
+          </button-paper>
         </div>
       </footer>
     </article>
+    <div>
+      <paper-dialog id="confirm" modal="true"
+                    entry-animation="scale-up-animation" exit-animation="fade-out-animation">
+        <p>Êtes vous sûr de vouloir le supprimer ?</p>
+        <div id="button-bar" >
+          <div id="button-set">
+            <paper-button label="Annuler" dialog-dismiss autofocus><span class="ui-button-text">Annuler</span></paper-button>
+            <paper-button label="Ok" dialog-confirm on-click="_onConfirm"><span class="ui-button-text">Ok</span></paper-button>
+          </div>
+        </div>
+      </paper-dialog>
+      <sp-service-ajax id="deletion"
+          method="DELETE"
+          on-response="_handleResponse">
+      </sp-service-ajax>
+    </div>
   </template>
 </dom-module>
 
@@ -92,9 +108,22 @@
         this.creationDate = this._date(this.post.createDate);
         this.publicationDate = this._date(this.post.dateEvent);
         this.modificationDate = this._date(this.post.updateDate);
+        this.$.deletion.path = 'blogs/' + this.post.componentId + '/posts/' + this.post.id;
       },
-      _selectPost : function() {
+      _selectPost : function(event) {
         this.fire('post-selected', {post: this.post})
+      },
+      _toggleConfirm: function() {
+        event.stopImmediatePropagation();
+        this.$.confirm.toggle();
+      },
+      _onConfirm: function() {
+        this.$.deletion.send();
+      },
+      _handleResponse: function(event) {
+        if (event.detail.succeeded) {
+          this.remove();
+        }
       }
     });
 
