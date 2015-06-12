@@ -154,15 +154,22 @@
           app.addEventListener('route-changed', function(event) {
             if (event.detail.target === 'sp-app' && event.detail.id === this.blog) {
               this._onBlogChange();
+            } else {
+              // Setting to undefined the current blog as the page displayed does not concerned it.
+              // This action avoid a lot of errors when navigating into other pages.
+              // If you comment this below line, you will see the damages!
+              // That is because of the mechanism of <iron-pages> that makes all created components staying alive...
+              this.blog = undefined;
             }
           }.bind(this));
         }
       },
       _onBlogChange: function() {
-        console.log('query posts of blog ' + this.blog);
         this._setPosts([]);
         this._fullLoaded = false;
         this._page = 5;
+        if (!this.blog) {return;}
+        console.log('query posts of blog ' + this.blog);
         this.$.postsFetcher.path = 'blogs/' + this.blog + '/posts?page=1;5';
         this.$.postsFetcher.send();
       },
