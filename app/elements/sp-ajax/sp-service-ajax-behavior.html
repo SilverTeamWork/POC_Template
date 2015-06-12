@@ -1,0 +1,93 @@
+<script>
+  (function() {
+
+    var SilverpeasServiceAjax = function() {
+      var self = this;
+      var ajax = document.createElement("iron-ajax");
+      ajax.debounceDuration = 300;
+
+      // Wiring all parameters
+      this.withParams = function(params) {
+        Object.getOwnPropertyNames(params).forEach(function(propertyName) {
+          ajax.params[propertyName] = params[propertyName];
+        });
+        return self;
+      };
+      this.withHeaders = function(headers) {
+        Object.getOwnPropertyNames(headers).forEach(function(propertyName) {
+          ajax.headers[propertyName] = headers[propertyName];
+        });
+        return self;
+      };
+      this.withBody = function(body) {
+        ajax.body = body;
+        return self;
+      };
+      this.ofContentType = function(contentType) {
+        ajax.contentType = contentType;
+        return self;
+      };
+      // Settings the session
+      var sessionId = SessionBehavior.sessionKey;
+      if (typeof sessionId === 'string' && sessionId.length > 0) {
+        ajax.headers["X-Silverpeas-Session"] = sessionId;
+      }
+
+      // Wiring events
+      this.onResponse = function(callback) {
+        ajax.addEventListener('response', function(e) {
+          callback.call(this, e);
+        });
+        return self;
+      };
+      this.onError = function(callback) {
+        ajax.addEventListener('error', function(e) {
+          callback.call(this, e);
+        });
+        return self;
+      };
+
+      // Send
+      this.get = function(path) {
+        return self.send(path, 'GET');
+      };
+      this.put = function(path) {
+        return self.send(path, 'PUT');
+      };
+      this.post = function(path) {
+        return self.send(path, 'POST');
+      };
+      this.delete = function(path) {
+        return self.send(path, 'DELETE');
+      };
+      this.send = function(path, method) {
+        if (typeof method === 'string' && method.length > 0) {
+          ajax.method = method;
+        }
+        ajax.url = __normalizeUrl(path);
+        return ajax.generateRequest();
+      }
+    };
+
+    function __normalizeUrl(path) {
+      var normalizedUrl = path;
+      if (path.indexOf("http") < 0) {
+        normalizedUrl = SilverpeasUrl.silverpeasServiceUrl + '/' + normalizedUrl;
+        normalizedUrl = normalizedUrl.replace(/[^:]\/{2,}/gi, '/')
+      }
+      return normalizedUrl;
+    }
+
+    window.SilverpeasServiceAjaxBehavior = {
+
+      /**
+       * Creates a new instance of Silverpeas Service Ajax.
+       * That avoids to write boring and repeating code...
+       * @returns {SilverpeasServiceAjax} a new instance.
+       */
+      newSilverpeasServiceAjax : function() {
+        return new SilverpeasServiceAjax();
+      }
+    };
+  })();
+</script>

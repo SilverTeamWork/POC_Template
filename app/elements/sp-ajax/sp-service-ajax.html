@@ -5,7 +5,7 @@
     Polymer({
       is : 'sp-service-ajax',
 
-      behaviors : [SessionBehavior, SilverpeasUrl],
+      behaviors : [SessionBehavior, SilverpeasServiceAjaxBehavior],
 
       properties : {
         path : {
@@ -104,54 +104,29 @@
 
       observers : ['_requestOptionsChanged(path, method, params, auto)'],
 
-      created : function() {
-        this.silverpeasServiceBaseUrl = this.silverpeasUrl + '/services/';
-      },
-
       send : function() {
         if (typeof this.path !== 'string' || this.path.length == 0) {
           return;
         }
         var self = this;
-        var ajax = document.createElement("iron-ajax");
+
+        var ajax = this.newSilverpeasServiceAjax();
 
         // Wiring all parameters
-        ajax.params = this.params;
-        ajax.method = this.method;
-        ajax.headers = this.headers;
-        ajax.contentType = this.contentType;
-        ajax.body = this.body;
-
-        // Settings the session
-        var sessionId = this._getSessionId();
-        if (typeof sessionId === 'string' && sessionId.length > 0) {
-          ajax.headers["X-Silverpeas-Session"] = sessionId;
-        }
+        ajax.withParams(this.params).withHeaders(this.headers);
+        ajax.withBody(this.body).ofContentType(this.contentType);
 
         // Wiring events
-        ajax.addEventListener('response', function(e) {
-          self._setLastResponse(ajax.lastResponse);
+        ajax.onResponse(function(e) {
+          self._setLastResponse(e.detail.response);
           self.fire('response', e.detail)
         });
-        ajax.addEventListener('error', function(e) {
-          self._setLastError(ajax.lastError);
+        ajax.onError(function(e) {
+          self._setLastError(e.detail.error);
           self.fire('error', e.detail)
         });
 
-        // URL
-        var normalizedUrl = this.path;
-        if (this.path.indexOf("http") < 0) {
-          normalizedUrl = this.silverpeasServiceBaseUrl + normalizedUrl;
-          normalizedUrl = normalizedUrl.replace(/[^:]\/{2,}/gi, '/')
-        }
-        ajax.url = normalizedUrl;
-
-        ajax.debounceDuration = 300;
-        return ajax.generateRequest();
-      },
-
-      _getSessionId : function() {
-        return this.sessionKey;
+        return ajax.send(this.path, this.method);
       },
 
       _requestOptionsChanged : function() {

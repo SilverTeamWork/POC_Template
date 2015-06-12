@@ -3,8 +3,7 @@
     <sp-service-ajax id="requester"
                      path="[[getApplicationInstanceUri(instanceId)]]"
                      last-response="{{applicationInstance}}"
-                     last-error="{{lastError}}"
-                     on-response="_applicationInstanceLoaded"></sp-service-ajax>
+                     on-error="_applicationInstanceNotFound"></sp-service-ajax>
     <template is="dom-if" if="{{isApplicationNameEqualTo(applicationInstance, 'blog')}}">
       <sp-blog-home blog="{{instanceId}}"></sp-blog-home>
     </template>
@@ -13,7 +12,7 @@
       <div>Application <b><span>{{applicationInstance.name}}</span></b> is not yet handled.</div>
     </template>
 
-    <template is="dom-if" if="{{_isApplicationNotFound(lastError)}}">
+    <template is="dom-if" if="{{!isApplicationInstanceFound}}">
       <div>Application with identifier <b><span>{{instanceId}}</span></b> does not exist, asshole.
       </div>
     </template>
@@ -31,6 +30,14 @@
 
         instanceId : {
           type : String, notify : true, observer : '_instanceIdChanged'
+        },
+
+        applicationInstance : {
+          type : Object, notify : true, observer : '_applicationInstanceChanged'
+        },
+
+        isApplicationInstanceFound : {
+          type : Boolean, notify : true, readOnly : true
         }
       },
 
@@ -46,17 +53,27 @@
         }
       },
 
+      _applicationInstanceNotFound : function() {
+        this.applicationInstance = null;
+        this._applicationInstanceChanged();
+      },
+
+      _applicationInstanceChanged : function() {
+        this._setIsApplicationInstanceFound(this.isValidApplicationInstance(this.applicationInstance));
+        this.fire('iron-signal', {
+          name : 'last-accessed-application-instance', data : {
+            applicationInstance : this.applicationInstance
+          }
+        });
+      },
+
       _isApplicationNotHandled : function(applicationInstance) {
-        return (typeof applicationInstance === 'object') &&
+        return this.isValidApplicationInstance(applicationInstance) &&
             !this.handledApplications[applicationInstance.name];
       },
 
       _isApplicationNotFound : function(lastError) {
         return (typeof lastError === 'object');
-      },
-
-      _applicationInstanceLoaded : function() {
-        this.lastError = undefined;
       }
     });
   })();

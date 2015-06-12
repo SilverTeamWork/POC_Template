@@ -3,6 +3,40 @@
     window.SpaceBehavior = {
 
       /**
+       * Get the root space from the given space uri.
+       * @param spaceUri a space uri.
+       * @param callback the called callback with root space as parameter if any.
+       * @private
+       */
+      _getRootSpaceFromSpaceUri : function(spaceUri, callback) {
+        var self = this;
+        SilverpeasServiceAjaxBehavior.newSilverpeasServiceAjax().onResponse(function(e) {
+          var space = e.detail.response;
+          self._getRootSpaceFromSpace(space, callback);
+        }).get(spaceUri);
+      },
+
+      /**
+       * Get the root space from the given space.
+       * @param space a space.
+       * @param callback the called callback with root space as parameter if any.
+       * @private
+       */
+      _getRootSpaceFromSpace : function(space, callback) {
+        if (space && space != null) {
+          if (!space.parentURI) {
+            callback.call(this, space);
+          } else {
+            var self = this;
+            SilverpeasServiceAjaxBehavior.newSilverpeasServiceAjax().onResponse(function(e) {
+              var space = e.detail.response;
+              self._getRootSpaceFromSpace(space, callback);
+            }).get(space.parentURI);
+          }
+        }
+      },
+
+      /**
        * Gets the URI to get json data of space represented by the given parameter.
        * @param space a space object or a spaceId
        * @returns {string} an URI.
@@ -22,11 +56,11 @@
 
       /**
        * Indicates if the given content json object represents a space.
-       * @param content a json object.
+       * @param object a json object.
        * @returns {boolean} true if it represents a space, false otherwise.
        */
-      isContentTypeOfSpace : function(content) {
-        return content != null && (typeof content === 'object') && content.type === 'space';
+      isObjectTypeOfSpace : function(object) {
+        return object != null && (typeof object === 'object') && object.type === 'space';
       },
 
       /**
@@ -64,7 +98,7 @@
        * Indicates if the given object represents a valid space object.
        */
       isValidSpace : function(object) {
-        return this.isContentTypeOfSpace(object) && (typeof object.id === 'string') &&
+        return this.isObjectTypeOfSpace(object) && (typeof object.id === 'string') &&
             object.id.length > 0;
       },
 

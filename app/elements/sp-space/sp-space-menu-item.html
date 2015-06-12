@@ -8,7 +8,7 @@
       <ul>
         <template is="dom-repeat" items="[[spaceContent]]">
           <li>
-            <template is="dom-if" if="{{isContentTypeOfSpace(item)}}">
+            <template is="dom-if" if="{{isObjectTypeOfSpace(item)}}">
               <template is="dom-if" if="{{_isSubLevel()}}">
                 <sp-space-menu-item space="{{item}}" to-sub-level="{{_nextSubLevel()}}"></sp-space-menu-item>
               </template>
@@ -16,7 +16,7 @@
                 <a href="{{getSpacePageUrl(item)}}">{{item.label}}</a>
               </template>
             </template>
-            <template is="dom-if" if="{{!isContentTypeOfSpace(item)}}">
+            <template is="dom-if" if="{{!isObjectTypeOfSpace(item)}}">
               <a href="{{getApplicationInstancePageUrl(item)}}">{{item.label}}</a>
             </template>
           </li>

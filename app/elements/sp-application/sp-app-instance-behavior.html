@@ -18,7 +18,8 @@
        * @returns {boolean} an URI.
        */
       isApplicationNameEqualTo : function(applicationInstance, applicationNameToVerify) {
-        return applicationInstance.name === applicationNameToVerify;
+        return this.isValidApplicationInstance(applicationInstance) &&
+            applicationInstance.name === applicationNameToVerify;
       },
 
       /**
@@ -26,6 +27,23 @@
        */
       isValidApplicationInstanceId : function(instanceId) {
         return (typeof instanceId === 'string') && instanceId.length > 0;
+      },
+
+      /**
+       * Indicates if the given content json object represents an application instance.
+       * @param content a json object.
+       * @returns {boolean} true if it represents a space, false otherwise.
+       */
+      isObjectTypeOfComponent : function(content) {
+        return content != null && (typeof content === 'object') && content.type === 'component';
+      },
+
+      /**
+       * Indicates if the given object represents a valid application instance object.
+       */
+      isValidApplicationInstance : function(object) {
+        return this.isObjectTypeOfComponent(object) && (typeof object.id === 'string') &&
+            object.id.length > 0;
       },
 
       /**
