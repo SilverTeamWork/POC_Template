@@ -84,18 +84,21 @@
         page('/spaces/:id', function(data) {
           console.log("space selected: " + data.params.id);
           app.space = data.params;
-          app.route = 'space-home'
+          app.route = 'space-home';
+          app.fire('route-changed', {target: 'sp-space', id: app.space.id});
         });
 
         page('/instances/:id', function(data) {
           console.log("instance selected: " + data.params.id);
           app.instance = data.params;
           app.route = 'instance-home';
+          app.fire('route-changed', {target: 'sp-app', id: app.instance.id});
         });
 
         page('*', function(data) {
           console.log("Unknown path, redirect to home");
           app.route = 'home';
+          app.fire('route-changed', {target: 'home', id: null});
         });
 
         // add #! before urls

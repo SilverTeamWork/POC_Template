@@ -120,6 +120,14 @@
       ready: function() {
         console.log("List posts of blog " + this.blog);
         this._scrollHandler = this._onScroll.bind(this);
+        if (app) {
+          // the blog is reselected, so change page to the home page
+          app.addEventListener('route-changed', function(event) {
+            if (event.detail.target === 'sp-app' && event.detail.id === this.blog) {
+              this._onBlogChange();
+            }
+          }.bind(this));
+        }
       },
       _onBlogChange: function() {
         console.log('query posts of blog ' + this.blog);
