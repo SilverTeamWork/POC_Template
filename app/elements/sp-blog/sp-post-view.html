@@ -16,7 +16,7 @@
         </div>
       </aside>
       <p class="post-info">
-        <sp-rating appid="[[post.componentId]]" contributionid="[[post.id]]"></sp-rating>
+        <sp-rating id="postRatingId" appid="[[post.componentId]]" contributionid="[[post.id]]"></sp-rating>
         <a href="#commentaires" class="nb-comment"><img src="../../images/talk2user.gif" alt="commentaire"/>&nbsp;<span>[[post.nbComments]]</span></a>
       </p>
     </header>
@@ -76,6 +76,7 @@
         this.creationDate = this._date(this.post.createDate);
         this.publicationDate = this._date(this.post.dateEvent);
         this.modificationDate = this._date(this.post.updateDate);
+        document.querySelector('#postRatingId')._retrieveContributionRating();
       },
       _userAvatarUrl: function() {
         return this.silverpeasHost + this.currentUser.avatar;
