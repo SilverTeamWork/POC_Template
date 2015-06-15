@@ -5,13 +5,14 @@
                      last-response="{{currentSpace}}"
                      on-error="_spaceNotFound"></sp-service-ajax>
     <div class="main-container flexitem-fluid flexbox-h">
-      <div class="flexbox-v"></div>
+      <sp-space-menu class="flexbox-v" space="[[currentSpace]]"></sp-space-menu>
       <div class="main wrapper flexitem-fluid">
         <nav></nav>
         <section class="space">
           <template is="dom-if" if="[[isSpaceFound]]">
             <h2 class="title"><span>Chez Silverpeas</span></h2>
-            Space identifier: <span id="spaceId">{{currentSpace.label}}</span>
+            Space label: <span id="spaceId">{{currentSpace.label}}</span><br/>
+            Space description: <span>{{currentSpace.description}}</span>
           </template>
           <template is="dom-if" if="[[!isSpaceFound]]">
             Space with identifier <b><span>{{spaceId}}</span></b> does not exist, asshole.
@@ -44,6 +45,13 @@
         }
       },
 
+      ready : function() {
+        document.body.addEventListener('last-accessed-application-instance', function(e) {
+          // When a application instance homepage is accessed, this page must be cleared in order to get a right behavior!
+          this.spaceId = null;
+        }.bind(this));
+      },
+
       _spaceIdChanged : function() {
         if (this.isValidSpaceId(this.spaceId)) {
           this.$.requester.send();
@@ -57,11 +65,7 @@
 
       _currentSpaceChanged : function() {
         this._setIsSpaceFound(this.isValidSpace(this.currentSpace));
-        this.fire('iron-signal', {
-          name : 'last-accessed-space', data : {
-            space : this.currentSpace
-          }
-        });
+        this.fire('last-accessed-space', this.currentSpace);
       }
     });
   })();

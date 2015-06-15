@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="utf-8"/>
+  <meta charset="UTF-8"/>
   <title>POC > Accueil</title>
   <meta name="description" content=""/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -49,11 +49,17 @@
       </neon-animatable>
     </neon-animated-pages>-->
   </div>
-<!-- #main-container -->
+  <paper-toast text="Hey !">
+    Bienvenue <b><span>{{currentUser.firstName}}</span><span>{{currentUser.lastName}}</span></b>
+  </paper-toast>
+  <!-- #main-container -->
   <div class="footer-container pam">
-    <footer class="wrapper"><div id="footerContent" data-i18n="[html]silverpeas.footer.copyright"></div></footer>
+    <footer class="wrapper">
+      <div id="footerContent" data-i18n="[html]silverpeas.footer.copyright"></div>
+    </footer>
   </div>
   <a id="transition" style="display: none"></a>
+  <iron-a11y-announcer mode="off"></iron-a11y-announcer>
 </template>
 <script>
   (function(document) {
@@ -85,14 +91,14 @@
           console.log("space selected: " + data.params.id);
           app.space = data.params;
           app.route = 'space-home';
-          app.fire('route-changed', {target: 'sp-space', id: app.space.id});
+          app.fire('route-changed', {target : 'sp-space', id : app.space.id});
         });
 
         page('/instances/:id', function(data) {
           console.log("instance selected: " + data.params.id);
           app.instance = data.params;
           app.route = 'instance-home';
-          app.fire('route-changed', {target: 'sp-app', id: app.instance.id});
+          app.fire('route-changed', {target : 'sp-app', id : app.instance.id});
         });
 
         page('*', function(data) {
@@ -100,7 +106,7 @@
           app.route = 'home';
           app.space = {};
           app.instance = {};
-          app.fire('route-changed', {target: 'home', id: null});
+          app.fire('route-changed', {target : 'home', id : null});
         });
 
         // add #! before urls
@@ -116,7 +122,7 @@
 
       document.querySelector('body').removeAttribute('unresolved');
 
-      Polymer.dom(document).querySelector('h1').addEventListener('click', function(e) {
+      Polymer.dom(document.body).querySelector('h1').addEventListener('click', function(e) {
         document.location = "/yocha.html";
       });
 
@@ -134,9 +140,11 @@
         console.log("Loading json string " + t("silverpeas.footer.copyright"));
       });
 
+      document.querySelector('paper-toast').show();
+
     });
   })(document);
-  
+
 </script>
 </body>
 </html>

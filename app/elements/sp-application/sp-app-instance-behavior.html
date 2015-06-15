@@ -54,7 +54,7 @@
        */
       _getObjectId : function(object) {
         var objectId = object;
-        if (typeof object === 'object') {
+        if (typeof object === 'object' && object != null) {
           objectId = object.id;
           if (object.type === 'component') {
             objectId = object.name + objectId;

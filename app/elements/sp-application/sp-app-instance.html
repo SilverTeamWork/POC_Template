@@ -1,21 +1,66 @@
 <dom-module id="sp-app-instance">
   <template>
-    <sp-service-ajax id="requester"
+    <sp-service-ajax id="applicationInstanceRequester"
                      path="[[getApplicationInstanceUri(instanceId)]]"
                      last-response="{{applicationInstance}}"
                      on-error="_applicationInstanceNotFound"></sp-service-ajax>
-    <template is="dom-if" if="{{isApplicationNameEqualTo(applicationInstance, 'blog')}}">
-      <sp-blog-home blog="{{instanceId}}"></sp-blog-home>
-    </template>
+    <sp-service-ajax id="spaceRequester"
+                     path="[[applicationInstance.parentURI]]"
+                     last-response="{{parentSpace}}"
+                     on-response="_parentSpaceChanged"></sp-service-ajax>
 
-    <template is="dom-if" if="{{_isApplicationNotHandled(applicationInstance)}}">
-      <div>Application <b><span>{{applicationInstance.name}}</span></b> is not yet handled.</div>
-    </template>
+    <div class="main wrapper flexitem-fluid flexbox-h">
+      <sp-space-menu class="flexbox-v" space="[[parentSpace]]"></sp-space-menu>
+      <div class="main wrapper flexitem-fluid application">
+        <section data-field="app-section" class="with-aside-app">
+          <nav data-field="breadcrumb"></nav>
+          <header>
+            <h2 class="title"><span data-field="title">Application SP</span></h2>
+            <aside data-field="menu" class="menu actions"></aside>
+            <p data-field="description" data-i18n-key="description">Créé pour tout l'équipe, il
+              regroupe les billets aussi bien R&amp;D
+              que
+              projet...Here you can
+              find two other compact skins like - skin-black ( on the left ) and skin-aurora ( on
+              the
+              right
+              )
+              - like skin-default, these are compact skins .
 
-    <template is="dom-if" if="{{!isApplicationInstanceFound}}">
-      <div>Application with identifier <b><span>{{instanceId}}</span></b> does not exist, asshole.
+              You will find in the second example that events can have different colors. For
+              example, if
+              an
+              event is important you can assign the tag important and it will show up red.
+            </p>
+          </header>
+
+          <!--<aside class="aside-app" id="aside-app-fixed">-->
+            <!--<img src="../../images/calendar-magie-mai.png" alt="calendrier"/>-->
+          <!--</aside>-->
+
+          <div class="application-content">
+            <template is="dom-if" if="{{isApplicationNameEqualTo(applicationInstance, 'blog')}}">
+              <sp-blog-home blog="{{instanceId}}"></sp-blog-home>
+            </template>
+
+            <template is="dom-if" if="{{_isApplicationNotHandled(applicationInstance)}}">
+              <div>Application <b><span>{{applicationInstance.name}}</span></b> is not yet handled.
+              </div>
+            </template>
+
+            <template is="dom-if" if="{{!isApplicationInstanceFound}}">
+              <div>Application with identifier <b><span>{{instanceId}}</span></b> does not exist,
+                asshole.
+              </div>
+            </template>
+          </div>
+
+          <footer>
+            <div class="application-footer">--</div>
+          </footer>
+        </section>
       </div>
-    </template>
+    </div>
   </template>
 </dom-module>
 <script>
@@ -36,6 +81,10 @@
           type : Object, notify : true, observer : '_applicationInstanceChanged'
         },
 
+        parentSpace : {
+          type : Object, notify : true
+        },
+
         isApplicationInstanceFound : {
           type : Boolean, notify : true, readOnly : true
         }
@@ -47,24 +96,35 @@
         map['blog'] = true;
       },
 
+      ready : function() {
+        document.body.addEventListener('last-accessed-space', function(e) {
+          // When a space homepage is accessed, this page must be cleared in order to get a right behavior!
+          this.instanceId = null;
+        }.bind(this));
+      },
+
       _instanceIdChanged : function() {
         if (this.isValidApplicationInstanceId(this.instanceId)) {
-          this.$.requester.send();
+          this.$.applicationInstanceRequester.send();
         }
       },
 
       _applicationInstanceNotFound : function() {
         this.applicationInstance = null;
+        this.parentSpace = null;
         this._applicationInstanceChanged();
       },
 
       _applicationInstanceChanged : function() {
         this._setIsApplicationInstanceFound(this.isValidApplicationInstance(this.applicationInstance));
-        this.fire('iron-signal', {
-          name : 'last-accessed-application-instance', data : {
-            applicationInstance : this.applicationInstance
-          }
-        });
+        if (this.isApplicationInstanceFound) {
+          this.$.spaceRequester.send();
+        }
+      },
+
+      _parentSpaceChanged : function() {
+        this.fire('last-accessed-application-instance',
+            {applicationInstance : this.applicationInstance, parentSpace : this.parentSpace});
       },
 
       _isApplicationNotHandled : function(applicationInstance) {

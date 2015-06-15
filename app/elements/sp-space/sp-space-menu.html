@@ -1,0 +1,81 @@
+<dom-module id="sp-space-menu">
+  <template>
+    <iron-localstorage id="context"
+                       name="sp-space-menu-context"
+                       value="{{context}}"></iron-localstorage>
+    <aside class="aside-gauche" id="nav-gauche">
+      <a class="icon-menu" href="#" title="Cacher ce menu que je ne saurais voir"
+         on-click="menuToggle">Menu</a>
+      <nav>
+        <sp-space-menu-content space="{{context.space}}"></sp-space-menu-content>
+      </nav>
+    </aside>
+  </template>
+</dom-module>
+<script>
+  (function() {
+
+    Polymer({
+      is : 'sp-space-menu',
+
+      properties : {
+
+        space : {
+          type : Object, notify : true, observer : '_spaceChanged'
+        },
+
+        /**
+         * The context permits to handles several menus that must display same content.
+         * It avoids to get some bad flickering...
+         */
+        context : {
+          type : Object, notify : true
+        }
+      },
+
+      ready : function() {
+        if (typeof this.context === 'undefined') {
+          this.context = {
+            deployed : true, space : this.space
+          };
+        }
+        document.body.addEventListener('sp-space-menu_context-changed', function(e) {
+          this.context = e.detail;
+        }.bind(this));
+        document.body.addEventListener('sp-space-menu_menu-toggled', function(e) {
+          this._menuToggle(e.detail);
+        }.bind(this));
+        this._renderDeployment();
+      },
+
+      _spaceChanged : function() {
+        this.context = {
+          deployed : this.context.deployed, space : this.space
+        };
+        this.fire('sp-space-menu_context-changed', this.context);
+      },
+
+      _menuToggle : function(oldContext) {
+        this.context = oldContext;
+        this.$.context.save();
+        this.space = oldContext.space;
+        this._renderDeployment();
+      },
+
+      _renderDeployment : function() {
+        if (!this.context || this.context.deployed) {
+          Polymer.dom(this.root).querySelector('#nav-gauche').classList.remove('minimize');
+        } else {
+          Polymer.dom(this.root).querySelector('#nav-gauche').classList.add('minimize');
+        }
+      },
+
+      menuToggle : function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        this.context.deployed = !this.context.deployed;
+        app.fire('sp-space-menu_menu-toggled', this.context);
+      }
+    });
+  })();
+</script>

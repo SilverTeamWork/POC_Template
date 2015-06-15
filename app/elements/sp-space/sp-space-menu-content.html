@@ -1,16 +1,15 @@
-<dom-module id="sp-space-menu-item">
+<dom-module id="sp-space-menu-content">
   <template>
     <sp-service-ajax id="requester"
                      path="[[getSpaceContentUri(space)]]"
                      last-response="{{spaceContent}}"></sp-service-ajax>
-    <a href="{{getSpacePageUrl(space)}}">{{space.label}}</a>
     <template is="dom-if" if="[[spaceContent.length]]">
       <ul>
         <template is="dom-repeat" items="[[spaceContent]]">
           <li>
             <template is="dom-if" if="{{isObjectTypeOfSpace(item)}}">
               <template is="dom-if" if="{{_isSubLevel()}}">
-                <sp-space-menu-item space="{{item}}" to-sub-level="{{_nextSubLevel()}}"></sp-space-menu-item>
+                <sp-space-menu-content space="{{item}}" to-sub-level="{{_nextSubLevel()}}"></sp-space-menu-content>
               </template>
               <template is="dom-if" if="{{!_isSubLevel()}}">
                 <a href="{{getSpacePageUrl(item)}}">{{item.label}}</a>
@@ -29,7 +28,7 @@
   (function() {
 
     Polymer({
-      is : 'sp-space-menu-item',
+      is : 'sp-space-menu-content',
 
       behaviors : [SpaceBehavior],
 
@@ -38,8 +37,8 @@
           type : Object, notify : true, value : function() {
             return {
               label : 'unknown'
-            };
-          }
+            }
+          }, observer : '_spaceChanged'
         },
 
         toSubLevel : {
@@ -47,12 +46,18 @@
         }
       },
 
-      ready : function() {
-        if (this.space.id != '-1') {
-          this.$.requester.send();
-        } else {
-          this.spaceContent = [];
+      _spaceChanged : function() {
+        if (this.space != null && typeof this.space.id === 'string') {
+          if (this.space.id != '-1') {
+            this.$.requester.send();
+          } else {
+            this.spaceContent = [];
+          }
         }
+      },
+
+      ready : function() {
+        this._spaceChanged();
       },
 
       _isSubLevel : function() {
