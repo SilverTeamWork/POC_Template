@@ -36,20 +36,15 @@ user to interact with
     <span id="ratingSpanId" class="silverpeas-rating">
       <img id="ratingStar1" width="16" height="16" class="silverpeas-rating-note silverpeas-rating-note-unselected"
            title="Mauvais" alt="1" src="../../images/rating/star_empty.png"
-           on-mouseout="onMouseOut" on-mouseover="onMouseOver" on-click="onMouseClick"/>
-      <img id="ratingStar2" width="16" height="16" class="silverpeas-rating-note silverpeas-rating-note-unselected"
+           on-mouseout="onMouseOut" on-mouseover="onMouseOver" on-click="onMouseClick"/><img id="ratingStar2" width="16" height="16" class="silverpeas-rating-note silverpeas-rating-note-unselected"
            title="Passable" alt="2" src="../../images/rating/star_empty.png"
-           on-mouseout="onMouseOut" on-mouseover="onMouseOver" on-click="onMouseClick"/>
-      <img id="ratingStar3" width="16" height="16" class="silverpeas-rating-note silverpeas-rating-note-unselected"
+           on-mouseout="onMouseOut" on-mouseover="onMouseOver" on-click="onMouseClick"/><img id="ratingStar3" width="16" height="16" class="silverpeas-rating-note silverpeas-rating-note-unselected"
            title="Assez bien" alt="3" src="../../images/rating/star_empty.png"
-           on-mouseout="onMouseOut" on-mouseover="onMouseOver" on-click="onMouseClick"/>
-      <img id="ratingStar4" width="16" height="16" class="silverpeas-rating-note silverpeas-rating-note-unselected"
+           on-mouseout="onMouseOut" on-mouseover="onMouseOver" on-click="onMouseClick"/><img id="ratingStar4" width="16" height="16" class="silverpeas-rating-note silverpeas-rating-note-unselected"
            title="Bien" alt="4" src="../../images/rating/star_empty.png"
-           on-mouseout="onMouseOut" on-mouseover="onMouseOver" on-click="onMouseClick"/>
-      <img id="ratingStar5" width="16" height="16" class="silverpeas-rating-note silverpeas-rating-note-unselected"
+           on-mouseout="onMouseOut" on-mouseover="onMouseOver" on-click="onMouseClick"/><img id="ratingStar5" width="16" height="16" class="silverpeas-rating-note silverpeas-rating-note-unselected"
            title="Très bien" alt="5" src="../../images/rating/star_empty.png"
-           on-mouseout="onMouseOut" on-mouseover="onMouseOver" on-click="onMouseClick"/>
-      <img id="ratingStarDelete" width="16" height="16" class="silverpeas-rating-note silverpeas-rating-note-unselected"
+           on-mouseout="onMouseOut" on-mouseover="onMouseOver" on-click="onMouseClick"/><img id="ratingStarDelete" width="16" height="16" class="silverpeas-rating-note silverpeas-rating-note-unselected"
            src="../../images/rating/star_delete2.png" title="Supprimer mon avis"
            on-click="onMouseClick"/>
     </span>
@@ -75,7 +70,7 @@ user to interact with
       is : 'sp-rating', behaviors : [SessionBehavior],
       properties : {
         /**
-         * if true, user cannot only view current contribution rating
+         * if true, user can only view current contribution rating
          * if false, user can modify its own contribution rating
          */
         readonly : {
@@ -108,9 +103,11 @@ user to interact with
       }, _computeRatingUri : function(appid, contributionid) {
         return "rating/" + this.appid + "/Publication/" + this.contributionid;
       }, ready : function() {
-        console.log('sp-rating element ready! appid=' + this.appid + " and contributionId = " +
-            this.contributionid);
-        this._retrieveContributionRating();
+        if (this.appid != undefined) {
+          console.log('sp-rating element ready appid=' + this.appid + " and contributionId = " +
+              this.contributionid);
+          this._retrieveContributionRating();
+        }
       },
       /**
        * This method retrieve current contribution rating

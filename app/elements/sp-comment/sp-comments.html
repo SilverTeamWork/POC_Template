@@ -1,0 +1,175 @@
+<!--
+The `sp-comment` element exposes silverpeas comment functionality.
+
+    <sp-comment
+        appid = "blog2"
+        contributionid = "58"
+        authorId = "5"
+        avatarUrl = ""
+        readonly></sp-comment>
+
+String blogAppId, String postId,
+      String authorId, String avatarUrl, boolean canBeUpdated, String userToken
+
+
+With `readonly` set to `true`, the element only display current comments and don't allow
+user to interact with
+-->
+<dom-module id="sp-comment-item">
+  <style></style>
+  <template>
+    <div class="commentaire flexbox-h">
+      <p class="commentaire-info w100">
+        <span class="commentaire-auteur">[[comment.author.fullName]]</span>&nbsp;a dit le
+        <time datetime="[[modificationDate.toIso8601]]">[[comment.modificationDate]]</time>
+      </p>
+      <div class="commentaire-meta">
+        <img src="[[authorAvatar]]" class="avatar" alt="">
+      </div>
+      <div id="commentContent" class="commentaire-content talkbubble flexitem-fluid"></div>
+    </div>
+    <sp-service-ajax id="deleteComment"
+                     method="DELETE"
+                     on-response="_handleDeleteResponse">
+    </sp-service-ajax>
+    <sp-service-ajax id="updateComment"
+                     method="PUT"
+                     on-response="_handleUpdateResponse">
+    </sp-service-ajax>
+  </template>
+</dom-module>
+
+<dom-module id="sp-comments">
+  <style>
+  </style>
+  <template>
+    <sp-service-ajax
+        id="commentsFetcher"
+        on-response="_handleResponse">
+    </sp-service-ajax>
+
+    <aside class="commentaires" id="commentaires">
+      <div class="commentaire flexbox-h add">
+        <label for="add-my-comment" class="w100">Ajouter un commentaire</label>
+
+        <div class="commentaire-meta"><img src="" class="avatar" alt="">
+        </div>
+        <div class="talkbubble flexitem-fluid">
+          <textarea id="add-my-comment" class="w100 text"></textarea>
+
+          <div class="buttons pas txtcenter">
+            <button class="submit">Valider</button>
+          </div>
+        </div>
+      </div>
+      <template is="dom-repeat" items="{{comments}}" as="comment">
+        <sp-comment-item comment="{{comment}}"></sp-comment-item>
+      </template>
+    </aside>
+  </template>
+</dom-module>
+
+<script>
+
+  (function() {
+    // a brief presentation of a given comment within a list
+    Polymer({
+      is : 'sp-comment-item',
+      behaviors : [SilverpeasUrl, DateBehavior],
+      properties : {
+        comment : {
+          type : Object, notify : true
+        }
+      },
+      ready : function() {
+        console.log("sp-comment-item comment from author=" + this.comment.author.fullName);
+        this.authorAvatar = this.silverpeasHost + this.comment.author.avatar;
+        this.modificationDate = this._dateFromddMMYYYY(this.comment.modificationDate);
+        this.$.commentContent.innerHTML = this.comment.text.replace(/\n/g, '<br/>');
+        this.$.deleteComment.path =
+            'comments/' + this.comment.componentId + '/Publication/' + this.comment.resourceId +
+            '/' + this.comment.id;
+        this.$.updateComment.path =
+            'comments/' + this.comment.componentId + '/Publication/' + this.comment.resourceId +
+            '/' + this.comment.id;
+      },
+      _toggleConfirm : function() {
+        event.stopImmediatePropagation();
+        this.$.confirm.toggle();
+      },
+      _onConfirm : function() {
+        this.$.deleteComment.send();
+      },
+      _handleDeleteResponse : function(event) {
+        if (event.detail.succeeded) {
+          this.remove();
+        }
+      }
+    });
+
+    /**
+     *
+     */
+    Polymer({
+      is : 'sp-comments', behaviors : [SessionBehavior], properties : {
+        /**
+         * if false, user can only view contribution comments
+         */
+        canBeUpdated : {
+          type : Boolean, value : true
+        }, /**
+         * the current application identifier
+         */
+        appid : {
+          type : String, notify : true
+        }, /**
+         * the current contribution identifier
+         */
+        contributionid : {
+          type : String, notify : true
+        }, /**
+         * The current user identifier
+         */
+        authorId : {
+          type : String, notify : true
+        }, /**
+         * The current user avatar URL
+         */
+        avatarUrl : {
+          type : String
+        }, /**
+         * The current user token
+         */
+        userToken : {
+          type : String
+        }, comments : {
+          type : Array, value : [], notify : true, readOnly : true
+        }
+
+      }, ready : function() {
+        if (this.appid != undefined) {
+          console.log('sp-comments element ready: appid=' + this.appid + ", contributionId = " +
+              this.contributionid);
+        }
+      }, attached : function() {
+        console.log('sp-comments element attached: appid=' + this.appid + ", contributionId = " +
+            this.contributionid);
+      }, loadComments : function() {
+        console.log('sp-comments load comments: appid=' + this.appid + ", contributionId = " +
+            this.contributionid);
+        if (!this.appid) {
+          return;
+        }
+        this.$.commentsFetcher.path =
+            'comments/' + this.appid + '/Publication/' + this.contributionid;
+        this.$.commentsFetcher.send();
+      }, _handleResponse : function(event) {
+        var comments = event.detail.response;
+        this._setComments(event.detail.response);
+        console.log('sp-comments process ajax response ' + comments.length);
+      }
+
+    });
+  })();
+</script>
+

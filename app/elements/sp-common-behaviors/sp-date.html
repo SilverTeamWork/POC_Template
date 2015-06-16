@@ -8,8 +8,20 @@
         var jsDate = new Date(milliseconds)
         var dayOfMonth = jsDate.getDate();
         var monthOfYear = jsDate.getMonth() + 1;
+        return this._commonDateProcessing(jsDate);
+      },
+      _dateFromddMMYYYY: function(ddMMyyyy) {
+        var dt1   = parseInt(ddMMyyyy.substring(0,2));
+        var mon1  = parseInt(ddMMyyyy.substring(3,5));
+        var yr1   = parseInt(ddMMyyyy.substring(6,10));
+        var jsDate = new Date(yr1, mon1-1, dt1);
+        return this._commonDateProcessing(jsDate);
+      },
+      _commonDateProcessing: function (jsDate) {
+        var dayOfMonth = jsDate.getDate();
+        var monthOfYear = jsDate.getMonth() + 1;
         return {
-          milliseconds : milliseconds,
+          milliseconds : jsDate.getMilliseconds(),
           day : DAYS_FR[jsDate.getDay()],
           month : MONTHS_FR[jsDate.getMonth()],
           dayOfMonth : (dayOfMonth < 10 ? '0' + dayOfMonth : '' + dayOfMonth),
