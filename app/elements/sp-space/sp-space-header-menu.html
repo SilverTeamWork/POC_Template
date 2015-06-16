@@ -1,3 +1,4 @@
+<link rel="import" href="../sp-space/sp-space-libs.html"/>
 <link rel="import" href="../sp-application/sp-app-libs.html"/>
 
 <dom-module id="sp-space-header-menu">
@@ -7,8 +8,8 @@
                      auto></sp-service-ajax>
     <nav>
       <ul>
-        <li class="selected">
-          <a href="{{getSpacePageUrl(homeSpace)}}" on-click="_homePage">{{homeSpace.label}}</a>
+        <li>
+          <a href="{{getSpacePageUrl(homeSpace)}}">{{homeSpace.label}}</a>
           <sp-space-menu-content id="spaceHomepage" space="[[homeSpace]]"></sp-space-menu-content>
         </li>
         <template is="dom-repeat" items="[[spaces]]">
@@ -32,12 +33,6 @@
       properties : {
         spaces : {
           type : Array, notify : true, observer : '_spacesLoaded'
-        },
-
-        homeSpace : {
-          type : Object, notify : true, readOnly : true, value : function() {
-            return {"type" : "space", "id" : "-1", "label" : "Home sweet home"};
-          }
         }
       },
 
@@ -50,54 +45,44 @@
 
       ready : function() {
         document.body.addEventListener('last-accessed-space',
-            this._lastAccessedSpaceChanged.bind(this));
+            this._lastAccessedAreaChanged.bind(this));
         document.body.addEventListener('last-accessed-application-instance',
-            this._lastAccessedApplicationInstanceChanged.bind(this));
+            this._lastAccessedAreaChanged.bind(this));
       },
 
       _spacesLoaded : function() {
         this.resolveCompletes(this);
       },
 
-      _lastAccessedSpaceChanged : function(e) {
-        var lastAccessedSpace = e.detail;
-        if (this.isValidSpace(lastAccessedSpace)) {
-          var self = this;
-          this._getRootSpaceFromSpace(lastAccessedSpace, function(rootSpace) {
-            self._markAsSelected(rootSpace);
-          });
+      _lastAccessedAreaChanged : function(e) {
+        var area = e.detail;
+        if (area && area != null) {
+          this._getRootSpace(area, function(rootSpace) {
+            this._markAsSelected(rootSpace);
+          }.bind(this));
         } else {
           this._markAsSelected(null);
         }
       },
 
-      _lastAccessedApplicationInstanceChanged : function(e) {
-        this._lastAccessedSpaceChanged({detail : e.detail.parentSpace});
-      },
-
-      _homePage : function() {
-        this._markAsSelected(this.homeSpace);
-      },
-
       _markAsSelected : function(lastAccessedSpace) {
-        var self = this;
         this._whenReady_.then(function() {
 
           // Clearings the current selection
-          Polymer.dom(self.root).querySelectorAll('sp-space-menu-content').forEach(function(item) {
+          Polymer.dom(this.root).querySelectorAll('sp-space-menu-content').forEach(function(item) {
             item.parentNode.classList.remove('selected');
           });
 
           // Guess the new one
-          if (self.homeSpace === lastAccessedSpace) {
+          if (this.homeSpace === lastAccessedSpace) {
 
             // Home space
-            self.$.spaceHomepage.parentNode.classList.add('selected');
+            this.$.spaceHomepage.parentNode.classList.add('selected');
 
-          } else if (self.isValidSpace(lastAccessedSpace)) {
+          } else if (this.isValidSpace(lastAccessedSpace)) {
 
             // Valid space
-            Polymer.dom(self.root).querySelectorAll('sp-space-menu-content').forEach(function(item) {
+            Polymer.dom(this.root).querySelectorAll('sp-space-menu-content').forEach(function(item) {
               if (item.space.id === lastAccessedSpace.id) {
                 item.parentNode.classList.add('selected');
               }
@@ -106,7 +91,7 @@
           } else {
             // Space that does not exist
           }
-        });
+        }.bind(this));
       }
     });
   })();

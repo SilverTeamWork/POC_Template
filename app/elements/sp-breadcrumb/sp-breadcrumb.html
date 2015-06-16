@@ -1,0 +1,50 @@
+<link rel="import" href="../sp-space/sp-space-libs.html">
+<link rel="import" href="../sp-application/sp-app-libs.html">
+
+<script>
+  (function() {
+    window.BreadCrumbSingleton = {
+
+      properties : {
+
+        spaces : {
+          type : Array, notify : true, value : function() {
+            return [];
+          }
+        },
+
+        applicationInstances : {
+          type : Array, notify : true, value : function() {
+            return [];
+          }
+        }
+      }
+    };
+  })();
+</script>
+
+<dom-module id="sp-breadcrumb">
+  <template>
+    <nav class="breadcrumb">
+      <div class="content">
+        <a href="{{getSpacePageUrl(homeSpace)}}" class="home-breadcrump">{{homeSpace.label}}</a>
+        <template is="dom-repeat" items="{{spaces}}" as="space">
+          <a href="{{getSpacePageUrl(space)}}" class="space-breadcrump">{{space.label}}</a>
+        </template>
+        <template is="dom-repeat" items="{{applicationInstances}}" as="applicationInstance">
+          <a href="{{getApplicationInstancePageUrl(space)}}" class="app-breadcrump">{{applicationInstance.label}}</a>
+        </template>
+      </div>
+    </nav>
+  </template>
+</dom-module>
+<script>
+  (function() {
+
+    Polymer({
+      is : 'sp-breadcrumb',
+
+      behaviors : [SpaceBehavior, BreadCrumbSingleton]
+    });
+  })();
+</script>

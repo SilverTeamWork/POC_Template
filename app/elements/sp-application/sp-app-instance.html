@@ -1,3 +1,6 @@
+<link rel="import" href="../sp-space/sp-space-libs.html">
+<link rel="import" href="../sp-breadcrumb/sp-breadcrumb.html">
+
 <dom-module id="sp-app-instance">
   <template>
     <sp-notifier id="msgNotHandled" type="warning">
@@ -11,16 +14,12 @@
                      path="[[getApplicationInstanceUri(instanceId)]]"
                      last-response="{{applicationInstance}}"
                      on-error="_applicationInstanceNotFound"></sp-service-ajax>
-    <sp-service-ajax id="spaceRequester"
-                     path="[[applicationInstance.parentURI]]"
-                     last-response="{{parentSpace}}"
-                     on-response="_parentSpaceChanged"></sp-service-ajax>
 
     <div class="main wrapper flexitem-fluid flexbox-h">
-      <sp-space-menu class="flexbox-v" space="[[parentSpace]]"></sp-space-menu>
+      <sp-space-menu class="flexbox-v" space="{{applicationInstance.parentSpace}}"></sp-space-menu>
       <div class="main wrapper flexitem-fluid application">
         <section data-field="app-section" class="with-aside-app">
-          <nav data-field="breadcrumb"></nav>
+          <sp-breadcrumb></sp-breadcrumb>
           <header>
             <h2 class="title"><span id="title">{{applicationInstance.label}}</span></h2>
             <aside id="applicationMenu" class="menu actions"></aside>
@@ -51,7 +50,7 @@
     Polymer({
       is : 'sp-app-instance',
 
-      behaviors : [ApplicationInstanceBehavior],
+      behaviors : [SpaceBehavior, ApplicationInstanceBehavior],
 
       properties : {
 
@@ -61,10 +60,6 @@
 
         applicationInstance : {
           type : Object, notify : true, observer : '_applicationInstanceChanged'
-        },
-
-        parentSpace : {
-          type : Object, notify : true
         },
 
         isApplicationInstanceFound : {
@@ -95,7 +90,6 @@
 
       _applicationInstanceNotFound : function() {
         this.applicationInstance = null;
-        this.parentSpace = null;
         this.msgInstanceId = this.instanceId;
         this.$.msgNotFound.show();
         this._applicationInstanceChanged();
@@ -104,14 +98,12 @@
       _applicationInstanceChanged : function() {
         this._setIsApplicationInstanceFound(this.isValidApplicationInstance(this.applicationInstance));
         if (this.isApplicationInstanceFound) {
-          this.$.spaceRequester.send();
+          this._loadParentSpaces(this.applicationInstance, function() {
+            this.notifyPath('applicationInstance.parentSpace', this.applicationInstance.parentSpace);
+            this.fire('last-accessed-application-instance', this.applicationInstance);
+          });
           this._verifyApplicationNotHandled();
         }
-      },
-
-      _parentSpaceChanged : function() {
-        this.fire('last-accessed-application-instance',
-            {applicationInstance : this.applicationInstance, parentSpace : this.parentSpace});
       },
 
       _verifyApplicationNotHandled : function() {

@@ -1,3 +1,5 @@
+<link rel="import" href="../sp-space/sp-space-libs.html"/>
+
 <dom-module id="sp-home-page">
   <template>
     <div class="main wrapper clearfix">
@@ -169,7 +171,17 @@
 <script>
   (function() {
     Polymer({
-      is : 'sp-home-page'
+      is : 'sp-home-page',
+
+      behaviors : [SpaceBehavior],
+
+      ready : function() {
+        document.body.addEventListener('route-changed', function(e) {
+          if (e.detail.target === 'home') {
+            this.fire('last-accessed-space', this.homeSpace);
+          }
+        }.bind(this));
+      }
     });
   })();
 </script>

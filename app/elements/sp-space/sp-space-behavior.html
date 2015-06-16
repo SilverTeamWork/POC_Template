@@ -2,6 +2,14 @@
   (function() {
     window.SpaceBehavior = {
 
+      properties : {
+        homeSpace : {
+          type : Object, notify : true, readOnly : true, value : function() {
+            return {"type" : "space", "id" : "-1", "label" : "Home sweet home"};
+          }
+        }
+      },
+
       /**
        * Get the root space from the given space uri.
        * @param spaceUri a space uri.
@@ -9,30 +17,56 @@
        * @private
        */
       _getRootSpaceFromSpaceUri : function(spaceUri, callback) {
-        var self = this;
         SilverpeasServiceAjaxBehavior.newSilverpeasServiceAjax().onResponse(function(e) {
           var space = e.detail.response;
-          self._getRootSpaceFromSpace(space, callback);
-        }).get(spaceUri);
+          this._getRootSpace(space, callback);
+        }.bind(this)).get(spaceUri);
       },
 
       /**
-       * Get the root space from the given space.
-       * @param space a space.
+       * Get the root space from the given space or instance.
+       * @param spaceOrInstance a space or an instance (actually needs parentURI attribute).
        * @param callback the called callback with root space as parameter if any.
        * @private
        */
-      _getRootSpaceFromSpace : function(space, callback) {
-        if (space && space != null) {
-          if (!space.parentURI) {
-            callback.call(this, space);
-          } else {
-            var self = this;
-            SilverpeasServiceAjaxBehavior.newSilverpeasServiceAjax().onResponse(function(e) {
-              var space = e.detail.response;
-              self._getRootSpaceFromSpace(space, callback);
-            }).get(space.parentURI);
+      _getRootSpace : function(spaceOrInstance, callback) {
+        this._loadParentSpaces(spaceOrInstance, function() {
+          var rootSpace = spaceOrInstance;
+          while (rootSpace.parentSpace) {
+            rootSpace = rootSpace.parentSpace;
           }
+          callback.call(this, rootSpace);
+        }.bind(this));
+      },
+
+      /**
+       * Loads the parent space recursively from a given space or instance.
+       * @param spaceOrInstance a space or an instance (actually needs parentURI attribute).
+       * @param callback the called callback with given instance as parameter.
+       * @private
+       */
+      _loadParentSpaces : function(spaceOrInstance, callback) {
+        if (spaceOrInstance && spaceOrInstance != null) {
+          if (!spaceOrInstance.parentURI) {
+            callback.call(this, spaceOrInstance);
+          } else {
+            console.log("SpaceBehavior._loadParentSpaces " + spaceOrInstance.uri);
+            if (spaceOrInstance.parentSpace) {
+              console.log("--> but space linked to following parent uri is already cached " +
+                  spaceOrInstance.parentSpace.uri);
+              this._loadParentSpaces(spaceOrInstance.parentSpace, callback);
+            } else {
+              SilverpeasServiceAjaxBehavior.newSilverpeasServiceAjax().onResponse(function(e) {
+                var parentSpace = e.detail.response;
+                console.log("--> space linked to following parent uri is loaded " +
+                    parentSpace.uri);
+                spaceOrInstance.parentSpace = parentSpace;
+                this._loadParentSpaces(spaceOrInstance.parentSpace, callback);
+              }.bind(this)).get(spaceOrInstance.parentURI);
+            }
+          }
+        } else {
+          callback.call(this, spaceOrInstance);
         }
       },
 

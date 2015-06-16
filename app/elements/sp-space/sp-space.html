@@ -1,3 +1,5 @@
+<link rel="import" href="../sp-breadcrumb/sp-breadcrumb.html">
+
 <dom-module id="sp-space">
   <template>
     <sp-notifier id="msgNotFound" type="error">
@@ -11,7 +13,7 @@
     <div class="main-container flexitem-fluid flexbox-h">
       <sp-space-menu class="flexbox-v" space="[[currentSpace]]"></sp-space-menu>
       <div class="main wrapper flexitem-fluid">
-        <nav></nav>
+        <sp-breadcrumb></sp-breadcrumb>
         <section class="space">
           <template is="dom-if" if="[[isSpaceFound]]">
             <h2 class="title"><span>Chez Silverpeas</span></h2>
@@ -69,7 +71,9 @@
 
       _currentSpaceChanged : function() {
         this._setIsSpaceFound(this.isValidSpace(this.currentSpace));
-        this.fire('last-accessed-space', this.currentSpace);
+        this._loadParentSpaces(this.currentSpace, function() {
+          this.fire('last-accessed-space', this.currentSpace);
+        });
       }
     });
   })();
