@@ -1,0 +1,136 @@
+<link rel="import" href="../../bower_components/paper-toast/paper-toast.html">
+
+<dom-module id="sp-notifier">
+  <style>
+
+    :host paper-toast {
+      background-color: #FBF7AA;
+      border-color: #F9E98E;
+      color: #333;
+      top: 12px;
+      bottom: auto;
+
+      -webkit-transform: translateY(0px);
+      transform: translateY(0px);
+    }
+
+    :host paper-toast.paper-toast-open {
+      -webkit-transform: translateY(50px);
+      transform: translateY(50px);
+    }
+
+    :host .success {
+      background-color: #B5DF7D;
+      border-color: #9BD94A;
+      color: #333;
+    }
+
+    :host .warning {
+      background-color: #ffd49d;
+      border-color: #ffb85b;
+      color: #333;
+    }
+
+    :host .error {
+      background-color: #F79992;
+      border-color: #CE6F6F;
+      color: #333;
+    }
+  </style>
+  <template>
+    <paper-toast class$="{{type}}" id="noty" duration="{{duration}}" text="{{title}}" visible="{{visible}}">
+      <content></content>
+    </paper-toast>
+  </template>
+</dom-module>
+<script>
+  (function() {
+
+    Polymer({
+      is : 'sp-notifier',
+
+      properties : {
+
+        /**
+         * success, warning or error
+         */
+        type : {
+          type : String, value : ''
+        },
+
+        /**
+         * The duration in milliseconds to show the toast.
+         */
+        duration : {
+          type : Number, value : 3000
+        },
+
+        /**
+         * The title to display in the toast.
+         */
+        title : {
+          type : String, value : ""
+        },
+
+        /**
+         * True if the toast is currently visible.
+         */
+        visible : {
+          type : Boolean, readOnly : true, value : false
+        },
+
+        /**
+         * If true, displays immediately the message.
+         * After the first automatic display, the notifier must be handled manually.
+         */
+        auto : {
+          type : Boolean, value : false
+        }
+      },
+
+      observers : ['_autoChanged(auto)'],
+
+      created : function() {
+        this._whenReady_ = new Promise(function(resolve, reject) {
+          this.resolveCompletes = resolve;
+          this.rejectCompletes = reject;
+        }.bind(this));
+      },
+
+      attached : function() {
+        this.resolveCompletes(this);
+      },
+
+      /**
+       * Show the toast.
+       * @method show
+       */
+      show : function() {
+        this.$.noty.show();
+      },
+
+      /**
+       * Hide the toast
+       */
+      hide : function() {
+        this.$.noty.hide();
+      },
+
+      /**
+       * Toggle the opened state of the toast.
+       * @method toggle
+       */
+      toggle : function() {
+        this.$.noty.toggle();
+      },
+
+      _autoChanged : function() {
+        this._whenReady_.then(function() {
+          if (this.auto) {
+            this.show();
+          }
+        }.bind(this));
+      }
+    });
+  })();
+</script>

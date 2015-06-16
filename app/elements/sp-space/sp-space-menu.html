@@ -34,11 +34,6 @@
       },
 
       ready : function() {
-        if (typeof this.context === 'undefined') {
-          this.context = {
-            deployed : true, space : this.space
-          };
-        }
         document.body.addEventListener('sp-space-menu_context-changed', function(e) {
           this.context = e.detail;
         }.bind(this));
@@ -49,10 +44,16 @@
       },
 
       _spaceChanged : function() {
-        this.context = {
-          deployed : this.context.deployed, space : this.space
-        };
-        this.fire('sp-space-menu_context-changed', this.context);
+        if (typeof this.context === 'undefined' || this.context == null) {
+          this.context = {
+            deployed : true, space : this.space
+          };
+        } else {
+          this.context = {
+            deployed : this.context.deployed, space : this.space
+          };
+          this.fire('sp-space-menu_context-changed', this.context);
+        }
       },
 
       _menuToggle : function(oldContext) {

@@ -49,9 +49,9 @@
       </neon-animatable>
     </neon-animated-pages>-->
   </div>
-  <paper-toast text="Hey !">
-    Bienvenue <b><span>{{currentUser.firstName}}</span><span>{{currentUser.lastName}}</span></b>
-  </paper-toast>
+  <sp-notifier id="noty1" text="Hey !" auto>
+    Bienvenue <b><span>{{currentUser.firstName}}</span> <span>{{currentUser.lastName}}</span></b>
+  </sp-notifier>
   <!-- #main-container -->
   <div class="footer-container pam">
     <footer class="wrapper">
@@ -114,6 +114,9 @@
           hashbang : true
         });
 
+        page('/login.html', function() {
+        });
+
         page('/yocha.html', function() {
         });
 
@@ -139,9 +142,6 @@
         // programatical access
         console.log("Loading json string " + t("silverpeas.footer.copyright"));
       });
-
-      document.querySelector('paper-toast').show();
-
     });
   })(document);
 

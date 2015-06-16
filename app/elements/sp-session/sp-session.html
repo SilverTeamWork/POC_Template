@@ -1,5 +1,6 @@
 <script>
   (function() {
+    var initialized = false;
     var SESSION_TOKEN = 'user-auth-token';
     var CURRENT_USER = 'user-profile';
     var LOGIN_PAGE = '/index.html';
@@ -16,11 +17,16 @@
         loginPage : {
           type : String, value : LOGIN_PAGE
         }, user : {
-          type : Object, notify : true, readOnly: true
+          type : Object, notify : true, readOnly : true
         }
       },
 
       ready : function() {
+        if (initialized) {
+          return;
+        }
+        initialized = true;
+        // This treatment must be performed one time only, when application is just started.
         var sessionKey = this.sessionKey;
         if (!sessionKey) {
           console.log("no user session key!");
@@ -45,7 +51,7 @@
         return JSON.parse(localStorage.getItem(CURRENT_USER));
       },
 
-      _redirectToLoginPage: function() {
+      _redirectToLoginPage : function() {
         console.log("redirect to " + this.loginPage);
         document.location = this.loginPage;
       }
