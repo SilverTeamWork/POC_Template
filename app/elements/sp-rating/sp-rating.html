@@ -19,20 +19,20 @@ user to interact with
     }
   </style>
   <template>
-    <iron-ajax
+    <sp-service-ajax
         id="ratingFetcher"
-        handle-as="json"
+        path="{{ratingUri}}"
         on-response="_handleResponse"
         debounce-duration="300">
-    </iron-ajax>
-    <iron-ajax
+    </sp-service-ajax>
+    <sp-service-ajax
         id="ratingPusher"
-        handle-as="json"
-        contentType="application/x-www-form-urlencoded"
+        path="{{ratingUri}}"
+        contentType="text/plain"
         method="POST"
         on-response="_handlePostResponse"
         debounce-duration="300">
-    </iron-ajax>
+    </sp-service-ajax>
     <span id="ratingSpanId" class="silverpeas-rating">
       <img id="ratingStar1" width="16" height="16" class="silverpeas-rating-note silverpeas-rating-note-unselected"
            title="Mauvais" alt="1" src="../../images/rating/star_empty.png"
@@ -117,9 +117,7 @@ user to interact with
        */
       _retrieveContributionRating: function() {
         // Get rating from ajax call (xml http request)
-        this.$.ratingFetcher.headers = {"X-Silverpeas-Session" : this.sessionKey};
-        this.$.ratingFetcher.url = "http://localhost:8000/silverpeas/services/" + this.ratingUri;
-        this.$.ratingFetcher.generateRequest();
+        this.$.ratingFetcher.send();
       }, _handleResponse : function(event) {
         // Handle rating ajax response
         this.rating = event.detail.response;
@@ -239,11 +237,9 @@ user to interact with
             this.contributionid + ' with value =' + note);
         this.rating.raterRatingValue = note;
         // Get rating from ajax call (xml http request)
-        this.$.ratingPusher.headers = {"X-Silverpeas-Session" : this.sessionKey};
-        this.$.ratingPusher.url = "http://localhost:8000/silverpeas/services/" + this.ratingUri;
         this.$.ratingPusher.body = note;
         this.$.ratingPusher.contentType = 'text/plain';
-        this.$.ratingPusher.generateRequest();
+        this.$.ratingPusher.send();
       }, _handlePostResponse: function(event) {
         // Handle post rating ajax response
         console.log("post rating response=" + event.detail.response);
