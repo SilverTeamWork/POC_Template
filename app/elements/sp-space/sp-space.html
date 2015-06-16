@@ -1,5 +1,9 @@
 <dom-module id="sp-space">
   <template>
+    <sp-notifier id="msgNotFound" type="error">
+      Il n'existe pas d'espace ayant l'identifiant <b><span>{{msgSpaceId}}</span></b>.
+    </sp-notifier>
+
     <sp-service-ajax id="requester"
                      path="[[getSpaceUri(spaceId)]]"
                      last-response="{{currentSpace}}"
@@ -13,9 +17,6 @@
             <h2 class="title"><span>Chez Silverpeas</span></h2>
             Space label: <span id="spaceId">{{currentSpace.label}}</span><br/>
             Space description: <span>{{currentSpace.description}}</span>
-          </template>
-          <template is="dom-if" if="[[!isSpaceFound]]">
-            Space with identifier <b><span>{{spaceId}}</span></b> does not exist, asshole.
           </template>
         </section>
       </div>
@@ -53,6 +54,7 @@
       },
 
       _spaceIdChanged : function() {
+        this.$.msgNotFound.hide();
         if (this.isValidSpaceId(this.spaceId)) {
           this.$.requester.send();
         }
@@ -60,6 +62,8 @@
 
       _spaceNotFound : function() {
         this.currentSpace = null;
+        this.msgSpaceId = this.spaceId;
+        this.$.msgNotFound.show();
         this._currentSpaceChanged();
       },
 

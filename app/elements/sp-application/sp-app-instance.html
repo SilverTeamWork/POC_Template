@@ -1,5 +1,12 @@
 <dom-module id="sp-app-instance">
   <template>
+    <sp-notifier id="msgNotHandled" type="warning">
+      L'application <b><span>{{msgInstanceName}}</span></b> n'est pas encore prise en charge.
+    </sp-notifier>
+    <sp-notifier id="msgNotFound" type="error">
+      Il n'existe pas d'instance d'application ayant l'identifiant <b><span>{{msgInstanceId}}</span></b>.
+    </sp-notifier>
+
     <sp-service-ajax id="applicationInstanceRequester"
                      path="[[getApplicationInstanceUri(instanceId)]]"
                      last-response="{{applicationInstance}}"
@@ -15,43 +22,18 @@
         <section data-field="app-section" class="with-aside-app">
           <nav data-field="breadcrumb"></nav>
           <header>
-            <h2 class="title"><span data-field="title">Application SP</span></h2>
-            <aside data-field="menu" class="menu actions"></aside>
-            <p data-field="description" data-i18n-key="description">Créé pour tout l'équipe, il
-              regroupe les billets aussi bien R&amp;D
-              que
-              projet...Here you can
-              find two other compact skins like - skin-black ( on the left ) and skin-aurora ( on
-              the
-              right
-              )
-              - like skin-default, these are compact skins .
-
-              You will find in the second example that events can have different colors. For
-              example, if
-              an
-              event is important you can assign the tag important and it will show up red.
-            </p>
+            <h2 class="title"><span id="title">{{applicationInstance.label}}</span></h2>
+            <aside id="applicationMenu" class="menu actions"></aside>
+            <p id="description">{{applicationInstance.description}}</p>
           </header>
 
           <!--<aside class="aside-app" id="aside-app-fixed">-->
-            <!--<img src="../../images/calendar-magie-mai.png" alt="calendrier"/>-->
+          <!--<img src="../../images/calendar-magie-mai.png" alt="calendrier"/>-->
           <!--</aside>-->
 
           <div class="application-content">
             <template is="dom-if" if="{{isApplicationNameEqualTo(applicationInstance, 'blog')}}">
               <sp-blog-home blog="{{instanceId}}"></sp-blog-home>
-            </template>
-
-            <template is="dom-if" if="{{_isApplicationNotHandled(applicationInstance)}}">
-              <div>Application <b><span>{{applicationInstance.name}}</span></b> is not yet handled.
-              </div>
-            </template>
-
-            <template is="dom-if" if="{{!isApplicationInstanceFound}}">
-              <div>Application with identifier <b><span>{{instanceId}}</span></b> does not exist,
-                asshole.
-              </div>
             </template>
           </div>
 
@@ -104,6 +86,8 @@
       },
 
       _instanceIdChanged : function() {
+        this.$.msgNotHandled.hide();
+        this.$.msgNotFound.hide();
         if (this.isValidApplicationInstanceId(this.instanceId)) {
           this.$.applicationInstanceRequester.send();
         }
@@ -112,6 +96,8 @@
       _applicationInstanceNotFound : function() {
         this.applicationInstance = null;
         this.parentSpace = null;
+        this.msgInstanceId = this.instanceId;
+        this.$.msgNotFound.show();
         this._applicationInstanceChanged();
       },
 
@@ -119,6 +105,7 @@
         this._setIsApplicationInstanceFound(this.isValidApplicationInstance(this.applicationInstance));
         if (this.isApplicationInstanceFound) {
           this.$.spaceRequester.send();
+          this._verifyApplicationNotHandled();
         }
       },
 
@@ -127,9 +114,14 @@
             {applicationInstance : this.applicationInstance, parentSpace : this.parentSpace});
       },
 
-      _isApplicationNotHandled : function(applicationInstance) {
-        return this.isValidApplicationInstance(applicationInstance) &&
-            !this.handledApplications[applicationInstance.name];
+      _verifyApplicationNotHandled : function() {
+        var isNotHandled = this.isValidApplicationInstance(this.applicationInstance) &&
+            !this.handledApplications[this.applicationInstance.name];
+        if (isNotHandled) {
+          this.msgInstanceName = this.applicationInstance.label;
+          this.$.msgNotHandled.show();
+        }
+        return isNotHandled;
       },
 
       _isApplicationNotFound : function(lastError) {
