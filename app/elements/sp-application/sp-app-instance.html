@@ -103,6 +103,8 @@
             this.fire('last-accessed-application-instance', this.applicationInstance);
           });
           this._verifyApplicationNotHandled();
+        } else {
+          this.fire('last-accessed-application-instance', this.applicationInstance);
         }
       },
 

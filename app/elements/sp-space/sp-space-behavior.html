@@ -132,8 +132,7 @@
        * Indicates if the given object represents a valid space object.
        */
       isValidSpace : function(object) {
-        return this.isObjectTypeOfSpace(object) && (typeof object.id === 'string') &&
-            object.id.length > 0;
+        return this.isObjectTypeOfSpace(object) && this.isValidSpaceId(object.id);
       },
 
       /**

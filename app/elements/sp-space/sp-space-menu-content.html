@@ -47,12 +47,10 @@
       },
 
       _spaceChanged : function() {
-        if (this.space != null && typeof this.space.id === 'string') {
-          if (this.space.id != '-1') {
-            this.$.requester.send();
-          } else {
-            this.spaceContent = [];
-          }
+        if (this.space != null && typeof this.space.id === 'string' && this.space.id != '-1') {
+          this.$.requester.send();
+        } else {
+          this.spaceContent = [];
         }
       },
 
