@@ -16,7 +16,7 @@
                      on-error="_applicationInstanceNotFound"></sp-service-ajax>
 
     <div class="main wrapper flexitem-fluid flexbox-h">
-      <sp-space-menu class="flexbox-v" space="{{applicationInstance.parentSpace}}"></sp-space-menu>
+      <sp-space-menu class="flexbox-v" space="{{parentSpace}}"></sp-space-menu>
       <div class="main wrapper flexitem-fluid application">
         <section data-field="app-section" class="with-aside-app">
           <sp-breadcrumb></sp-breadcrumb>
@@ -99,7 +99,7 @@
         this._setIsApplicationInstanceFound(this.isValidApplicationInstance(this.applicationInstance));
         if (this.isApplicationInstanceFound) {
           this._loadParentSpaces(this.applicationInstance, function() {
-            this.notifyPath('applicationInstance.parentSpace', this.applicationInstance.parentSpace);
+            this.parentSpace = this.applicationInstance.parentSpace;
             this.fire('last-accessed-application-instance', this.applicationInstance);
           });
           this._verifyApplicationNotHandled();
