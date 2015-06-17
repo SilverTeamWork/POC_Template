@@ -23,7 +23,7 @@
     <sp-post-content post="[[post]]"></sp-post-content>
 
     <sp-comments id="spCommentId" appid="[[post.componentId]]" contributionid="[[post.id]]"
-                 authorId="[[_userId()]]" avatarUrl="[[_userAvatarUrl()]]" canBeUpdated="true"></sp-comments>
+                 authorid="[[_userId()]]" avatarurl="[[_userAvatarUrl()]]" canbeupdated="true"></sp-comments>
     <footer>
       <p class="publication-detail"> <span class="publication">Publiée le <time datetime$="[[publicationDate.toIso8601]]">[[publicationDate.toLocaleDateTime]]</time>
           <span class="auteur">par <span>[[post.creator]]</span></span></span>
@@ -65,14 +65,17 @@
         document.querySelector('#postRatingId')._retrieveContributionRating();
         document.querySelector('#spCommentId').setAttribute("appid", this.post.componentId);
         document.querySelector('#spCommentId').setAttribute("contributionid", this.post.id);
-        document.querySelector('#spCommentId').setAttribute("authorId", this.currentUser.id);
-        document.querySelector('#spCommentId').setAttribute("authorUrl", this._userAvatarUrl());
+        document.querySelector('#spCommentId').setAttribute("authorid", this.currentUser.id);
+        console.log("sp-post-view : authorId = " + this.currentUser.id)
+        document.querySelector('#spCommentId').setAttribute("avatarurl", this._userAvatarUrl());
         document.querySelector('#spCommentId').loadComments();
       },
       _userAvatarUrl: function() {
+        console.log("sp-post-view avatar=" + this.currentUser.avatar);
         return this.silverpeasHost + this.currentUser.avatar;
       },
       _userId : function() {
+        console.log("sp-post-view userid=" + this.currentUser.id);
         return this.currentUser.id;
       }
     });

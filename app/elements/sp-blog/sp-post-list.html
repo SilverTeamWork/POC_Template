@@ -7,12 +7,14 @@
 <dom-module id="sp-post-item">
   <link href="http://code.jquery.com/ui/1.11.4/themes/ui-lightness/jquery-ui.css" rel="stylesheet" type="text/css"/>
   <style>
+    .paper-dialog-div {
+      position: absolute;
+    }
     #confirm {
       position: relative;
       height: auto;
+      left: 50%;
       width: 300px;
-      left: 70%;
-      display: block;
     }
 
     button.ui-button.ui-widget.ui-state-default.ui-corner-all.ui-button-text-only {
@@ -31,10 +33,11 @@
     }
   </style>
   <template>
-    <div>
+    <div class="paper-dialog-div">
       <paper-dialog id="confirm" modal="true"
                     entry-animation="scale-up-animation" exit-animation="fade-out-animation"
                     class="ui-dialog ui-widget ui-widget-content ui-corner-all ui-front ui-dialog-buttons ui-draggable ui-resizable">
+        <h2>Confirmation</h2>
         <div class="ui-dialog-content ui-widget-content">
           <p>Êtes vous sûr de vouloir le supprimer ?</p>
         </div>

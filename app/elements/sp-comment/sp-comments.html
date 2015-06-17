@@ -16,26 +16,96 @@ With `readonly` set to `true`, the element only display current comments and don
 user to interact with
 -->
 <dom-module id="sp-comment-item">
-  <style></style>
+  <link href="http://code.jquery.com/ui/1.11.4/themes/ui-lightness/jquery-ui.css" rel="stylesheet" type="text/css"/>
+  <style>
+    .paper-dialog-div {
+      position: absolute;
+    }
+    #confirmDelete, #confirmUpdate {
+      position: relative;
+      left: 50%;
+      width: 300px;
+    }
+
+    button.ui-button.ui-widget.ui-state-default.ui-corner-all.ui-button-text-only {
+      font-size: 10pt !important;
+    }
+
+    button.ui-button.ui-widget {
+      background-color: #7eb73b;
+      background: #7eb73b linear-gradient(#7eb73b, #6fa800) 0 0 repeat scroll;
+      border: 1px solid #6fa800;
+      border-radius: 0 0 0 0;
+      box-shadow: 0 0 0 #343434;
+      color: #FFF !important;
+      font-family: "Century Gothic", "Trebuchet MS", Arial, sans serif;
+      padding: 2px 5px;
+    }
+  </style>
   <template>
     <div class="commentaire flexbox-h">
       <p class="commentaire-info w100">
         <span class="commentaire-auteur">[[comment.author.fullName]]</span>&nbsp;a dit le
         <time datetime="[[modificationDate.toIso8601]]">[[comment.modificationDate]]</time>
       </p>
+      <div class="action">
+        <button-paper id="postUpdate" label="Supprimer" on-click="_toggleUpdate" class="ui-button">
+          <img title="Modifier" alt="Modifier" src="../../images/update.gif"/>
+        </button-paper>
+        <button-paper id="postDeletion" label="Supprimer" on-click="_toggleConfirm" class="ui-button">
+          <img title="Supprimer" alt="Supprimer" src="../../images/delete.gif"/>
+        </button-paper>
+      </div>
       <div class="commentaire-meta">
         <img src="[[authorAvatar]]" class="avatar" alt="">
       </div>
       <div id="commentContent" class="commentaire-content talkbubble flexitem-fluid"></div>
     </div>
-    <sp-service-ajax id="deleteComment"
-                     method="DELETE"
-                     on-response="_handleDeleteResponse">
-    </sp-service-ajax>
-    <sp-service-ajax id="updateComment"
+    <div class="paper-dialog-div">
+      <paper-dialog id="confirmDelete" modal="true"
+                    entry-animation="scale-up-animation" exit-animation="fade-out-animation"
+                    class="ui-dialog ui-widget ui-widget-content ui-corner-all ui-front ui-dialog-buttons ui-draggable ui-resizable">
+        <div class="ui-dialog-content ui-widget-content"><p>Êtes vous sûr de vouloir le supprimer ?</p></div>
+        <div id="delete-button-bar" class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+          <div id="deleteè button-set" class="ui-dialog-buttonset">
+            <paper-button label="Annuler" dialog-dismiss autofocus class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only">
+              <span class="ui-button-text">Annuler</span>
+            </paper-button>
+            <paper-button label="Ok" dialog-confirm on-click="_onConfirm" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only">
+              <span class="ui-button-text">Ok</span>
+            </paper-button>
+          </div>
+        </div>
+      </paper-dialog>
+      <sp-service-ajax id="deleteComment"
+                       method="DELETE"
+                       on-response="_handleDeleteResponse">
+      </sp-service-ajax>
+    </div>
+
+    <div class="paper-dialog-div">
+      <paper-dialog id="confirmUpdate" modal="true"
+                    entry-animation="scale-up-animation" exit-animation="fade-out-animation"
+                    class="ui-dialog ui-widget ui-widget-content ui-corner-all ui-front ui-dialog-buttons ui-draggable ui-resizable">
+        <div class="ui-dialog-content ui-widget-content">
+          <textarea id="updateMyComment" class="w100 text"></textarea>
+        </div>
+        <div id="update-button-bar" class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+          <div id="update-button-set" class="ui-dialog-buttonset">
+            <paper-button label="Valider" dialog-confirm on-click="_onUpdateConfirm" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only">
+              <span class="ui-button-text">Valider</span>
+            </paper-button>
+            <paper-button label="Annuler" dialog-dismiss autofocus class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only">
+              <span class="ui-button-text">Annuler</span>
+            </paper-button>
+          </div>
+        </div>
+      </paper-dialog>
+      <sp-service-ajax id="updateComment"
                      method="PUT"
                      on-response="_handleUpdateResponse">
-    </sp-service-ajax>
+      </sp-service-ajax>
+    </div>
   </template>
 </dom-module>
 
@@ -48,22 +118,26 @@ user to interact with
         on-response="_handleResponse">
     </sp-service-ajax>
 
+    <sp-service-ajax
+        id="commentPost"
+        method="POST"
+        on-response="_handleCreateResponse">
+    </sp-service-ajax>
+
     <aside class="commentaires" id="commentaires">
       <div class="commentaire flexbox-h add">
-        <label for="add-my-comment" class="w100">Ajouter un commentaire</label>
-
-        <div class="commentaire-meta"><img src="" class="avatar" alt="">
+        <label for="addMyComment" class="w100">Ajouter un commentaire</label>
+        <div class="commentaire-meta"><img src="[[avatarurl]]" class="avatar" alt="">
         </div>
         <div class="talkbubble flexitem-fluid">
-          <textarea id="add-my-comment" class="w100 text"></textarea>
-
+          <textarea id="addMyComment" class="w100 text"></textarea>
           <div class="buttons pas txtcenter">
-            <button class="submit">Valider</button>
+            <button class="submit" on-click="createComment">Valider</button>
           </div>
         </div>
       </div>
-      <template is="dom-repeat" items="{{comments}}" as="comment">
-        <sp-comment-item comment="{{comment}}"></sp-comment-item>
+      <template is="dom-repeat" items="[[comments]]" as="comment">
+        <sp-comment-item comment="[[comment]]"></sp-comment-item>
       </template>
     </aside>
   </template>
@@ -92,10 +166,11 @@ user to interact with
         this.$.updateComment.path =
             'comments/' + this.comment.componentId + '/Publication/' + this.comment.resourceId +
             '/' + this.comment.id;
+        this.$.updateComment.contentType = "application/json;charset=UTF-8";
       },
       _toggleConfirm : function() {
         event.stopImmediatePropagation();
-        this.$.confirm.toggle();
+        this.$.confirmDelete.toggle();
       },
       _onConfirm : function() {
         this.$.deleteComment.send();
@@ -103,6 +178,21 @@ user to interact with
       _handleDeleteResponse : function(event) {
         if (event.detail.succeeded) {
           this.remove();
+        }
+      },
+      _toggleUpdate : function() {
+        event.stopImmediatePropagation();
+        this.$.updateMyComment.value = this.comment.text;
+        this.$.confirmUpdate.toggle();
+      },
+      _onUpdateConfirm : function() {
+        this.comment.text = this.$.updateMyComment.value;
+        this.$.updateComment.body = JSON.stringify(this.comment);
+        this.$.updateComment.send();
+      },
+      _handleUpdateResponse : function(event) {
+        if (event.detail.succeeded) {
+          this.$.commentContent.innerHTML = this.comment.text.replace(/\n/g, '<br/>');
         }
       }
     });
@@ -130,31 +220,26 @@ user to interact with
         }, /**
          * The current user identifier
          */
-        authorId : {
+        authorid : {
           type : String, notify : true
         }, /**
          * The current user avatar URL
          */
-        avatarUrl : {
+        avatarurl : {
           type : String
-        }, /**
-         * The current user token
-         */
-        userToken : {
-          type : String
-        }, comments : {
+        },
+        comments : {
           type : Array, value : [], notify : true, readOnly : true
         }
 
-      }, ready : function() {
+      },
+      ready : function() {
         if (this.appid != undefined) {
           console.log('sp-comments element ready: appid=' + this.appid + ", contributionId = " +
               this.contributionid);
         }
-      }, attached : function() {
-        console.log('sp-comments element attached: appid=' + this.appid + ", contributionId = " +
-            this.contributionid);
-      }, loadComments : function() {
+      },
+      loadComments : function() {
         console.log('sp-comments load comments: appid=' + this.appid + ", contributionId = " +
             this.contributionid);
         if (!this.appid) {
@@ -167,6 +252,29 @@ user to interact with
         var comments = event.detail.response;
         this._setComments(event.detail.response);
         console.log('sp-comments process ajax response ' + comments.length);
+      },
+      createComment : function() {
+        var newComment =
+        { "author": {"id": this.authorid},
+          "componentId": this.appid,
+          "resourceId": this.contributionid,
+          "resourceType":"Publication",
+          "indexed" :true,
+          "text": this.$.addMyComment.value,
+          "textForHtml": this.$.addMyComment.value
+        };
+        console.log("sp-comments : authorid =" + this.authorid);
+
+        this.$.commentPost.path =
+            'comments/' + this.appid + '/Publication/' + this.contributionid;
+        this.$.commentPost.body = JSON.stringify(newComment);
+        this.$.commentPost.contentType = "application/json;charset=UTF-8";
+        this.$.commentPost.send();
+      }, _handleCreateResponse : function(event) {
+        console.log('sp-comments : handle create response callback');
+        this.$.addMyComment.value="";
+        var comment = event.detail.response;
+        this.unshift('comments', comment);
       }
 
     });
