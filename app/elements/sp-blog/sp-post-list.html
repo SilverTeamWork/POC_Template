@@ -5,7 +5,53 @@
 </dom-module>
 
 <dom-module id="sp-post-item">
+  <link href="http://code.jquery.com/ui/1.11.4/themes/ui-lightness/jquery-ui.css" rel="stylesheet" type="text/css"/>
+  <style>
+    #confirm {
+      position: relative;
+      height: auto;
+      width: 300px;
+      left: 70%;
+      display: block;
+    }
+
+    button.ui-button.ui-widget.ui-state-default.ui-corner-all.ui-button-text-only {
+      font-size: 10pt !important;
+    }
+
+    button.ui-button.ui-widget {
+      background-color: #7eb73b;
+      background: #7eb73b linear-gradient(#7eb73b, #6fa800) 0 0 repeat scroll;
+      border: 1px solid #6fa800;
+      border-radius: 0 0 0 0;
+      box-shadow: 0 0 0 #343434;
+      color: #FFF !important;
+      font-family: "Century Gothic", "Trebuchet MS", Arial, sans serif;
+      padding: 2px 5px;
+    }
+  </style>
   <template>
+    <div>
+      <paper-dialog id="confirm" modal="true"
+                    entry-animation="scale-up-animation" exit-animation="fade-out-animation"
+                    class="ui-dialog ui-widget ui-widget-content ui-corner-all ui-front ui-dialog-buttons ui-draggable ui-resizable">
+        <div class="ui-dialog-content ui-widget-content">
+          <p>Êtes vous sûr de vouloir le supprimer ?</p>
+        </div>
+        <div id="button-bar" class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+          <div id="button-set" class="ui-dialog-buttonset">
+            <paper-button label="Annuler" dialog-dismiss autofocus class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only">
+              <span class="ui-button-text">Annuler</span></paper-button>
+            <paper-button label="Ok" dialog-confirm on-click="_onConfirm" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only">
+              <span class="ui-button-text">Ok</span></paper-button>
+          </div>
+        </div>
+      </paper-dialog>
+      <sp-service-ajax id="deletion"
+                       method="DELETE"
+                       on-response="_handleResponse">
+      </sp-service-ajax>
+    </div>
     <article on-click="_selectPost">
       <header>
         <time class="calendar-presentation" datetime$="[[creationDate.toIso8601]]">
@@ -35,22 +81,6 @@
         </div>
       </footer>
     </article>
-    <div>
-      <paper-dialog id="confirm" modal="true"
-                    entry-animation="scale-up-animation" exit-animation="fade-out-animation">
-        <p>Êtes vous sûr de vouloir le supprimer ?</p>
-        <div id="button-bar" >
-          <div id="button-set">
-            <paper-button label="Annuler" dialog-dismiss autofocus><span class="ui-button-text">Annuler</span></paper-button>
-            <paper-button label="Ok" dialog-confirm on-click="_onConfirm"><span class="ui-button-text">Ok</span></paper-button>
-          </div>
-        </div>
-      </paper-dialog>
-      <sp-service-ajax id="deletion"
-          method="DELETE"
-          on-response="_handleResponse">
-      </sp-service-ajax>
-    </div>
   </template>
 </dom-module>
 
