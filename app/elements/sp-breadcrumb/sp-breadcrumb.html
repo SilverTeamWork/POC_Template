@@ -1,38 +1,16 @@
 <link rel="import" href="../sp-space/sp-space-libs.html">
 <link rel="import" href="../sp-application/sp-app-libs.html">
 
-<script>
-  (function() {
-    window.BreadCrumbSingleton = {
-
-      properties : {
-
-        spaces : {
-          type : Array, notify : true, value : function() {
-            return [];
-          }
-        },
-
-        applicationInstances : {
-          type : Array, notify : true, value : function() {
-            return [];
-          }
-        }
-      }
-    };
-  })();
-</script>
-
 <dom-module id="sp-breadcrumb">
   <template>
     <nav class="breadcrumb">
       <div class="content">
-        <a href="{{getSpacePageUrl(homeSpace)}}" class="home-breadcrump">{{homeSpace.label}}</a>
-        <template is="dom-repeat" items="{{spaces}}" as="space">
-          <a href="{{getSpacePageUrl(space)}}" class="space-breadcrump">{{space.label}}</a>
+        <a href="{{getSpacePageUrl(homeSpace)}}" class="home-breadcrumb">{{homeSpace.label}}</a>
+        <template is="dom-repeat" items="{{spaces}}" as="space" restamp="true">
+          <a href="{{getSpacePageUrl(space)}}" class="space-breadcrumb">{{space.label}}</a>
         </template>
-        <template is="dom-repeat" items="{{applicationInstances}}" as="applicationInstance">
-          <a href="{{getApplicationInstancePageUrl(space)}}" class="app-breadcrump">{{applicationInstance.label}}</a>
+        <template is="dom-if" if="{{isValidApplicationInstance(applicationInstance)}}" restamp="true">
+          <a href="{{getApplicationInstancePageUrl(applicationInstance)}}" class="app-breadcrumb">{{applicationInstance.label}}</a>
         </template>
       </div>
     </nav>
@@ -44,7 +22,91 @@
     Polymer({
       is : 'sp-breadcrumb',
 
-      behaviors : [SpaceBehavior, BreadCrumbSingleton]
+      behaviors : [SpaceBehavior, ApplicationInstanceBehavior],
+
+      properties : {
+
+        spaces : {
+          type : Array, notify : true, value : function() {
+            return [];
+          }
+        },
+
+        applicationInstance : {
+          type : Array, notify : true
+        }
+      },
+
+      ready : function() {
+        // This treatment must be performed one time only
+        document.body.addEventListener('last-accessed-space',
+            this._handleLastAccessedSpace.bind(this));
+        document.body.addEventListener('last-accessed-application-instance',
+            this._handleLastAccessedApplicationInstance.bind(this));
+      },
+
+      _handleLastAccessedSpace : function(e) {
+        this._pushSpaces(e.detail);
+        this.applicationInstance = [];
+      },
+
+      _handleLastAccessedApplicationInstance : function(e) {
+        this._pushApplicationInstance(e.detail);
+      },
+
+      _pushSpaces : function(childSpace) {
+        this.async(function() {
+          if (childSpace != null && childSpace) {
+
+            // Getting the space path
+            var spacePath = [];
+            var currentSpace = childSpace;
+            while (currentSpace) {
+              spacePath.unshift(currentSpace);
+              currentSpace = currentSpace.parentSpace;
+            }
+
+            // Making a copy of spaces and initializing temporary variables
+            var modified = false;
+            var spaces = [].concat(this.spaces);
+            if (spaces.length > spacePath.length) {
+              modified = true;
+              spaces = spaces.slice(0, spacePath.length);
+            }
+
+            // Merging the breadcrumb according to computed space path
+            spacePath.forEach(function(space, index) {
+              if (spaces.length > index) {
+                if (space.uri != spaces[index].uri) {
+                  modified = true;
+                  spaces[index] = space;
+                }
+              } else {
+                modified = true;
+                spaces.push(space);
+              }
+            });
+
+            // Updating the breadcrumb if a modification has been performed
+            if (modified) {
+              this.spaces = spaces;
+            }
+
+          } else {
+            this.spaces = [];
+          }
+        }.bind(this));
+      },
+
+      _pushApplicationInstance : function(applicationInstance) {
+        if (this.isValidApplicationInstance(applicationInstance)) {
+          this._pushSpaces(applicationInstance.parentSpace);
+          this.applicationInstance = applicationInstance;
+        } else {
+          this._pushSpaces(null);
+          this.applicationInstance = [];
+        }
+      }
     });
   })();
 </script>

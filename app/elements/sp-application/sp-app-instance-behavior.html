@@ -42,8 +42,7 @@
        * Indicates if the given object represents a valid application instance object.
        */
       isValidApplicationInstance : function(object) {
-        return this.isObjectTypeOfComponent(object) && (typeof object.id === 'string') &&
-            object.id.length > 0;
+        return this.isObjectTypeOfComponent(object) && this.isValidApplicationInstanceId(object.id);
       },
 
       /**
