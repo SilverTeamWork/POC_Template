@@ -13,8 +13,8 @@ user to interact with
 <dom-module id="sp-rating">
   <style>
     .silverpeas-rating img {
-      width: 16px!important;
-      height: 16px!important;
+      width: 16px !important;
+      height: 16px !important;
       border: none;
     }
   </style>
@@ -30,23 +30,30 @@ user to interact with
         path="{{ratingUri}}"
         contentType="text/plain"
         method="POST"
-        on-response="_handlePostResponse"
+        on-response="_handleResponse"
         debounce-duration="300">
     </sp-service-ajax>
     <span id="ratingSpanId" class="silverpeas-rating">
       <img id="ratingStar1" width="16" height="16" class="silverpeas-rating-note silverpeas-rating-note-unselected"
            title="Mauvais" alt="1" src="../../images/rating/star_empty.png"
-           on-mouseout="onMouseOut" on-mouseover="onMouseOver" on-click="onMouseClick"/><img id="ratingStar2" width="16" height="16" class="silverpeas-rating-note silverpeas-rating-note-unselected"
+           on-mouseout="onMouseOut" on-mouseover="onMouseOver" on-click="onMouseClick"/>
+      <img id="ratingStar2" width="16" height="16" class="silverpeas-rating-note silverpeas-rating-note-unselected"
            title="Passable" alt="2" src="../../images/rating/star_empty.png"
-           on-mouseout="onMouseOut" on-mouseover="onMouseOver" on-click="onMouseClick"/><img id="ratingStar3" width="16" height="16" class="silverpeas-rating-note silverpeas-rating-note-unselected"
+           on-mouseout="onMouseOut" on-mouseover="onMouseOver" on-click="onMouseClick"/>
+      <img id="ratingStar3" width="16" height="16" class="silverpeas-rating-note silverpeas-rating-note-unselected"
            title="Assez bien" alt="3" src="../../images/rating/star_empty.png"
-           on-mouseout="onMouseOut" on-mouseover="onMouseOver" on-click="onMouseClick"/><img id="ratingStar4" width="16" height="16" class="silverpeas-rating-note silverpeas-rating-note-unselected"
+           on-mouseout="onMouseOut" on-mouseover="onMouseOver" on-click="onMouseClick"/>
+      <img id="ratingStar4" width="16" height="16" class="silverpeas-rating-note silverpeas-rating-note-unselected"
            title="Bien" alt="4" src="../../images/rating/star_empty.png"
-           on-mouseout="onMouseOut" on-mouseover="onMouseOver" on-click="onMouseClick"/><img id="ratingStar5" width="16" height="16" class="silverpeas-rating-note silverpeas-rating-note-unselected"
+           on-mouseout="onMouseOut" on-mouseover="onMouseOver" on-click="onMouseClick"/>
+      <img id="ratingStar5" width="16" height="16" class="silverpeas-rating-note silverpeas-rating-note-unselected"
            title="Très bien" alt="5" src="../../images/rating/star_empty.png"
-           on-mouseout="onMouseOut" on-mouseover="onMouseOver" on-click="onMouseClick"/><img id="ratingStarDelete" width="16" height="16" class="silverpeas-rating-note silverpeas-rating-note-unselected"
-           src="../../images/rating/star_delete2.png" title="Supprimer mon avis"
-           on-click="onMouseClick"/>
+           on-mouseout="onMouseOut" on-mouseover="onMouseOver" on-click="onMouseClick"/>
+      <template is="dom-if" if="{{_isRatingStarDeleteToDisplay(rating)}}">
+        <img id="ratingStarDelete" width="16" height="16" class="silverpeas-rating-note silverpeas-rating-note-unselected"
+             src="../../images/rating/star_delete2.png" title="Supprimer mon avis"
+             on-click="onMouseClick"/>
+      </template>
     </span>
   </template>
 </dom-module>
@@ -67,63 +74,82 @@ user to interact with
     var NOTE_CLEAR_RATING_SRC = "../../images/rating/star_delete2.png";
 
     Polymer({
-      is : 'sp-rating', behaviors : [SessionBehavior],
-      properties : {
+      is : 'sp-rating', behaviors : [SessionBehavior], properties : {
         /**
          * if true, user can only view current contribution rating
          * if false, user can modify its own contribution rating
          */
         readonly : {
-          type : Boolean,
-          value : false
+          type : Boolean, value : false
         },
+
         /**
          * the current application identifier
          */
         appid : {
           type : String
         },
+
         /**
          * the current contribution identifier
          */
         contributionid : {
           type : String
-        }, count : {
+        },
+
+        count : {
           type : Number, value : 5
-        }, ratingUri : {
+        },
+
+        ratingUri : {
           type : String, computed : '_computeRatingUri(appid, contributionid)'
-        }, rating : {
-          type : Object, notify : false
-        }, _hoverRatingNote : {
-          type : Number, value : 0, notify: true
-        }, onHovered : {
+        },
+
+        rating : {
+          type : Object, notify : true
+        },
+
+        _hoverRatingNote : {
+          type : Number, value : 0, notify : true
+        },
+
+        onHovered : {
           type : Event
         }
-      }, created : function() {
-      }, _computeRatingUri : function(appid, contributionid) {
+      },
+
+      _computeRatingUri : function(appid, contributionid) {
         return "rating/" + this.appid + "/Publication/" + this.contributionid;
-      }, ready : function() {
+      },
+
+      ready : function() {
         if (this.appid != undefined) {
           console.log('sp-rating element ready appid=' + this.appid + " and contributionId = " +
               this.contributionid);
           this._retrieveContributionRating();
         }
       },
+
       /**
        * This method retrieve current contribution rating
        */
-      _retrieveContributionRating: function() {
+      _retrieveContributionRating : function() {
         // Get rating from ajax call (xml http request)
         this.$.ratingFetcher.send();
-      }, _handleResponse : function(event) {
+      },
+
+      _handleResponse : function(event) {
         // Handle rating ajax response
         this.rating = event.detail.response;
-        console.log('Retrieve rating from ' + this.appid + ' and contribution ' + this.contributionid);
+        console.log('Retrieve rating from ' + this.appid + ' and contribution ' +
+            this.contributionid);
         this._render(this.rating);
-      }, hovered : false
-      , unsetHoverRatingNote : function() {
+      },
+
+      hovered : false, unsetHoverRatingNote : function() {
         this._hoverRatingNote = 0;
       },
+
       /**
        * Handle on mouse over event on targeted image
        * @param e the event
@@ -137,6 +163,7 @@ user to interact with
           this._render(this.rating);
         }
       },
+
       /**
        * Handle on mouse out event on targeted image
        * @param e the event
@@ -149,6 +176,7 @@ user to interact with
           this._render(this.rating);
         }
       },
+
       /**
        * Handle on mouse click event on targeted image
        * @param e the event
@@ -168,19 +196,22 @@ user to interact with
       },
 
       /**
+       * Indicates if the given rating must be displayed.
+       */
+      _isRatingStarDeleteToDisplay : function(rating) {
+        return !this.readonly && rating && rating.isRatingDone &&
+            rating.raterRatingValue != 0
+      },
+
+      /**
        * Render graphical display of the rating given in parameter
        * @param rating the rating to display
        */
       _render : function(rating) {
-        var ratingNote = rating.numberOfRaterRatings > 0 ? rating.ratingAverage : rating.raterRatingValue;
+        var ratingNote = rating.numberOfRaterRatings > 0 ? rating.ratingAverage :
+            rating.raterRatingValue;
         if (Math.ceil(ratingNote) != ratingNote) {
           ratingNote += 1;
-        }
-        if (!this.readonly && rating.isRatingDone && rating.raterRatingValue != 0) {
-          this.$.ratingStarDelete.style = "display:block";
-          this.$.ratingStarDelete.removeAttribute('hidden');
-        } else {
-          this.$.ratingStarDelete.setAttribute('hidden', true);
         }
         var ceil = Math.ceil(ratingNote);
         for (note = 1; note <= this.count; note++) {
@@ -225,6 +256,7 @@ user to interact with
           Polymer.dom(img).setAttribute("class", style);
         }
       },
+
       /**
        * Post a new rating on the current rating component identified by appid an contributionid
        * @param note the note to set
@@ -234,13 +266,9 @@ user to interact with
             this.contributionid + ' with value =' + note);
         this.rating.raterRatingValue = note;
         // Get rating from ajax call (xml http request)
-        this.$.ratingPusher.body = note;
+        this.$.ratingPusher.body = note ? note : '';
         this.$.ratingPusher.contentType = 'text/plain';
         this.$.ratingPusher.send();
-      }, _handlePostResponse: function(event) {
-        // Handle post rating ajax response
-        console.log("post rating response=" + event.detail.response);
-        this._retrieveContributionRating(this.rating);
       }
     });
   })();
