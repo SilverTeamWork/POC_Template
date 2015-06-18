@@ -48,6 +48,7 @@ user to interact with
       font-family: "Century Gothic", "Trebuchet MS", Arial, sans serif;
       padding: 2px 5px;
     }
+
   </style>
   <template>
     <div class="commentaire flexbox-h">
@@ -56,7 +57,7 @@ user to interact with
         <time datetime="[[modificationDate.toIso8601]]">[[comment.modificationDate]]</time>
       </p>
       <div class="action">
-        <button-paper id="postUpdate" label="Supprimer" on-click="_toggleUpdate" class="ui-button">
+        <button-paper id="postUpdate" label="Modifier" on-click="_toggleUpdate" class="ui-button">
           <img title="Modifier" alt="Modifier" src="../../images/update.gif"/>
         </button-paper>
         <button-paper id="postDeletion" label="Supprimer" on-click="_toggleConfirm" class="ui-button">
