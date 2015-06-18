@@ -55,6 +55,36 @@
 
     window.addEventListener('WebComponentsReady', function() {
       var app = document.querySelector('#app');
+      app.context = {
+        ofSpace : function(params) {
+          this.spaceId = params.id;
+          app.notifyPath('context.spaceId', this.spaceId);
+          app.route = 'space-home';
+          return this;
+        },
+
+        ofApplicationInstance : function(params) {
+          this.instanceId = params.id;
+          if (params.resource && params.rid) {
+            this.page = {
+              type : params.resource, id : params.rid
+            }
+          } else {
+            this.page = null;
+          }
+          app.notifyPath('context.instanceId', this.instanceId);
+          app.notifyPath('context.page', this.page);
+          app.route = 'instance-home';
+          return this;
+        },
+
+        reset : function() {
+          this.spaceId = null;
+          this.instanceId = null;
+          this.page = null;
+          return this;
+        }
+      }.reset();
 
       // apply dynamically some style classes
       (function() {
@@ -77,45 +107,27 @@
         // route to a space home page.
         page('/spaces/:id', function(data) {
           console.log("space selected: " + data.params.id);
-          app.context = {
-            spaceId: data.params.id
-          };
-          app.route = 'space-home';
-          app.fire('route-changed', {target : 'sp-space', id : app.context.spaceId});
+          app.context.ofSpace(data.params);
         });
 
         // route to an application instance home page.
         page('/instances/:id', function(data) {
           console.log("instance selected: " + data.params.id);
-          app.context = {
-              instanceId: data.params.id,
-              page: null
-          };
-          app.route = 'instance-home';
-          app.fire('route-changed', {target : 'sp-app', id : app.context.instanceId});
+          app.context.ofApplicationInstance(data.params);
         });
 
         // route to an application instance inner page; he control is passed to the home page
         // component of the application instance.
         page('/instances/:id/:resource/:rid', function(data) {
           console.log('resource selected: ' + data.params.rid + ' in instance ' + data.params.id);
-          app.context = {
-            instanceId: data.params.id,
-            page: {
-              type: data.params.resource,
-              id: data.params.rid
-            }
-          };
-          console.log(app.context.page);
-          app.route = 'instance-home';
+          app.context.ofApplicationInstance(data.params);
         });
 
         // route to the home page.
         page('*', function(data) {
           console.log("Unknown path, redirect to home");
           app.route = 'home';
-          app.context = {};
-          app.fire('route-changed', {target : 'home', id : null});
+          app.fire('last-accessed-space', SpaceBehavior.properties.homeSpace.value);
         });
 
         // add #! before urls

@@ -173,15 +173,7 @@
     Polymer({
       is : 'sp-home-page',
 
-      behaviors : [SpaceBehavior],
-
-      ready : function() {
-        document.body.addEventListener('route-changed', function(e) {
-          if (e.detail.target === 'home') {
-            this.fire('last-accessed-space', this.homeSpace);
-          }
-        }.bind(this));
-      }
+      behaviors : [SpaceBehavior]
     });
   })();
 </script>

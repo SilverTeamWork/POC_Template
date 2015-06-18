@@ -61,7 +61,7 @@
           <span class="day">[[creationDate.day]]</span> <span class="number">[[creationDate.dayOfMonth]]</span>
           <span class="month">[[creationDate.month]]</span> <span class="year">[[creationDate.year]]</span>
         </time>
-        <h3><a class="link-article" href="billet.html"><span class="editable input text">[[post.title]]</span></a>
+        <h3><a class="link-article" href="#" on-click="_selectPost"><span class="editable input text">[[post.title]]</span></a>
         </h3>
 
         <p class="post-info">
@@ -144,6 +144,8 @@
         this.$.deletion.path = 'blogs/' + this.post.componentId + '/posts/' + this.post.id;
       },
       _selectPost : function(event) {
+        event.preventDefault();
+        event.stopPropagation();
         this.fire('post-selected', {post: this.post})
       },
       _toggleConfirm: function() {
@@ -182,20 +184,6 @@
       ready: function() {
         console.log("List posts of blog " + this.blog);
         this._scrollHandler = this._onScroll.bind(this);
-        if (app) {
-          // the blog is reselected, so change page to the home page
-          app.addEventListener('route-changed', function(event) {
-            if (event.detail.target === 'sp-app' && event.detail.id === this.blog) {
-              this._onBlogChange();
-            } else {
-              // Setting to undefined the current blog as the page displayed does not concerned it.
-              // This action avoid a lot of errors when navigating into other pages.
-              // If you comment this below line, you will see the damages!
-              // That is because of the mechanism of <iron-pages> that makes all created components staying alive...
-              this.blog = undefined;
-            }
-          }.bind(this));
-        }
       },
       _onBlogChange: function() {
         this._setPosts([]);

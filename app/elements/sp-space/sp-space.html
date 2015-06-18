@@ -48,20 +48,13 @@
         }
       },
 
-      observers: ['_spaceIdChanged(context.spaceId)'],
-
-      ready : function() {
-        document.body.addEventListener('last-accessed-application-instance', function(e) {
-          // When a application instance homepage is accessed, this page must be cleared in order to get a right behavior!
-          //this.context.spaceId = null;
-        }.bind(this));
-      },
+      observers : ['_spaceIdChanged(context.spaceId)'],
 
       _spaceIdChanged : function() {
         this.$.msgNotFound.hide();
         if (this.isValidSpaceId(this.context.spaceId)) {
-          console.log('space reload');
           this.$.requester.send();
+          console.log("Loading data about the current valid space...");
         }
       },
 

@@ -32,7 +32,7 @@
 
           <div class="application-content">
             <template is="dom-if" if="{{isApplicationNameEqualTo(applicationInstance, 'blog')}}">
-              <sp-blog-home context="{{context}}"></sp-blog-home>
+              <sp-blog-home context="[[context]]"></sp-blog-home>
             </template>
           </div>
 
@@ -67,7 +67,7 @@
         }
       },
 
-      observers: ['_instanceIdChanged(context.instanceId)'],
+      observers : ['_instanceIdChanged(context.instanceId)'],
 
       created : function() {
         this.handledApplications = [];
@@ -75,19 +75,12 @@
         map['blog'] = true;
       },
 
-      ready : function() {
-        document.body.addEventListener('last-accessed-space', function(e) {
-          // When a space homepage is accessed, this page must be cleared in order to get a right behavior!
-          //this.instanceId = null;
-        }.bind(this));
-      },
-
       _instanceIdChanged : function() {
         this.$.msgNotHandled.hide();
         this.$.msgNotFound.hide();
         if (this.isValidApplicationInstanceId(this.context.instanceId)) {
-          console.log('app instance reload');
           this.$.applicationInstanceRequester.send();
+          console.log("Loading data about the current valid application...");
         }
       },
 
@@ -104,7 +97,7 @@
           this._loadParentSpaces(this.applicationInstance, function() {
             this.parentSpace = this.applicationInstance.parentSpace;
             this.fire('last-accessed-application-instance', this.applicationInstance);
-          });
+          }.bind(this));
           this._verifyApplicationNotHandled();
         } else {
           this.fire('last-accessed-application-instance', this.applicationInstance);
