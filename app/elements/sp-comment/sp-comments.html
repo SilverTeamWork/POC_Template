@@ -9,7 +9,7 @@ The `sp-comment` element exposes silverpeas comment functionality.
         readonly></sp-comment>
 
 String blogAppId, String postId,
-      String authorId, String avatarUrl, boolean canBeUpdated, String userToken
+      String authorId, String avatarUrl, boolean canBeUpdated
 
 
 With `readonly` set to `true`, the element only display current comments and don't allow
@@ -21,10 +21,17 @@ user to interact with
     .paper-dialog-div {
       position: absolute;
     }
-    #confirmDelete, #confirmUpdate {
+
+    #confirmDelete {
       position: relative;
       left: 50%;
       width: 300px;
+    }
+
+    #confirmUpdate {
+      position: relative;
+      left: 50%;
+      width: 500px;
     }
 
     button.ui-button.ui-widget.ui-state-default.ui-corner-all.ui-button-text-only {
@@ -65,6 +72,7 @@ user to interact with
       <paper-dialog id="confirmDelete" modal="true"
                     entry-animation="scale-up-animation" exit-animation="fade-out-animation"
                     class="ui-dialog ui-widget ui-widget-content ui-corner-all ui-front ui-dialog-buttons ui-draggable ui-resizable">
+        <h2>Suppression</h2>
         <div class="ui-dialog-content ui-widget-content"><p>Êtes vous sûr de vouloir le supprimer ?</p></div>
         <div id="delete-button-bar" class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
           <div id="deleteè button-set" class="ui-dialog-buttonset">
@@ -87,6 +95,7 @@ user to interact with
       <paper-dialog id="confirmUpdate" modal="true"
                     entry-animation="scale-up-animation" exit-animation="fade-out-animation"
                     class="ui-dialog ui-widget ui-widget-content ui-corner-all ui-front ui-dialog-buttons ui-draggable ui-resizable">
+        <h2>Modification commentaire</h2>
         <div class="ui-dialog-content ui-widget-content">
           <textarea id="updateMyComment" class="w100 text"></textarea>
         </div>
@@ -177,6 +186,7 @@ user to interact with
       },
       _handleDeleteResponse : function(event) {
         if (event.detail.succeeded) {
+          this.fire("comment-removed", event.detail)
           this.remove();
         }
       },
@@ -275,6 +285,7 @@ user to interact with
         this.$.addMyComment.value="";
         var comment = event.detail.response;
         this.unshift('comments', comment);
+        this.fire('comment-created', event);
       }
 
     });
