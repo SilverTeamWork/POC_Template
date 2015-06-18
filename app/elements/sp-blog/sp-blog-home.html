@@ -3,7 +3,7 @@
     <div class="main wrapper flexitem-fluid application" on-post-selected="_viewPost">
       <iron-pages attr-for-selected="data-page" selected="{{page}}" activate-event="">
         <section data-page="blog-home" class="blog with-aside-app">
-          <sp-post-list blog="[[blog]]"></sp-post-list>
+          <sp-post-list blog="[[context.instanceId]]"></sp-post-list>
         </section>
         <section data-page="post-info" class="blog with-aside-app">
           <sp-post-view post="[[selectedPost]]"></sp-post-view>
@@ -17,36 +17,32 @@
   (function() {
     Polymer({
       is: 'sp-blog-home',
+      behaviors: [SilverpeasServiceAjaxBehavior],
       properties: {
-        blog: {
-          type: String,
-          observer: '_onBlogChange'
+        context: {
+          type : Object
         }
       },
-      ready: function() {
-        this.page = 'blog-home';
-        // reload the list of posts if the blog is reselected so that new posts can be retrieved
-        if (app) {
-          app.addEventListener('route-changed', function(event) {
-            if (event.detail.target === 'sp-app' && event.detail.id === this.blog) {
-              this.page = 'blog-home';
-            }
-          }.bind(this));
-          app.addEventListener('page-changed', function(event) {
-            if (event.detail.target === 'sp-app' && event.detail.id === this.blog &&
-                event.detail.page.type === 'posts') {
-              this.selectedPost = event.detail.page.resource;
-              this.page = 'post-info';
-            }
-          }.bind(this));
-        }
-      },
-      _onBlogChange: function() {
-        this.page = 'blog-home';
-      },
+      observers: ['_onContextChange(context.instanceId, context.page)'],
       _viewPost: function(e) {
         e.stopPropagation();
-        page('/instances/' + this.blog + '/posts/' + e.detail.post.id, e.detail.post);
+        page('/instances/' + this.context.instanceId + '/posts/' + e.detail.post.id, e.detail.post);
+      },
+      _onContextChange: function() {
+        if (this.context.instanceId && this.context.instanceId.indexOf('blog') == 0) {
+          if (this.context.page) {
+            this.newSilverpeasServiceAjax()
+                .onResponse(function(event) {
+                  this.selectedPost = event.detail.response;
+                  this.page = 'post-info';
+                }.bind(this))
+                .get('blogs/' + this.context.instanceId + '/posts/' + this.context.page.id);
+          } else {
+            this.page = 'blog-home';
+          }
+        } else {
+          this.context = {};
+        }
       }
     });
   })();

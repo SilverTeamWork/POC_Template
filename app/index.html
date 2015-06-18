@@ -30,10 +30,10 @@
         <sp-home-page></sp-home-page>
       </paper-material>
       <paper-material data-route="space-home" elevation="1">
-        <sp-space space-id="{{space.id}}"></sp-space>
+        <sp-space context="[[context]]"></sp-space>
       </paper-material>
       <paper-material data-route="instance-home" elevation="1">
-        <sp-app-instance instance-id="[[instance.id]]"></sp-app-instance>
+        <sp-app-instance context="[[context]]"></sp-app-instance>
       </paper-material>
     </iron-pages>
   </div>
@@ -77,38 +77,44 @@
         // route to a space home page.
         page('/spaces/:id', function(data) {
           console.log("space selected: " + data.params.id);
-          app.space = data.params;
+          app.context = {
+            spaceId: data.params.id
+          };
           app.route = 'space-home';
-          app.fire('route-changed', {target : 'sp-space', id : app.space.id});
+          app.fire('route-changed', {target : 'sp-space', id : app.context.spaceId});
         });
 
         // route to an application instance home page.
         page('/instances/:id', function(data) {
           console.log("instance selected: " + data.params.id);
-          app.instance = data.params;
+          app.context = {
+              instanceId: data.params.id,
+              page: null
+          };
           app.route = 'instance-home';
-          app.fire('route-changed', {target : 'sp-app', id : app.instance.id});
+          app.fire('route-changed', {target : 'sp-app', id : app.context.instanceId});
         });
 
         // route to an application instance inner page; he control is passed to the home page
         // component of the application instance.
         page('/instances/:id/:resource/:rid', function(data) {
           console.log('resource selected: ' + data.params.rid + ' in instance ' + data.params.id);
-          app.instance = {id: data.params.id};
-          data.save();
-          app.fire('page-changed', {
-            target: 'sp-app',
-            id: data.params.id,
-            page: {type: data.params.resource, id: data.params.rid, resource: data.state}
-          });
+          app.context = {
+            instanceId: data.params.id,
+            page: {
+              type: data.params.resource,
+              id: data.params.rid
+            }
+          };
+          console.log(app.context.page);
+          app.route = 'instance-home';
         });
 
         // route to the home page.
         page('*', function(data) {
           console.log("Unknown path, redirect to home");
           app.route = 'home';
-          app.space = {};
-          app.instance = {};
+          app.context = {};
           app.fire('route-changed', {target : 'home', id : null});
         });
 

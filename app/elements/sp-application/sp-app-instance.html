@@ -11,7 +11,7 @@
     </sp-notifier>
 
     <sp-service-ajax id="applicationInstanceRequester"
-                     path="[[getApplicationInstanceUri(instanceId)]]"
+                     path="[[getApplicationInstanceUri(context.instanceId)]]"
                      last-response="{{applicationInstance}}"
                      on-error="_applicationInstanceNotFound"></sp-service-ajax>
 
@@ -32,7 +32,7 @@
 
           <div class="application-content">
             <template is="dom-if" if="{{isApplicationNameEqualTo(applicationInstance, 'blog')}}">
-              <sp-blog-home blog="{{instanceId}}"></sp-blog-home>
+              <sp-blog-home context="{{context}}"></sp-blog-home>
             </template>
           </div>
 
@@ -54,8 +54,8 @@
 
       properties : {
 
-        instanceId : {
-          type : String, notify : true, observer : '_instanceIdChanged'
+        context : {
+          type : Object
         },
 
         applicationInstance : {
@@ -67,6 +67,8 @@
         }
       },
 
+      observers: ['_instanceIdChanged(context.instanceId)'],
+
       created : function() {
         this.handledApplications = [];
         var map = this.handledApplications;
@@ -76,21 +78,22 @@
       ready : function() {
         document.body.addEventListener('last-accessed-space', function(e) {
           // When a space homepage is accessed, this page must be cleared in order to get a right behavior!
-          this.instanceId = null;
+          //this.instanceId = null;
         }.bind(this));
       },
 
       _instanceIdChanged : function() {
         this.$.msgNotHandled.hide();
         this.$.msgNotFound.hide();
-        if (this.isValidApplicationInstanceId(this.instanceId)) {
+        if (this.isValidApplicationInstanceId(this.context.instanceId)) {
+          console.log('app instance reload');
           this.$.applicationInstanceRequester.send();
         }
       },
 
       _applicationInstanceNotFound : function() {
         this.applicationInstance = null;
-        this.msgInstanceId = this.instanceId;
+        this.msgInstanceId = this.context.instanceId;
         this.$.msgNotFound.show();
         this._applicationInstanceChanged();
       },

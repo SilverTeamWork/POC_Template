@@ -7,7 +7,7 @@
     </sp-notifier>
 
     <sp-service-ajax id="requester"
-                     path="[[getSpaceUri(spaceId)]]"
+                     path="[[getSpaceUri(context.spaceId)]]"
                      last-response="{{currentSpace}}"
                      on-error="_spaceNotFound"></sp-service-ajax>
     <div class="main-container flexitem-fluid flexbox-h">
@@ -35,8 +35,8 @@
 
       properties : {
 
-        spaceId : {
-          type : String, notify : true, observer : '_spaceIdChanged'
+        context : {
+          type : Object
         },
 
         currentSpace : {
@@ -48,23 +48,26 @@
         }
       },
 
+      observers: ['_spaceIdChanged(context.spaceId)'],
+
       ready : function() {
         document.body.addEventListener('last-accessed-application-instance', function(e) {
           // When a application instance homepage is accessed, this page must be cleared in order to get a right behavior!
-          this.spaceId = null;
+          //this.context.spaceId = null;
         }.bind(this));
       },
 
       _spaceIdChanged : function() {
         this.$.msgNotFound.hide();
-        if (this.isValidSpaceId(this.spaceId)) {
+        if (this.isValidSpaceId(this.context.spaceId)) {
+          console.log('space reload');
           this.$.requester.send();
         }
       },
 
       _spaceNotFound : function() {
         this.currentSpace = null;
-        this.msgSpaceId = this.spaceId;
+        this.msgSpaceId = this.context.spaceId;
         this.$.msgNotFound.show();
         this._currentSpaceChanged();
       },
