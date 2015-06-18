@@ -24,7 +24,6 @@
         }
       },
       ready: function() {
-        this._viewPost = this._goToPostInfo.bind(this);
         this.page = 'blog-home';
         // reload the list of posts if the blog is reselected so that new posts can be retrieved
         if (app) {
@@ -33,15 +32,21 @@
               this.page = 'blog-home';
             }
           }.bind(this));
+          app.addEventListener('page-changed', function(event) {
+            if (event.detail.target === 'sp-app' && event.detail.id === this.blog &&
+                event.detail.page.type === 'posts') {
+              this.selectedPost = event.detail.page.resource;
+              this.page = 'post-info';
+            }
+          }.bind(this));
         }
       },
       _onBlogChange: function() {
         this.page = 'blog-home';
       },
-      _goToPostInfo: function(e) {
+      _viewPost: function(e) {
         e.stopPropagation();
-        this.selectedPost = e.detail.post;
-        this.page = 'post-info';
+        page('/instances/' + this.blog + '/posts/' + e.detail.post.id, e.detail.post);
       }
     });
   })();
