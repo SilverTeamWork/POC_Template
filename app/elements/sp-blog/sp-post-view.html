@@ -8,13 +8,15 @@
   <template>
     <header>
       <h2 class="title">[[post.title]]</h2>
-      <aside class="menu actions">
-        <div><a class="button select" href="#">Plus</a>
-          <ul>
-            <li><a href="#">Modifier ce billet</a></li>
-          </ul>
-        </div>
-      </aside>
+      <template is="dom-if" if="{{hasModificationRightsOn(post)}}">
+        <aside class="menu actions">
+          <div><a class="button select" href="#">Plus</a>
+            <ul>
+              <li><a href$="[[editionUrl]]">Modifier ce billet</a></li>
+            </ul>
+          </div>
+        </aside>
+      </template>
       <p class="post-info">
         <sp-rating id="postRatingId" appid="[[post.componentId]]" contributionid="[[post.id]]"></sp-rating>
         <a href="#commentaires" class="nb-comment"><img src="../../images/talk2user.gif" alt="commentaire"/>&nbsp;<span id="nbComment">[[post.nbComments]]</span></a>
@@ -50,7 +52,7 @@
 
     Polymer({
       is: 'sp-post-view',
-      behaviors : [DateBehavior, SessionBehavior, SilverpeasUrl],
+      behaviors : [DateBehavior, SessionBehavior, SilverpeasUrl, AccessControlBehavior],
       properties: {
         post: {
           type: Object,
@@ -66,6 +68,7 @@
         this.creationDate = this._date(this.post.createDate);
         this.publicationDate = this._date(this.post.dateEvent);
         this.modificationDate = this._date(this.post.updateDate);
+        this.editionUrl = '/instances/' + this.post.componentId + '/posts/' + this.post.id + '?state=edition';
         document.querySelector('#postRatingId')._retrieveContributionRating();
         document.querySelector('#spCommentId').setAttribute("appid", this.post.componentId);
         document.querySelector('#spCommentId').setAttribute("contributionid", this.post.id);

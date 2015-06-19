@@ -1,0 +1,67 @@
+<script>
+  (function() {
+    window.AccessControlBehavior = {
+      hasModificationRightsOn: function(resource) {
+        var rights = 7;
+        if (resource.links && resource.links.length > 0) {
+          rights = 0;
+          for(var i = 0; i < resource.links.length; i++) {
+            switch (resource.links[i].method) {
+              case 'POST':
+                rights |= 4;
+                break;
+              case 'PUT':
+                rights |= 2;
+                break;
+              case 'DELETE':
+                rights |= 1;
+            }
+          }
+        }
+        // has right only if either (PUT, DELETE) or (POST, DELETE) or (POST, PUT, DELETE)
+        return rights === 3 || rights === 6 || rights === 7;
+      },
+      hasDeletionRightOn: function(resource) {
+        var right = true;
+        if (resource.links && resource.links.length > 0) {
+          right = false;
+          for(var i = 0; i < resource.links.length && !right; i++) {
+            if (resource.links[i].method === 'DELETE') {
+              right = true
+            }
+          }
+        }
+        return right;
+      },
+      hasCreationRightOn: function(resource) {
+        var right = true;
+        if (resource.links && resource.links.length > 0) {
+          right = false;
+          for(var i = 0; i < resource.links.length && !right; i++) {
+            if (resource.links[i].method === 'POST') {
+              right = true
+            }
+          }
+        }
+        return right;
+      },
+      hasUpdateRightOn: function(resource) {
+        var right = true;
+        if (resource.links && resource.links.length > 0) {
+          right = false;
+          for(var i = 0; i < resource.links.length && !right; i++) {
+            if (resource.links[i].method === 'PUT') {
+              right = true
+            }
+          }
+        }
+        return right;
+      },
+      doPrivilegedActionOn: function(resource, action) {
+        if (this.hasModificationRightOn(resource)) {
+          action.call();
+        }
+      }
+    }
+  })();
+</script>
