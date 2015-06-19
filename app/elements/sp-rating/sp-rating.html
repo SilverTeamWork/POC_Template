@@ -39,25 +39,38 @@ user to interact with
         on-response="_handleResponse"
         debounce-duration="300">
     </sp-service-ajax>
-    <div id="ratingContainer" class="silverpeas-rating">
+    <span id="ratingSpanId" class="silverpeas-rating">
       <template is="dom-repeat" items="[[_stars]]" as="star">
-        <img class$="[[star.classes]]"
+        <img class="[[star.classes]]"
              title$="[[star.title]]" alt$="[[star.note]]" src$="[[star.url]]"
              on-mouseout="onMouseOut" on-mouseenter="onMouseEnter" on-click="onMouseClick"/>
       </template>
+      <img id="ratingStar1" class="silverpeas-rating-note silverpeas-rating-note-unselected"
+           title="Mauvais" alt="1" src="../../images/rating/star_empty.png"
+           on-mouseout="onMouseOut" on-mouseenter="onMouseEnter" on-click="onMouseClick"/>
+      <img id="ratingStar2" class="silverpeas-rating-note silverpeas-rating-note-unselected"
+           title="Passable" alt="2" src="../../images/rating/star_empty.png"
+           on-mouseout="onMouseOut" on-mouseenter="onMouseEnter" on-click="onMouseClick"/>
+      <img id="ratingStar3" class="silverpeas-rating-note silverpeas-rating-note-unselected"
+           title="Assez bien" alt="3" src="../../images/rating/star_empty.png"
+           on-mouseout="onMouseOut" on-mouseenter="onMouseEnter" on-click="onMouseClick"/>
+      <img id="ratingStar4" class="silverpeas-rating-note silverpeas-rating-note-unselected"
+           title="Bien" alt="4" src="../../images/rating/star_empty.png"
+           on-mouseout="onMouseOut" on-mouseenter="onMouseEnter" on-click="onMouseClick"/>
+      <img id="ratingStar5" class="silverpeas-rating-note silverpeas-rating-note-unselected"
+           title="Très bien" alt="5" src="../../images/rating/star_empty.png"
+           on-mouseout="onMouseOut" on-mouseenter="onMouseEnter" on-click="onMouseClick"/>
       <template is="dom-if" if="{{_isRatingStarDeleteToDisplay(rating)}}">
         <img id="ratingStarDelete" class="silverpeas-rating-note silverpeas-rating-note-unselected"
              src="../../images/rating/star_delete2.png" title="Supprimer mon avis"
              on-click="onMouseClick"/>
       </template>
-    </div>
+    </span>
   </template>
 </dom-module>
 
 <script>
   (function() {
-
-    var __starTitles = ['Mauvais', 'Passable', 'Assez bien', 'Bien', 'Très bien'];
 
     var DEFAULT_RATING_NOTE_STYLE = "silverpeas-rating-note";
     var UNSELECTED_RATING_NOTE_STYLE = "silverpeas-rating-note-unselected";
@@ -95,6 +108,10 @@ user to interact with
           type : String
         },
 
+        count : {
+          type : Number, value : 5
+        },
+
         ratingUri : {
           type : String, computed : '_computeRatingUri(appid, contributionid)'
         },
@@ -111,18 +128,11 @@ user to interact with
           type : Event
         },
 
-        _stars : {
-          type : Array, notify : true, value : function() {
-            var stars = [];
-            __starTitles.forEach(function(starLabel, index) {
-              stars.push({
-                classes : DEFAULT_RATING_NOTE_STYLE + ' ' + UNSELECTED_RATING_NOTE_STYLE,
-                url : '../../images/rating/star_empty.png',
-                title : starLabel,
-                note : (index + 1)
-              });
-            });
-            return stars;
+        _currentClasses : {
+          type : Array, readOnly : true, value : function() {
+            return [UNSELECTED_RATING_NOTE_STYLE, UNSELECTED_RATING_NOTE_STYLE,
+              UNSELECTED_RATING_NOTE_STYLE, UNSELECTED_RATING_NOTE_STYLE,
+              UNSELECTED_RATING_NOTE_STYLE];
           }
         }
       },
@@ -173,7 +183,6 @@ user to interact with
        */
       onMouseEnter : function(e) {
         this.hovered = true;
-        e.preventDefault();
         e.stopPropagation();
         if (!this.readonly) {
           var curImageTarget = e.target;
@@ -188,7 +197,6 @@ user to interact with
        */
       onMouseOut : function(e) {
         this.hovered = false;
-        e.preventDefault();
         e.stopPropagation();
         if (!this.readonly) {
           this.unsetHoverRatingNote();
@@ -202,7 +210,6 @@ user to interact with
        */
       onMouseClick : function(e) {
         console.log('onMouseClick : register new user rating');
-        e.preventDefault();
         e.stopPropagation();
         if (!this.readonly) {
           var curImageTarget = e.target;
@@ -232,11 +239,9 @@ user to interact with
         if (Math.ceil(ratingNote) != ratingNote) {
           ratingNote += 1;
         }
-        var ratingContainer = Polymer.dom(this.$.ratingContainer);
         var ceil = Math.ceil(ratingNote);
-        this._stars.forEach(function(star, index) {
-          var note = index + 1;
-          var img = ratingContainer.querySelector("img[alt='" + note + "']");
+        for (note = 1; note <= this.count; note++) {
+          var img = Polymer.dom(this.$.ratingSpanId).querySelector("#ratingStar" + note);
 
           var resource = '';
           var style = '';
@@ -273,11 +278,11 @@ user to interact with
             resource = NOTE_UNSELECTED_SRC;
             style = UNSELECTED_RATING_NOTE_STYLE;
           }
-          star.url = resource;
-          star.classes = DEFAULT_RATING_NOTE_STYLE + ' ' + style;
-          this.notifyPath('_stars.' + index + '.url', star.url);
-          this.notifyPath('_stars.' + index + '.classes', star.classes);
-        }.bind(this));
+          img.setAttribute("src", resource);
+          img.classList.remove(this._currentClasses[note - 1]);
+          img.classList.add(style);
+          this._currentClasses[note - 1] = style;
+        }
       },
 
       /**
