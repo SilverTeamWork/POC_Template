@@ -5,7 +5,37 @@
 
 <script>
   (function() {
+
+    var __$S_resolve;
+    var __$S_reject;
+
+    var __$S_queuePromise = new Promise(function(resolve, reject) {
+      __$S_resolve = resolve;
+      __$S_reject = reject;
+    });
+    var __$S_queue = [];
+    __$S_resolve();
+
+    function __$S_consumeQueue() {
+      __$S_queuePromise.then(function() {
+        var callback = __$S_queue.shift();
+        if (callback) {
+          callback.call(this);
+        }
+        if (__$S_queue.length) {
+          __$S_consumeQueue.call(this);
+        }
+      });
+    }
+
     window.$S = {
+
+      /**
+       * Extends an Object.
+       * @param obj the object to extend.
+       * @param props the properties with which the object must be extended.
+       * @returns {*}
+       */
       extend : function extend(obj, props) {
         for (var prop in props) {
           if (props.hasOwnProperty(prop)) {
@@ -13,6 +43,17 @@
           }
         }
         return obj;
+      },
+
+      /**
+       * Synchronizing several tasks
+       * @param callback
+       */
+      queueing : function(callback) {
+        __$S_queuePromise.then(function() {
+          __$S_queue.push(callback);
+          __$S_consumeQueue();
+        });
       }
     }
   })();

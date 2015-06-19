@@ -31,10 +31,17 @@
       behaviors : [SpaceBehavior, ApplicationInstanceBehavior],
 
       properties : {
+
         spaces : {
           type : Array, notify : true, observer : '_spacesLoaded'
+        },
+
+        context : {
+          type : Object
         }
       },
+
+      observers : ['_spaceChanged(context.space)', '_applicationInstanceChanged(context.instance)'],
 
       created : function() {
         this._whenReady_ = new Promise(function(resolve, reject) {
@@ -43,19 +50,19 @@
         }.bind(this));
       },
 
-      ready : function() {
-        document.body.addEventListener('last-accessed-space',
-            this._lastAccessedAreaChanged.bind(this));
-        document.body.addEventListener('last-accessed-application-instance',
-            this._lastAccessedAreaChanged.bind(this));
-      },
-
       _spacesLoaded : function() {
         this.resolveCompletes(this);
       },
 
-      _lastAccessedAreaChanged : function(e) {
-        var area = e.detail;
+      _spaceChanged : function() {
+        this._lastAccessedAreaChanged(this.context.space);
+      },
+
+      _applicationInstanceChanged : function() {
+        this._lastAccessedAreaChanged(this.context.instance);
+      },
+
+      _lastAccessedAreaChanged : function(area) {
         if (area && area != null) {
           this._getRootSpace(area, function(rootSpace) {
             this._markAsSelected(rootSpace);

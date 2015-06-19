@@ -40,11 +40,6 @@ user to interact with
         debounce-duration="300">
     </sp-service-ajax>
     <span id="ratingSpanId" class="silverpeas-rating">
-      <template is="dom-repeat" items="[[_stars]]" as="star">
-        <img class="[[star.classes]]"
-             title$="[[star.title]]" alt$="[[star.note]]" src$="[[star.url]]"
-             on-mouseout="onMouseOut" on-mouseenter="onMouseEnter" on-click="onMouseClick"/>
-      </template>
       <img id="ratingStar1" class="silverpeas-rating-note silverpeas-rating-note-unselected"
            title="Mauvais" alt="1" src="../../images/rating/star_empty.png"
            on-mouseout="onMouseOut" on-mouseenter="onMouseEnter" on-click="onMouseClick"/>
@@ -72,7 +67,6 @@ user to interact with
 <script>
   (function() {
 
-    var DEFAULT_RATING_NOTE_STYLE = "silverpeas-rating-note";
     var UNSELECTED_RATING_NOTE_STYLE = "silverpeas-rating-note-unselected";
     var SELECTED_RATING_NOTE_STYLE = "silverpeas-rating-note-selected";
     var HALF_SELECTED_RATING_NOTE_STYLE = "silverpeas-rating-note-half";

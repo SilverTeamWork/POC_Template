@@ -47,7 +47,6 @@
 
       _viewPost : function(e) {
         e.stopPropagation();
-        console.log(this.getPostViewUrl(e.detail.post));
         page(this.getPostViewUrl(e.detail.post), e.detail.post);
       },
       _onContextChange : function() {

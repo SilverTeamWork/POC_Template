@@ -5,17 +5,23 @@
   <template>
     <nav class="breadcrumb">
       <div class="content">
-        <a href="{{getSpacePageUrl(homeSpace)}}" class="home-breadcrumb">{{homeSpace.label}}</a>
-        <template is="dom-repeat" items="{{spaces}}" as="space" restamp="true">
-          <a href="{{getSpacePageUrl(space)}}" class="space-breadcrumb" on-click="_spaceBreadcrumbClicked">{{space.label}}</a>
+        <a href="[[getSpacePageUrl(homeSpace)]]" class="home-breadcrumb">[[homeSpace.label]]</a>
+        <template is="dom-repeat" items="[[spaces]]" as="space" restamp="true">
+          <a href="[[getSpacePageUrl(space)]]" class="space-breadcrumb" on-click="_spaceBreadcrumbClicked">[[space.label]]</a>
         </template>
-        <template is="dom-if" if="{{isValidApplicationInstance(applicationInstance)}}" restamp="true">
-          <a href="{{getApplicationInstancePageUrl(applicationInstance)}}" class="app-breadcrumb" on-click="_appBreadcrumbClicked">{{applicationInstance.label}}</a>
+        <template is="dom-if" if="[[isValidApplicationInstance(applicationInstance)]]" restamp="true">
+          <a href="[[getApplicationInstancePageUrl(applicationInstance)]]" class="app-breadcrumb" on-click="_appBreadcrumbClicked">[[applicationInstance.label]]</a>
         </template>
-        <template is="dom-repeat" items="{{pages}}" as="page" restamp="true">
-          <a href="{{page.url}}" class="app-page-breadcrumb">{{page.label}}</a>
+        <template is="dom-repeat" items="[[pages]]" as="page" restamp="true">
+          <a href="[[page.url]]" class="app-page-breadcrumb" on-click="_pageBreadcrumbClicked">[[page.label]]</a>
         </template>
       </div>
+      <template is="dom-if" if="[[_backButtonDisplayed]]" restamp="true">
+        <div id="backContainer" class="back">
+          <a title="Retour à la page précédente" href="#" on-click="_backButtonClicked">Retour à la
+            page précédente</a>
+        </div>
+      </template>
     </nav>
   </template>
 </dom-module>
@@ -25,7 +31,7 @@
     Polymer({
       is : 'sp-breadcrumb',
 
-      behaviors : [SpaceBehavior, ApplicationInstanceBehavior],
+      behaviors : [SpaceBehavior, ApplicationInstanceBehavior, NavigationContextBehavior],
 
       properties : {
 
@@ -40,112 +46,171 @@
         },
 
         applicationInstance : {
-          type : Array, notify : true
+          type : Object, notify : true
         },
 
         pages : {
           type : Array, notify : true, value : function() {
             return [];
           }
-        }
+        },
+
+        _backButtonDisplayed : false
       },
 
       observers : ['_spaceChanged(context.space)', '_instanceChanged(context.instance)',
         '_pageChanged(context.page.label)'],
 
-      _spaceBreadcrumbClicked : function() {
-        this.applicationInstance = null;
-        this.pages = [];
-      },
+      _spaceBreadcrumbClicked : function(e) {
+        e.preventDefault();
+        e.stopPropagation();
 
-      _spaceChanged : function() {
-        this._pushSpaces(this.context.space);
-        this._spaceBreadcrumbClicked();
-      },
+        $S.queueing(function() {
+          var index = e.model.__key__;
+          var sliceIndex = -1;
+          if (this.isValidApplicationInstance(this.applicationInstance)) {
+            sliceIndex = index + 1;
+          } else if ((index + 1) < this.spaces.length) {
+            sliceIndex = index;
+          }
 
-      _appBreadcrumbClicked : function() {
-        this.pages = [];
-      },
-
-      _instanceChanged : function() {
-        this._pushApplicationInstance(this.context.instance);
-        this._appBreadcrumbClicked();
-      },
-
-      _pageChanged : function() {
-        this._pushPage(this.context.page);
-      },
-
-      _pushSpaces : function(childSpace) {
-        this.async(function() {
-          if (childSpace != null && childSpace) {
-
-            // Getting the space path
-            var spacePath = [];
-            var currentSpace = childSpace;
-            while (currentSpace) {
-              spacePath.unshift(currentSpace);
-              currentSpace = currentSpace.parentSpace;
-            }
-
-            // Making a copy of spaces and initializing temporary variables
-            var modified = false;
-            var spaces = [].concat(this.spaces);
-            if (spaces.length > spacePath.length) {
-              modified = true;
-              spaces = spaces.slice(0, spacePath.length);
-            }
-
-            // Merging the breadcrumb according to computed space path
-            spacePath.forEach(function(space, index) {
-              if (spaces.length > index) {
-                if (space.uri != spaces[index].uri) {
-                  modified = true;
-                  spaces[index] = space;
-                }
-              } else {
-                modified = true;
-                spaces.push(space);
-              }
-            });
-
-            // Updating the breadcrumb if a modification has been performed
-            if (modified) {
-              this.spaces = spaces;
-            }
-
-          } else {
-            this.spaces = [];
+          if (sliceIndex > -1) {
+            page(this.getSpacePageUrl(this.spaces[index]));
           }
         }.bind(this));
       },
 
-      _pushApplicationInstance : function(applicationInstance) {
-        this.async(function() {
-          if (this.isValidApplicationInstance(applicationInstance)) {
-            this._pushSpaces(applicationInstance.parentSpace);
-            this.applicationInstance = applicationInstance;
-          } else {
-            this._pushSpaces(null);
-            this.applicationInstance = [];
+      _spaceChanged : function() {
+        $S.queueing(function() {
+          this.applicationInstance = null;
+          this.pages = [];
+          this._pushSpaces(this.context.space);
+          this._backButtonDisplayed = (this.spaces.length > 1);
+        }.bind(this));
+      },
+
+      _appBreadcrumbClicked : function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        $S.queueing(function() {
+          if (this.pages.length) {
+            page(this.getApplicationInstancePageUrl(this.applicationInstance));
           }
-        });
+        }.bind(this));
+      },
+
+      _instanceChanged : function() {
+        $S.queueing(function() {
+          this.pages = [];
+          this._pushApplicationInstance(this.context.instance);
+          this._backButtonDisplayed = true;
+        }.bind(this));
+      },
+
+      _pageBreadcrumbClicked : function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        $S.queueing(function() {
+          var index = e.model.__key__;
+          if ((index + 1) < this.pages.length) {
+            page(this.pages[index].url);
+          }
+        }.bind(this));
+      },
+
+      _pageChanged : function() {
+        $S.queueing(function() {
+          this._pushPage(this.context.page);
+          this._backButtonDisplayed = true;
+        }.bind(this));
+      },
+
+      _pushSpaces : function(childSpace) {
+        if (childSpace != null && childSpace) {
+
+          // Getting the space path
+          var spacePath = [];
+          var currentSpace = childSpace;
+          while (currentSpace) {
+            spacePath.unshift(currentSpace);
+            currentSpace = currentSpace.parentSpace;
+          }
+
+          // Making a copy of spaces and initializing temporary variables
+          var modified = false;
+          var spaces = [].concat(this.spaces);
+          if (spaces.length > spacePath.length) {
+            modified = true;
+            spaces = spaces.slice(0, spacePath.length);
+          }
+
+          // Merging the breadcrumb according to computed space path
+          spacePath.forEach(function(space, index) {
+            if (spaces.length > index) {
+              if (space.uri != spaces[index].uri) {
+                modified = true;
+                spaces[index] = space;
+              }
+            } else {
+              modified = true;
+              spaces.push(space);
+            }
+          });
+
+          // Updating the breadcrumb if a modification has been performed
+          if (modified) {
+            this.spaces = spaces;
+          }
+
+        } else {
+          this.spaces = [];
+        }
+      },
+
+      _pushApplicationInstance : function(applicationInstance) {
+        if (this.isValidApplicationInstance(applicationInstance)) {
+          this._pushSpaces(applicationInstance.parentSpace);
+          this.applicationInstance = applicationInstance;
+        } else {
+          this._pushSpaces(null);
+          this.applicationInstance = null;
+        }
       },
 
       _pushPage : function() {
-        this.async(function() {
-          if (this.context.page) {
-            var pages = [].concat(this.pages);
-            while (pages.length > 0) {
-              var currentPage = pages.pop();
-              if (currentPage.url === this.context.path) {
-                break;
-              }
+        if (this.context.page) {
+          var pages = [].concat(this.pages);
+          while (pages.length > 0) {
+            var currentPage = pages.pop();
+            if (currentPage.url === this.context.path) {
+              break;
             }
-            pages.push({url : this.context.path, label : this.context.page.label});
-            this.pages = pages;
           }
-        });
+          pages.push({url : this.context.path, label : this.context.page.label});
+          this.pages = pages;
+        }
+      },
+
+      _backButtonClicked : function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var length = this.pages.length;
+        if (length) {
+          this.pages = [];
+          if (length > 1) {
+            page(this.pages[length - 2].url);
+          } else {
+            page(this.getApplicationInstancePageUrl(this.applicationInstance));
+          }
+          return;
+        }
+
+        length = this.spaces.length;
+        if (this.applicationInstance) {
+          page(this.getSpacePageUrl(this.spaces[length - 1]));
+        } else if (length > 1) {
+          page(this.getSpacePageUrl(this.spaces[length - 2]));
+        }
       }
     });
   })();

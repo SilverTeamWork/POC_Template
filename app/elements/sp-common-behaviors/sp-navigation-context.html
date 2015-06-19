@@ -2,8 +2,19 @@
   (function() {
 
     var __handleCommonRouteData = function(context, data) {
-      context.setAndNotify('state', data.state);
       context.setAndNotify('path', data.path);
+    };
+
+    var __clearSpaceContext = function(context, space) {
+      var spaceValue = (space) ? space : null;
+      context.setAndNotify('spaceId', null);
+      context.setAndNotify('space', spaceValue);
+    };
+
+
+    var __clearApplicationContext = function(context) {
+      context.setAndNotify('instanceId', null);
+      context.setAndNotify('instance', null);
     };
 
     var __context;
@@ -20,6 +31,7 @@
            */
           ofSpace : function(routeData) {
             __handleCommonRouteData(this, routeData);
+            __clearApplicationContext(this);
             this.setAndNotify('spaceId', routeData.params.id);
             host.route = 'space-home';
             return this;
@@ -41,6 +53,7 @@
            * @returns {NavigationContextBehavior} the context itself.
            */
           ofApplicationInstance : function(routeData) {
+            __clearSpaceContext(this);
             __handleCommonRouteData(this, routeData);
             this.setAndNotify('instanceId', routeData.params.id);
             var page = null;
@@ -54,7 +67,7 @@
                 }
               }
               page = {
-                type : routeData.params.resource, id : routeData.params.rid, params: params
+                type : routeData.params.resource, id : routeData.params.rid, params : params
               }
             }
             this.setAndNotify('page', page);
@@ -86,8 +99,9 @@
                 page.show(path, routeData.state);
               }
             } else {
+              __clearApplicationContext(this);
+              __clearSpaceContext(this, SpaceBehavior.properties.homeSpace.value);
               __handleCommonRouteData(this, routeData);
-              app.fire('last-accessed-space', SpaceBehavior.properties.homeSpace.value);
               host.route = 'home';
             }
             return this;
@@ -115,6 +129,10 @@
             var contextPathParts = contextAttributeName.split(".");
             contextPathParts.forEach(function(part, index) {
               if ((index + 1) == contextPathParts.length) {
+                if (attribute[part] == value) {
+                  console.log("Trying to notify binding 'context." + contextAttributeName +
+                      "', but value has not changed... ('" + value + "')");
+                }
                 attribute[part] = value;
               } else {
                 attribute = attribute[part] || {};
@@ -126,9 +144,10 @@
 
           reset : function() {
             this.path = null;
-            this.state = null;
             this.spaceId = null;
+            this.space = null;
             this.instanceId = null;
+            this.instance = null;
             this.page = null;
             return this;
           }
@@ -149,7 +168,7 @@
        * Sets the context application instance object.
        * @param applicationInstance a well loaded application instance.
        */
-      setContextApplicationInstance: function(applicationInstance) {
+      setContextApplicationInstance : function(applicationInstance) {
         __context.setCurrentApplicationInstance(applicationInstance);
       },
 

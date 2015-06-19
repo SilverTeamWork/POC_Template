@@ -1,13 +1,13 @@
 <dom-module id="sp-space-menu">
   <template>
-    <iron-localstorage id="context"
+    <iron-localstorage id="spaceMenuContextLS"
                        name="sp-space-menu-context"
-                       value="{{context}}"></iron-localstorage>
-    <aside class="aside-gauche" id="nav-gauche">
+                       value="{{spaceMenuContext}}"></iron-localstorage>
+    <aside class$="[[spaceMenuContext.classes]]" id="nav-gauche">
       <a class="icon-menu" href="#" title="Cacher ce menu que je ne saurais voir"
          on-click="menuToggle">Menu</a>
       <nav>
-        <sp-space-menu-content space="{{context.space}}"></sp-space-menu-content>
+        <sp-space-menu-content space="[[space]]"></sp-space-menu-content>
       </nav>
     </aside>
   </template>
@@ -15,67 +15,73 @@
 <script>
   (function() {
 
+    var NAV_GAUCHE = 'aside-gauche';
+
+    var __allInstances = [];
+
     Polymer({
       is : 'sp-space-menu',
 
+      behaviors : [SpaceBehavior],
+
       properties : {
 
-        space : {
-          type : Object, notify : true, observer : '_spaceChanged'
+        context : {
+          type : Object
         },
 
         /**
          * The context permits to handles several menus that must display same content.
          * It avoids to get some bad flickering...
          */
-        context : {
-          type : Object, notify : true
+        spaceMenuContext : {
+          type : Object
         }
       },
+
+      observers : ['_spaceChanged(context.space)', '_instanceChanged(context.instance)',
+        '_renderDeployment(spaceMenuContext.deployed)'],
 
       ready : function() {
-        document.body.addEventListener('sp-space-menu_context-changed', function(e) {
-          this.context = e.detail;
-        }.bind(this));
-        document.body.addEventListener('sp-space-menu_menu-toggled', function(e) {
-          this._menuToggle(e.detail);
-        }.bind(this));
         this._renderDeployment();
       },
 
-      _spaceChanged : function() {
-        if (typeof this.context === 'undefined' || this.context == null) {
-          this.context = {
-            deployed : true, space : this.space
-          };
-        } else {
-          this.context = {
-            deployed : this.context.deployed, space : this.space
-          };
-          this.fire('sp-space-menu_context-changed', this.context);
-        }
+      attached : function() {
+        __allInstances.push(this);
       },
 
-      _menuToggle : function(oldContext) {
-        this.context = oldContext;
-        this.$.context.save();
-        this.space = oldContext.space;
-        this._renderDeployment();
-      },
-
-      _renderDeployment : function() {
-        if (!this.context || this.context.deployed) {
-          Polymer.dom(this.root).querySelector('#nav-gauche').classList.remove('minimize');
-        } else {
-          Polymer.dom(this.root).querySelector('#nav-gauche').classList.add('minimize');
-        }
+      detached : function() {
+        __allInstances.remove(this);
       },
 
       menuToggle : function(e) {
         e.preventDefault();
         e.stopPropagation();
-        this.context.deployed = !this.context.deployed;
-        app.fire('sp-space-menu_menu-toggled', this.context);
+        __allInstances.forEach(function($this) {
+          $this.set('spaceMenuContext.deployed', !$this.spaceMenuContext.deployed);
+        });
+      },
+
+      _spaceChanged : function() {
+        this.space = this.context.space;
+      },
+
+      _instanceChanged : function() {
+        if (this.context.instance) {
+          this._loadParentSpaces(this.context.instance, function() {
+            this.space = this.context.instance.parentSpace;
+          }.bind(this));
+        } else if (this.space) {
+          this.space = null;
+        }
+      },
+
+      _renderDeployment : function() {
+        if (this.spaceMenuContext) {
+          var classes = NAV_GAUCHE +
+              ((this.spaceMenuContext && !this.spaceMenuContext.deployed) ? ' minimize' : '');
+          this.set('spaceMenuContext.classes', classes);
+        }
       }
     });
   })();

@@ -11,7 +11,7 @@
                      last-response="{{currentSpace}}"
                      on-error="_spaceNotFound"></sp-service-ajax>
     <div class="main-container flexitem-fluid flexbox-h">
-      <sp-space-menu class="flexbox-v" space="[[currentSpace]]"></sp-space-menu>
+      <sp-space-menu class="flexbox-v" context="[[context]]"></sp-space-menu>
       <div class="main wrapper flexitem-fluid">
         <sp-breadcrumb context="[[context]]"></sp-breadcrumb>
         <section class="space">
@@ -70,7 +70,6 @@
         this._setIsSpaceFound(this.isValidSpace(this.currentSpace));
         this._loadParentSpaces(this.currentSpace, function() {
           this.setContextSpace(this.currentSpace);
-          this.fire('last-accessed-space', this.currentSpace);
         });
       }
     });
