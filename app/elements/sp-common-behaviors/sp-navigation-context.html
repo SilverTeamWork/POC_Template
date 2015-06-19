@@ -1,0 +1,157 @@
+<script>
+  (function() {
+
+    var __handleCommonRouteData = function(context, data) {
+      context.setAndNotify('state', data.state);
+      context.setAndNotify('path', data.path);
+    };
+
+    var __context;
+
+    window.NavigationContextBehavior = {
+
+      init : function(host) {
+        __context = {
+
+          /**
+           * Sets the context data about a space access.
+           * @param routeData the parameters about a space access.
+           * @returns {NavigationContextBehavior} the context itself.
+           */
+          ofSpace : function(routeData) {
+            __handleCommonRouteData(this, routeData);
+            this.setAndNotify('spaceId', routeData.params.id);
+            host.route = 'space-home';
+            return this;
+          },
+
+          /**
+           * Sets the context space object.
+           * @param space a well loaded space.
+           * @returns {NavigationContextBehavior} the context itself.
+           */
+          setCurrentSpace : function(space) {
+            this.setAndNotify('space', space);
+            return this;
+          },
+
+          /**
+           * Sets the context data about an application instance (and its internal page) access.
+           * @param routeData the parameters about an application instance (and its internal page) access.
+           * @returns {NavigationContextBehavior} the context itself.
+           */
+          ofApplicationInstance : function(routeData) {
+            __handleCommonRouteData(this, routeData);
+            this.setAndNotify('instanceId', routeData.params.id);
+            var page = null;
+            if (routeData.params.resource && routeData.params.rid) {
+              page = {
+                type : routeData.params.resource, id : routeData.params.rid
+              }
+            }
+            this.setAndNotify('page', page);
+            host.route = 'instance-home';
+            return this;
+          },
+
+          /**
+           * Sets the context application instance object.
+           * @param instance a well loaded application instance.
+           * @returns {NavigationContextBehavior} the context itself.
+           */
+          setCurrentApplicationInstance : function(instance) {
+            this.setAndNotify('instance', instance);
+            return this;
+          },
+
+          /**
+           * Sets the context data about an application instance (and its internal page) access.
+           * @param routeData the parameters about an application instance (and its internal page) access.
+           * @returns {NavigationContextBehavior} the context itself.
+           */
+          ofUnknown : function(routeData) {
+            if (routeData.canonicalPath.indexOf('/#!') == 0) {
+              var indexOfBadPath = routeData.path.indexOf('//');
+              if (0 <= indexOfBadPath && indexOfBadPath <= 1) {
+                var path = routeData.path.replace(/^\/{2,}/gi, '/');
+                console.log(path);
+                page.show(path, routeData.state);
+              }
+            } else {
+              __handleCommonRouteData(this, routeData);
+              app.fire('last-accessed-space', SpaceBehavior.properties.homeSpace.value);
+              host.route = 'home';
+            }
+            return this;
+          },
+
+          /**
+           * Sets page info data (used by breadcrumb for example).
+           * @param pageInfo the page info.
+           * @returns {NavigationContextBehavior} the context itself.
+           */
+          setPageInfo : function(pageInfo) {
+            var _pageInfo = $S.extend({label : ''}, pageInfo);
+            this.setAndNotify('page.label', _pageInfo.label);
+            return this;
+          },
+
+          /**
+           * Sets the attribute value of the context from given path and value.
+           * @param contextAttributeName the path
+           * @param value the value to set.
+           * @returns {NavigationContextBehavior} the context itself.
+           */
+          setAndNotify : function(contextAttributeName, value) {
+            var attribute = this;
+            var contextPathParts = contextAttributeName.split(".");
+            contextPathParts.forEach(function(part, index) {
+              if ((index + 1) == contextPathParts.length) {
+                attribute[part] = value;
+              } else {
+                attribute = attribute[part] || {};
+              }
+            });
+            host.notifyPath('context.' + contextAttributeName, value);
+            return this;
+          },
+
+          reset : function() {
+            this.path = null;
+            this.state = null;
+            this.spaceId = null;
+            this.instanceId = null;
+            this.page = null;
+            return this;
+          }
+        }.reset();
+
+        return __context;
+      },
+
+      /**
+       * Sets the context space object.
+       * @param space a well loaded space.
+       */
+      setContextSpace : function(space) {
+        __context.setCurrentSpace(space);
+      },
+
+      /**
+       * Sets the context application instance object.
+       * @param applicationInstance a well loaded application instance.
+       */
+      setContextApplicationInstance: function(applicationInstance) {
+        __context.setCurrentApplicationInstance(applicationInstance);
+      },
+
+      /**
+       * Sets page info data (used by breadcrumb for example).
+       * @param pageInfo the page info.
+       */
+      setContextPageInfo : function(pageInfo) {
+        __context.setPageInfo(pageInfo);
+      }
+    };
+  })();
+</script>

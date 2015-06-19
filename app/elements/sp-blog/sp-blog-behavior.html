@@ -1,0 +1,55 @@
+<link rel="import" href="../sp-space/sp-space-libs.html">
+<link rel="import" href="../sp-application/sp-app-libs.html">
+
+<script>
+  (function() {
+    window.BlogBehavior = {
+
+      /**
+       * Gets the page URL of a post represented by the given parameter.
+       * @param context a context object
+       * @returns {string} a page URL.
+       */
+      getPostUriFromContext : function(context) {
+        return 'blogs/' + context.instanceId + '/posts/' + context.page.id;
+      },
+
+      /**
+       * Gets the page URL of a post represented by the given parameter.
+       * @param post a post object
+       * @returns {string} a page URL.
+       */
+      getPostViewUrl : function(post) {
+        return this.getApplicationInstanceResourcePageUrl(this._getInstanceId(post), 'posts',
+            this._getObjectId(post));
+      },
+
+      /**
+       * Gets the id attribute of the given parameter.
+       * @param object an object or a string.
+       * @returns {*} the string identifier.
+       * @private
+       */
+      _getObjectId : function(object) {
+        var objectId = object;
+        if (typeof object === 'object' && object != null) {
+          objectId = object.id;
+        }
+        return objectId;
+      },
+
+      /**
+       * Gets the instance id attribute of the given parameter.
+       * @param object an object or a string.
+       * @returns {*} the string identifier or empty if it does not exist.
+       * @private
+       */
+      _getInstanceId : function(object) {
+        if (typeof object === 'object' && object != null) {
+          return object.componentId ? object.componentId : '';
+        }
+        return '';
+      }
+    };
+  })();
+</script>

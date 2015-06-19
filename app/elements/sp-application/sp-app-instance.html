@@ -19,7 +19,7 @@
       <sp-space-menu class="flexbox-v" space="{{parentSpace}}"></sp-space-menu>
       <div class="main wrapper flexitem-fluid application">
         <section data-field="app-section" class="with-aside-app">
-          <sp-breadcrumb></sp-breadcrumb>
+          <sp-breadcrumb context="[[context]]"></sp-breadcrumb>
           <header>
             <h2 class="title"><span id="title">{{applicationInstance.label}}</span></h2>
             <aside id="applicationMenu" class="menu actions"></aside>
@@ -50,7 +50,7 @@
     Polymer({
       is : 'sp-app-instance',
 
-      behaviors : [SpaceBehavior, ApplicationInstanceBehavior],
+      behaviors : [SpaceBehavior, ApplicationInstanceBehavior, NavigationContextBehavior],
 
       properties : {
 
@@ -85,6 +85,7 @@
       },
 
       _applicationInstanceNotFound : function() {
+        this.setContextApplicationInstance(null);
         this.applicationInstance = null;
         this.msgInstanceId = this.context.instanceId;
         this.$.msgNotFound.show();
@@ -96,10 +97,12 @@
         if (this.isApplicationInstanceFound) {
           this._loadParentSpaces(this.applicationInstance, function() {
             this.parentSpace = this.applicationInstance.parentSpace;
+            this.setContextApplicationInstance(this.applicationInstance);
             this.fire('last-accessed-application-instance', this.applicationInstance);
           }.bind(this));
           this._verifyApplicationNotHandled();
         } else {
+          this.setContextApplicationInstance(this.applicationInstance);
           this.fire('last-accessed-application-instance', this.applicationInstance);
         }
       },

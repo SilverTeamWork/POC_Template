@@ -1,2 +1,18 @@
 <link rel="import" href="sp-date.html">
 <link rel="import" href="sp-silverpeas-url.html">
+<link rel="import" href="sp-navigation-context.html">
+
+<script>
+  (function() {
+    window.$S = {
+      extend : function extend(obj, props) {
+        for (var prop in props) {
+          if (props.hasOwnProperty(prop)) {
+            obj[prop] = props[prop];
+          }
+        }
+        return obj;
+      }
+    }
+  })();
+</script>

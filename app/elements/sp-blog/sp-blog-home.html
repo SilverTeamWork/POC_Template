@@ -1,9 +1,13 @@
 <dom-module id="sp-blog-home">
   <template>
+    <sp-notifier id="postNotFound" type="error">
+      Il n'existe pas de billet à cette URI <b><span>{{msgPostUri}}</span></b>.
+    </sp-notifier>
+
     <div class="main wrapper flexitem-fluid application" on-post-selected="_viewPost">
       <iron-pages attr-for-selected="data-page" selected="{{page}}" activate-event="">
         <section data-page="blog-home" class="blog with-aside-app">
-          <sp-post-list blog="[[context.instanceId]]"></sp-post-list>
+          <sp-post-list blog="[[instanceId]]"></sp-post-list>
         </section>
         <section data-page="post-info" class="blog with-aside-app">
           <sp-post-view post="[[selectedPost]]"></sp-post-view>
@@ -16,32 +20,42 @@
 <script>
   (function() {
     Polymer({
-      is: 'sp-blog-home',
-      behaviors: [SilverpeasServiceAjaxBehavior],
-      properties: {
-        context: {
+      is : 'sp-blog-home',
+
+      behaviors : [NavigationContextBehavior, SilverpeasServiceAjaxBehavior,
+        ApplicationInstanceBehavior, BlogBehavior],
+
+      properties : {
+        context : {
           type : Object
         }
       },
-      observers: ['_onContextChange(context.instanceId, context.page)'],
-      _viewPost: function(e) {
+
+      observers : ['_onContextChange(context.instanceId, context.page)'],
+
+      _viewPost : function(e) {
         e.stopPropagation();
-        page('/instances/' + this.context.instanceId + '/posts/' + e.detail.post.id, e.detail.post);
+        console.log(this.getPostViewUrl(e.detail.post));
+        page(this.getPostViewUrl(e.detail.post), e.detail.post);
       },
-      _onContextChange: function() {
+
+      _onContextChange : function() {
         if (this.context.instanceId && this.context.instanceId.indexOf('blog') == 0) {
           if (this.context.page) {
-            this.newSilverpeasServiceAjax()
-                .onResponse(function(event) {
-                  this.selectedPost = event.detail.response;
-                  this.page = 'post-info';
-                }.bind(this))
-                .get('blogs/' + this.context.instanceId + '/posts/' + this.context.page.id);
+            var postUri = this.getPostUriFromContext(this.context);
+            this.newSilverpeasServiceAjax().onResponse(function(event) {
+              this.selectedPost = event.detail.response;
+              this.setContextPageInfo({label : this.selectedPost.title});
+              this.page = 'post-info';
+            }.bind(this)).onError(function() {
+              this.msgPostUri = postUri;
+              page(this.getApplicationInstancePageUrl(this.context.instanceId));
+              this.$.postNotFound.show();
+            }.bind(this)).get(postUri);
           } else {
+            this.instanceId = this.context.instanceId;
             this.page = 'blog-home';
           }
-        } else {
-          this.context = {};
         }
       }
     });

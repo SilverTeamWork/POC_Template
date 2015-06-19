@@ -13,7 +13,7 @@
     <div class="main-container flexitem-fluid flexbox-h">
       <sp-space-menu class="flexbox-v" space="[[currentSpace]]"></sp-space-menu>
       <div class="main wrapper flexitem-fluid">
-        <sp-breadcrumb></sp-breadcrumb>
+        <sp-breadcrumb context="[[context]]"></sp-breadcrumb>
         <section class="space">
           <template is="dom-if" if="[[isSpaceFound]]">
             <h2 class="title"><span>Chez Silverpeas</span></h2>
@@ -31,7 +31,7 @@
     Polymer({
       is : 'sp-space',
 
-      behaviors : [SpaceBehavior],
+      behaviors : [SpaceBehavior, NavigationContextBehavior],
 
       properties : {
 
@@ -59,6 +59,7 @@
       },
 
       _spaceNotFound : function() {
+        this.setContextSpace(null);
         this.currentSpace = null;
         this.msgSpaceId = this.context.spaceId;
         this.$.msgNotFound.show();
@@ -68,6 +69,7 @@
       _currentSpaceChanged : function() {
         this._setIsSpaceFound(this.isValidSpace(this.currentSpace));
         this._loadParentSpaces(this.currentSpace, function() {
+          this.setContextSpace(this.currentSpace);
           this.fire('last-accessed-space', this.currentSpace);
         });
       }

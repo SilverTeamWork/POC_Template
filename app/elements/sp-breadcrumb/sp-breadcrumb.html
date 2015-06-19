@@ -7,10 +7,13 @@
       <div class="content">
         <a href="{{getSpacePageUrl(homeSpace)}}" class="home-breadcrumb">{{homeSpace.label}}</a>
         <template is="dom-repeat" items="{{spaces}}" as="space" restamp="true">
-          <a href="{{getSpacePageUrl(space)}}" class="space-breadcrumb">{{space.label}}</a>
+          <a href="{{getSpacePageUrl(space)}}" class="space-breadcrumb" on-click="_spaceBreadcrumbClicked">{{space.label}}</a>
         </template>
         <template is="dom-if" if="{{isValidApplicationInstance(applicationInstance)}}" restamp="true">
-          <a href="{{getApplicationInstancePageUrl(applicationInstance)}}" class="app-breadcrumb">{{applicationInstance.label}}</a>
+          <a href="{{getApplicationInstancePageUrl(applicationInstance)}}" class="app-breadcrumb" on-click="_appBreadcrumbClicked">{{applicationInstance.label}}</a>
+        </template>
+        <template is="dom-repeat" items="{{pages}}" as="page" restamp="true">
+          <a href="{{page.url}}" class="app-page-breadcrumb">{{page.label}}</a>
         </template>
       </div>
     </nav>
@@ -26,6 +29,10 @@
 
       properties : {
 
+        context : {
+          type : Object
+        },
+
         spaces : {
           type : Array, notify : true, value : function() {
             return [];
@@ -34,24 +41,39 @@
 
         applicationInstance : {
           type : Array, notify : true
+        },
+
+        pages : {
+          type : Array, notify : true, value : function() {
+            return [];
+          }
         }
       },
 
-      ready : function() {
-        // This treatment must be performed one time only
-        document.body.addEventListener('last-accessed-space',
-            this._handleLastAccessedSpace.bind(this));
-        document.body.addEventListener('last-accessed-application-instance',
-            this._handleLastAccessedApplicationInstance.bind(this));
+      observers : ['_spaceChanged(context.space)', '_instanceChanged(context.instance)',
+        '_pageChanged(context.page.label)'],
+
+      _spaceBreadcrumbClicked : function() {
+        this.applicationInstance = null;
+        this.pages = [];
       },
 
-      _handleLastAccessedSpace : function(e) {
-        this._pushSpaces(e.detail);
-        this.applicationInstance = [];
+      _spaceChanged : function() {
+        this._pushSpaces(this.context.space);
+        this._spaceBreadcrumbClicked();
       },
 
-      _handleLastAccessedApplicationInstance : function(e) {
-        this._pushApplicationInstance(e.detail);
+      _appBreadcrumbClicked : function() {
+        this.pages = [];
+      },
+
+      _instanceChanged : function() {
+        this._pushApplicationInstance(this.context.instance);
+        this._appBreadcrumbClicked();
+      },
+
+      _pageChanged : function() {
+        this._pushPage(this.context.page);
       },
 
       _pushSpaces : function(childSpace) {
@@ -99,13 +121,31 @@
       },
 
       _pushApplicationInstance : function(applicationInstance) {
-        if (this.isValidApplicationInstance(applicationInstance)) {
-          this._pushSpaces(applicationInstance.parentSpace);
-          this.applicationInstance = applicationInstance;
-        } else {
-          this._pushSpaces(null);
-          this.applicationInstance = [];
-        }
+        this.async(function() {
+          if (this.isValidApplicationInstance(applicationInstance)) {
+            this._pushSpaces(applicationInstance.parentSpace);
+            this.applicationInstance = applicationInstance;
+          } else {
+            this._pushSpaces(null);
+            this.applicationInstance = [];
+          }
+        });
+      },
+
+      _pushPage : function() {
+        this.async(function() {
+          if (this.context.page) {
+            var pages = [].concat(this.pages);
+            while (pages.length > 0) {
+              var currentPage = pages.pop();
+              if (currentPage.url === this.context.path) {
+                break;
+              }
+            }
+            pages.push({url : this.context.path, label : this.context.page.label});
+            this.pages = pages;
+          }
+        });
       }
     });
   })();

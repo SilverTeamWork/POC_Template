@@ -12,6 +12,27 @@
       },
 
       /**
+       * Gets the page URL of a component represented by the given parameter.
+       * @param component a component object or a componentId
+       * @returns {string} a page URL.
+       */
+      getApplicationInstancePageUrl : function(component) {
+        return "/instances/" + this._getObjectId(component);
+      },
+
+      /**
+       * Gets the page URL of a component page represented by given parameters.
+       * @param component a component object or a componentId
+       * @param resourceType the type of the resource (ex. posts)
+       * @param resourceId the identifier of the resource (ex. 1)
+       * @returns {string} a application internal page URL.
+       */
+      getApplicationInstanceResourcePageUrl : function(component, resourceType, resourceId) {
+        return this.getApplicationInstancePageUrl(component) + '/' +
+            resourceType + '/' + resourceId;
+      },
+
+      /**
        * Indicates if the given content json object represents a space.
        * @param applicationInstance a json object that represents an application instance.
        * @param applicationNameToVerify the application name to verify.

@@ -55,36 +55,7 @@
 
     window.addEventListener('WebComponentsReady', function() {
       var app = document.querySelector('#app');
-      app.context = {
-        ofSpace : function(params) {
-          this.spaceId = params.id;
-          app.notifyPath('context.spaceId', this.spaceId);
-          app.route = 'space-home';
-          return this;
-        },
-
-        ofApplicationInstance : function(params) {
-          this.instanceId = params.id;
-          if (params.resource && params.rid) {
-            this.page = {
-              type : params.resource, id : params.rid
-            }
-          } else {
-            this.page = null;
-          }
-          app.notifyPath('context.instanceId', this.instanceId);
-          app.notifyPath('context.page', this.page);
-          app.route = 'instance-home';
-          return this;
-        },
-
-        reset : function() {
-          this.spaceId = null;
-          this.instanceId = null;
-          this.page = null;
-          return this;
-        }
-      }.reset();
+      app.context = NavigationContextBehavior.init(app);
 
       // apply dynamically some style classes
       (function() {
@@ -106,28 +77,23 @@
       (function() {
         // route to a space home page.
         page('/spaces/:id', function(data) {
-          console.log("space selected: " + data.params.id);
-          app.context.ofSpace(data.params);
+          app.context.ofSpace(data);
         });
 
         // route to an application instance home page.
         page('/instances/:id', function(data) {
-          console.log("instance selected: " + data.params.id);
-          app.context.ofApplicationInstance(data.params);
+          app.context.ofApplicationInstance(data);
         });
 
         // route to an application instance inner page; he control is passed to the home page
         // component of the application instance.
         page('/instances/:id/:resource/:rid', function(data) {
-          console.log('resource selected: ' + data.params.rid + ' in instance ' + data.params.id);
-          app.context.ofApplicationInstance(data.params);
+          app.context.ofApplicationInstance(data);
         });
 
         // route to the home page.
         page('*', function(data) {
-          console.log("Unknown path, redirect to home");
-          app.route = 'home';
-          app.fire('last-accessed-space', SpaceBehavior.properties.homeSpace.value);
+          app.context.ofUnknown(data);
         });
 
         // add #! before urls
