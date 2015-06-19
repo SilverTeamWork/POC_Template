@@ -13,6 +13,7 @@
   <link rel="import" href="elements/elements.html">
   <script type="text/javascript" src="scripts/jquery/jquery-1.10.2.min.js"></script>
   <script type="text/javascript" src="bower_components/i18next/i18next.js"></script>
+  <script type="text/javascript" src="bower_components/ckeditor/ckeditor.js"></script>
   <link rel="import" href="locales/fr/translation.json">
 </head>
 <body unresolved class="page-home w100 flexbox-v">
@@ -52,6 +53,8 @@
 <script>
   (function(document) {
     'use strict';
+
+    var CKEDITOR_BASEPATH = 'bower_components/ckeditor/';
 
     window.addEventListener('WebComponentsReady', function() {
       var app = document.querySelector('#app');

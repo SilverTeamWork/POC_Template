@@ -3,7 +3,9 @@
     <sp-notifier id="postNotFound" type="error">
       Il n'existe pas de billet à cette URI <b><span>{{msgPostUri}}</span></b>.
     </sp-notifier>
-
+    <sp-notifier id="updateSuccess" type="success">
+      Votre billet a bien été mis à jour.
+    </sp-notifier>
     <div class="main wrapper flexitem-fluid application" on-post-selected="_viewPost">
       <iron-pages attr-for-selected="data-page" selected="{{page}}" activate-event="">
         <section data-page="blog-home" class="blog with-aside-app">
@@ -11,6 +13,9 @@
         </section>
         <section data-page="post-info" class="blog with-aside-app">
           <sp-post-view post="[[selectedPost]]"></sp-post-view>
+        </section>
+        <section data-page="post-edition" class="blog with-aside-app">
+          <sp-post-edition post="[[selectedPost]]" updated="{{_updated}}"></sp-post-edition>
         </section>
       </iron-pages>
     </div>
@@ -28,6 +33,10 @@
       properties : {
         context : {
           type : Object
+        },
+        _updated: {
+          type: Boolean,
+          observer: '_onUpdatedChange'
         }
       },
 
@@ -38,7 +47,6 @@
         console.log(this.getPostViewUrl(e.detail.post));
         page(this.getPostViewUrl(e.detail.post), e.detail.post);
       },
-
       _onContextChange : function() {
         if (this.context.instanceId && this.context.instanceId.indexOf('blog') == 0) {
           if (this.context.page) {
@@ -46,7 +54,18 @@
             this.newSilverpeasServiceAjax().onResponse(function(event) {
               this.selectedPost = event.detail.response;
               this.setContextPageInfo({label : this.selectedPost.title});
-              this.page = 'post-info';
+              var _page = 'post-info';
+              for (var i = 0; i < this.context.page.params.length; i++) {
+                if (this.context.page.params[i].key === 'state') {
+                  switch (this.context.page.params[i].value) {
+                    case 'edition':
+                      _page = 'post-edition';
+                      break;
+                  }
+                  break;
+                }
+              }
+              this.page = _page;
             }.bind(this)).onError(function() {
               this.msgPostUri = postUri;
               page(this.getApplicationInstancePageUrl(this.context.instanceId));
@@ -54,8 +73,14 @@
             }.bind(this)).get(postUri);
           } else {
             this.instanceId = this.context.instanceId;
+            this.$$('sp-post-list').reload();
             this.page = 'blog-home';
           }
+        }
+      },
+      _onUpdatedChange: function() {
+        if (this._updated) {
+          this.$.updateSuccess.show();
         }
       }
     });

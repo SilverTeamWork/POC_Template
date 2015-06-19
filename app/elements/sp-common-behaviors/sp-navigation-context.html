@@ -45,8 +45,16 @@
             this.setAndNotify('instanceId', routeData.params.id);
             var page = null;
             if (routeData.params.resource && routeData.params.rid) {
+              var params = [];
+              if (routeData.querystring) {
+                var pairs = routeData.querystring.split('&');
+                for (var i = 0; i < pairs.length; i++) {
+                  var param = pairs[i].split('=');
+                  params.push({key : param[0], value : param[1]});
+                }
+              }
               page = {
-                type : routeData.params.resource, id : routeData.params.rid
+                type : routeData.params.resource, id : routeData.params.rid, params: params
               }
             }
             this.setAndNotify('page', page);

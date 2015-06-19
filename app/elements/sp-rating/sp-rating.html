@@ -120,8 +120,8 @@ user to interact with
 
       ready : function() {
         if (this.appid != undefined) {
-          console.log('sp-rating element ready appid=' + this.appid + " and contributionId = " +
-              this.contributionid);
+//          console.log('sp-rating element ready appid=' + this.appid + " and contributionId = " +
+//              this.contributionid);
           this._retrieveContributionRating();
         }
       },
@@ -137,8 +137,8 @@ user to interact with
       _handleResponse : function(event) {
         // Handle rating ajax response
         this.rating = event.detail.response;
-        console.log('Retrieve rating from ' + this.appid + ' and contribution ' +
-            this.contributionid);
+//        console.log('Retrieve rating from ' + this.appid + ' and contribution ' +
+//            this.contributionid);
         this._render(this.rating);
       },
 

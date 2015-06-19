@@ -1,0 +1,30 @@
+<dom-module id="sp-wysiwyg">
+  <template>
+    <textarea id="wysiwyg"></textarea>
+  </template>
+</dom-module>
+
+<script>
+  (function() {
+    Polymer({
+      is: 'sp-wysiwyg',
+      properties: {
+        text: {
+          type: String,
+          observer: '_onTextChange'
+        }
+      },
+      ready: function() {
+        this.editor = CKEDITOR.replace(this.$.wysiwyg);
+
+      },
+      _onTextChange: function(e) {
+        console.log('CONTENT CHANGE');
+        this.editor.setData(this.text);
+      },
+      getText: function() {
+        return this.editor.getData();
+      }
+    });
+  })();
+</script>

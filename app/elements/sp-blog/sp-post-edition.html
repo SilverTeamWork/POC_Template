@@ -1,0 +1,89 @@
+<dom-module id="sp-post-edition">
+  <style>
+    .title, .buttonBar {
+      margin-top: 15px;
+      margin-bottom: 15px;
+    }
+  </style>
+  <template>
+    <sp-notifier id="updateError" type="error">
+      Une erreur est survenue. Votre billet n'a pas pu être mis à jour.
+    </sp-notifier>
+    <sp-service-ajax
+      id="update"
+      path="[[postUrl]]"
+      method="PUT"
+      content-type="application/json"
+      handle-as="json"
+      body="[[post]]"
+      on-response="_success"
+      on-error="_error">
+    </sp-service-ajax>
+    <form id="edition">
+      <fieldset>
+        <div>
+          <input type="text" class="title w100" value="{{_title::input}}">
+        </div>
+        <sp-wysiwyg text="[[_content]]"></sp-wysiwyg>
+        <div class="buttonBar txtcenter">
+          <div class="buttonSet">
+            <paper-button value="Annuler" dialog-dismiss autofocus on-click="_cancel" class="button btn" type="submit">
+              Annuler
+            </paper-button>
+            <paper-button value="Valider" dialog-confirm on-click="_submit" class="button btn" type="submit">
+              Valider
+            </paper-button>
+          </div>
+        </div>
+      </fieldset>
+    </form>
+  </template>
+</dom-module>
+
+<script>
+  (function() {
+    Polymer({
+      is : 'sp-post-edition',
+      properties : {
+        post : {
+          type : Object,
+          observer : '_onPostChange'
+        },
+        updated: {
+          type: Boolean,
+          value: false,
+          notify: true,
+          readOnly: true
+        },
+        postUrl: {
+          type: String,
+          computed: '_computePostUrl(post)'
+        }
+      },
+      _onPostChange : function() {
+        console.log("edit post " + this.post.id + ": " + this.post.title);
+        this._title = this.post.title;
+        this._content = this.post.content;
+      },
+      _cancel: function() {
+        page('/instances/' + this.post.componentId);
+      },
+      _computePostUrl: function(post) {
+        return 'blogs/' + post.componentId + '/posts/' + post.id;
+      },
+      _submit: function() {
+        this.post.title = this._title;
+        this.post.content = this.$$('sp-wysiwyg').getText();
+        this.$.update.send();
+      },
+      _success: function() {
+        this._setUpdated(true);
+        page('/instances/' + this.post.componentId);
+      },
+      _error: function() {
+        this._setUpdated(false);
+        this.$.updateError.show();
+      }
+    });
+  })();
+</script>

@@ -20,10 +20,11 @@
         return self;
       };
       this.withBody = function(body) {
-        ajax.body = body;
+        ajax.body = __encodeData(body, ajax.contentType);
         return self;
       };
       this.ofContentType = function(contentType) {
+        ajax.body = __encodeData(ajax.body, contentType);
         ajax.contentType = contentType;
         return self;
       };
@@ -68,6 +69,14 @@
         return ajax.generateRequest();
       }
     };
+
+    function __encodeData(data, contentType) {
+      var encoded = data;
+      if (data instanceof Object && contentType.toLowerCase().indexOf('json') > 0) {
+        encoded = JSON.stringify(data);
+      }
+      return encoded;
+    }
 
     function __normalizeUrl(path) {
       var normalizedUrl = path;

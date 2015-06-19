@@ -16,21 +16,6 @@
       left: 50%;
       width: 300px;
     }
-
-    button.ui-button.ui-widget.ui-state-default.ui-corner-all.ui-button-text-only {
-      font-size: 10pt !important;
-    }
-
-    button.ui-button.ui-widget {
-      background-color: #7eb73b;
-      background: #7eb73b linear-gradient(#7eb73b, #6fa800) 0 0 repeat scroll;
-      border: 1px solid #6fa800;
-      border-radius: 0 0 0 0;
-      box-shadow: 0 0 0 #343434;
-      color: #FFF !important;
-      font-family: "Century Gothic", "Trebuchet MS", Arial, sans serif;
-      padding: 2px 5px;
-    }
   </style>
   <template>
     <div class="paper-dialog-div">
@@ -43,9 +28,9 @@
         </div>
         <div id="button-bar" class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
           <div id="button-set" class="ui-dialog-buttonset">
-            <paper-button label="Annuler" dialog-dismiss autofocus class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only">
+            <paper-button label="Annuler" dialog-dismiss autofocus class="button btn">
               <span class="ui-button-text">Annuler</span></paper-button>
-            <paper-button label="Ok" dialog-confirm on-click="_onConfirm" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only">
+            <paper-button label="Ok" dialog-confirm on-click="_onConfirm" class="button btn">
               <span class="ui-button-text">Ok</span></paper-button>
           </div>
         </div>
@@ -55,7 +40,8 @@
                        on-response="_handleResponse">
       </sp-service-ajax>
     </div>
-    <article on-click="_selectPost">
+    <article>
+      <div on-click="_selectPost">
       <header>
         <time class="calendar-presentation" datetime$="[[creationDate.toIso8601]]">
           <span class="day">[[creationDate.day]]</span> <span class="number">[[creationDate.dayOfMonth]]</span>
@@ -70,14 +56,15 @@
         </p>
       </header>
       <sp-post-snippet post="[[post]]"></sp-post-snippet>
+      </div>
       <footer>
-        <p class="publication-detail">
+        <p class="publication-detail" on-click="_selectPost">
           <span class="publication">Publié le <time datetime$="[[publicationDate.toIso8601]]">[[publicationDate.toLocaleDateTime]]</time> <span class="auteur">par <span>[[post.creator]]</span></span></span>
           <span class="sep"> - </span>
           <span class="modification">Modifié le <time datetime$="[[modificationDate.toIso8601]]">[[modificationDate.toLocaleDateTime]]</time> <span class="auteur">par <span>[[post.updater]]</span></span></span>
         </p>
         <div class="operation">
-          <a title="Modifier" href="/blog/"><img title="Modifier" alt="Modifier" src="../../images/update.gif"/></a>
+          <a title="Modifier" href$="[[editionUrl]]"><img title="Modifier" alt="Modifier" src="../../images/update.gif"/></a>
           <button-paper id="postDeletion" label="Supprimer" on-click="_toggleConfirm">
             <img title="Supprimer" alt="Supprimer" src="../../images/delete.gif"/>
           </button-paper>
@@ -142,6 +129,7 @@
         this.publicationDate = this._date(this.post.dateEvent);
         this.modificationDate = this._date(this.post.updateDate);
         this.$.deletion.path = 'blogs/' + this.post.componentId + '/posts/' + this.post.id;
+        this.editionUrl = '/instances/' + this.post.componentId + '/posts/' + this.post.id + '?state=edition';
       },
       _selectPost : function(event) {
         event.preventDefault();
@@ -163,6 +151,8 @@
     });
 
     // a list of posts of a given post
+    // by default, the list of posts is reloaded only if the blog change. To force to reload the
+    // list, then use the reload() function.
     Polymer({
       is : 'sp-post-list',
       properties : {
@@ -184,6 +174,9 @@
       ready: function() {
         console.log("List posts of blog " + this.blog);
         this._scrollHandler = this._onScroll.bind(this);
+      },
+      reload: function() {
+        this._onBlogChange();
       },
       _onBlogChange: function() {
         this._setPosts([]);
