@@ -2,6 +2,31 @@
   <template>
     <div class="content-from-wysiwyg"></div>
   </template>
+
+  <script>
+    // the snippet of a given post
+    Polymer({
+      is: 'sp-post-snippet',
+      properties: {
+        post: {
+          type: Object
+        }
+      },
+      ready: function() {
+        this.$$('.content-from-wysiwyg').innerHTML = this._snippet(this.post);
+      },
+      _snippet : function(post) {
+        var snippet = post.content;
+        var idx = snippet.length;
+        for (var i = snippet.indexOf(". ", 0), p = 0; p < 10 && i != -1; i =
+            snippet.indexOf(". ", idx)) {
+          idx = i + 1;
+        }
+        snippet = snippet.substring(0, idx);
+        return snippet + '<br/><br/>';
+      }
+    });
+  </script>
 </dom-module>
 
 <dom-module id="sp-post-item">
@@ -101,64 +126,7 @@
       </footer>
     </article>
   </template>
-</dom-module>
-
-<dom-module id="sp-post-list">
-  <template>
-    <sp-service-ajax
-        id="postsFetcher"
-        on-response="_handleResponse">
-    </sp-service-ajax>
-    <header>
-      <h2 class="title"><span id="title">{{blog.label}}</span></h2>
-      <aside id="applicationMenu" class="menu actions">
-        <div><a class="button select" href="#">Plus</a>
-          <ul>
-            <template is="dom-if" if="{{hasCreationRightOn(_postList)}}">
-              <li><a href$="[[postCreationUrl]]">Créer un billet</a></li>
-            </template>
-            <li><a href="#">S'abonner</a></li>
-            <li><a href="#">Responsable de l'application</a></li>
-          </ul>
-        </div>
-      </aside>
-      <p id="description">{{blog.description}}</p>
-    </header>
-    <div id="blog-posts-list">
-    <template is="dom-repeat" items="[[posts]]" as="post">
-      <sp-post-item post="[[post]]"></sp-post-item>
-    </template>
-    </div>
-  </template>
-</dom-module>
-
-<script>
-  'use strict';
-
-  (function() {
-    // the snippet of a given post
-    Polymer({
-      is: 'sp-post-snippet',
-      properties: {
-        post: {
-          type: Object
-        }
-      },
-      ready: function() {
-        this.$$('.content-from-wysiwyg').innerHTML = this._snippet(this.post);
-      },
-      _snippet : function(post) {
-        var snippet = post.content;
-        var idx = snippet.length;
-        for (var i = snippet.indexOf(". ", 0), p = 0; p < 10 && i != -1; i =
-            snippet.indexOf(". ", idx)) {
-          idx = i + 1;
-        }
-        snippet = snippet.substring(0, idx);
-        return snippet + '<br/><br/>';
-      }
-    });
-
+  <script>
     // a brief presentation of a given post within a list
     Polymer({
       is : 'sp-post-item',
@@ -236,7 +204,39 @@
         this.$.updateError.show();
       }
     });
+  </script>
 
+</dom-module>
+
+<dom-module id="sp-post-list">
+  <template>
+    <sp-service-ajax
+        id="postsFetcher"
+        on-response="_handleResponse">
+    </sp-service-ajax>
+    <header>
+      <h2 class="title"><span id="title">{{blog.label}}</span></h2>
+      <aside id="applicationMenu" class="menu actions">
+        <div><a class="button select" href="#">Plus</a>
+          <ul>
+            <template is="dom-if" if="{{hasCreationRightOn(_postList)}}">
+              <li><a href$="[[postCreationUrl]]">Créer un billet</a></li>
+            </template>
+            <li><a href="#">S'abonner</a></li>
+            <li><a href="#">Responsable de l'application</a></li>
+          </ul>
+        </div>
+      </aside>
+      <p id="description">{{blog.description}}</p>
+    </header>
+    <div id="blog-posts-list">
+    <template is="dom-repeat" items="[[posts]]" as="post">
+      <sp-post-item post="[[post]]"></sp-post-item>
+    </template>
+    </div>
+  </template>
+
+  <script>
     // a list of posts of a given post
     // by default, the list of posts is reloaded only if the blog change. To force to reload the
     // list, then use the reload() function.
@@ -305,6 +305,5 @@
         }
       }
     });
-
-  })();
-</script>
+  </script>
+</dom-module>

@@ -2,6 +2,21 @@
   <template>
     <div class="content-from-wysiwyg"></div>
   </template>
+
+  <script>
+    Polymer({
+      is: 'sp-post-content',
+      properties: {
+        post: {
+          type: Object,
+          observer: '_onPostChange'
+        }
+      },
+      _onPostChange: function() {
+        this.$$('.content-from-wysiwyg').innerHTML = this.post.content;
+      }
+    });
+  </script>
 </dom-module>
 
 <dom-module id="sp-post-view">
@@ -33,23 +48,8 @@
           <span class="auteur">par <span>[[post.updater]]</span></span></span></p>
     </footer>
   </template>
-</dom-module>
 
-<script>
-  (function() {
-    Polymer({
-      is: 'sp-post-content',
-      properties: {
-        post: {
-          type: Object,
-          observer: '_onPostChange'
-        }
-      },
-      _onPostChange: function() {
-        this.$$('.content-from-wysiwyg').innerHTML = this.post.content;
-      }
-    });
-
+  <script>
     Polymer({
       is: 'sp-post-view',
       behaviors : [DateBehavior, SessionBehavior, SilverpeasUrl, AccessControlBehavior],
@@ -96,5 +96,5 @@
         this.$.nbComment.textContent = this.post.nbComments;
       }
     });
-  })();
-</script>
+  </script>
+</dom-module>
