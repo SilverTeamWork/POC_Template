@@ -89,7 +89,9 @@
       <aside id="applicationMenu" class="menu actions">
         <div><a class="button select" href="#">Plus</a>
           <ul>
-            <li><a href$="[[postCreationUrl]]">Créer un billet</a></li>
+            <template is="dom-if" if="{{hasCreationRightOn(_postList)}}">
+              <li><a href$="[[postCreationUrl]]">Créer un billet</a></li>
+            </template>
             <li><a href="#">S'abonner</a></li>
             <li><a href="#">Responsable de l'application</a></li>
           </ul>
@@ -172,6 +174,7 @@
     // list, then use the reload() function.
     Polymer({
       is : 'sp-post-list',
+      behaviors: [AccessControlBehavior],
       properties : {
         blog: {
           type: Object,
@@ -182,6 +185,9 @@
           value: [],
           notify : true,
           readOnly : true
+        },
+        _postList: {
+          type: Object
         }
       },
       listeners: {
@@ -207,9 +213,9 @@
         this.$.postsFetcher.send();
       },
       _handleResponse : function(event) {
-        var newPosts = event.detail.response.entities;
-        if (newPosts.length > 0) {
-          this._setPosts(this.posts.concat(event.detail.response.entities));
+        this._postList = event.detail.response;
+        if (this._postList.entities.length > 0) {
+          this._setPosts(this.posts.concat(this._postList.entities));
         } else {
           this._fullLoaded = true;
         }
