@@ -9,10 +9,13 @@
     <sp-notifier id="updateError" type="error">
       Une erreur est survenue. Votre billet n'a pas pu être mis à jour.
     </sp-notifier>
+    <sp-notifier id="titleError" type="error">
+      Le titre ne peut être vide.
+    </sp-notifier>
     <sp-service-ajax
-      id="update"
+      id="request"
       path="[[postUrl]]"
-      method="PUT"
+      method="[[editionMethod]]"
       content-type="application/json"
       handle-as="json"
       body="[[post]]"
@@ -58,10 +61,14 @@
         postUrl: {
           type: String,
           computed: '_computePostUrl(post)'
+        },
+        editionMethod: {
+          type: String,
+          computed: '_computeEditionMethod(post)'
         }
       },
       _onPostChange : function() {
-        console.log("edit post " + this.post.id + ": " + this.post.title);
+        console.log((this.post.id === null ? "create new post":"edit post " + this.post.id + ": " + this.post.title));
         this._title = this.post.title;
         this._content = this.post.content;
       },
@@ -69,12 +76,19 @@
         page('/instances/' + this.post.componentId);
       },
       _computePostUrl: function(post) {
-        return 'blogs/' + post.componentId + '/posts/' + post.id;
+        return 'blogs/' + post.componentId + '/posts/' + (this.post.id === null ? '':this.post.id);
+      },
+      _computeEditionMethod: function(post) {
+        return (this.post.id === null ? 'POST':'PUT');
       },
       _submit: function() {
-        this.post.title = this._title;
-        this.post.content = this.$$('sp-wysiwyg').getText();
-        this.$.update.send();
+        if (this._title && this._title.trim().length > 0) {
+          this.post.title = this._title;
+          this.post.content = this.$$('sp-wysiwyg').getText();
+          this.$.request.send();
+        } else {
+          this.$.titleError.show();
+        }
       },
       _success: function() {
         this._setUpdated(true);

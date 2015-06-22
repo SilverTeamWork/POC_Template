@@ -20,11 +20,6 @@
       <div class="main wrapper flexitem-fluid application">
         <section data-field="app-section" class="with-aside-app">
           <sp-breadcrumb context="[[context]]"></sp-breadcrumb>
-          <header>
-            <h2 class="title"><span id="title">{{applicationInstance.label}}</span></h2>
-            <aside id="applicationMenu" class="menu actions"></aside>
-            <p id="description">{{applicationInstance.description}}</p>
-          </header>
 
           <!--<aside class="aside-app" id="aside-app-fixed">-->
           <!--<img src="../../images/calendar-magie-mai.png" alt="calendrier"/>-->
@@ -32,7 +27,7 @@
 
           <div class="application-content">
             <template is="dom-if" if="{{isApplicationNameEqualTo(applicationInstance, 'blog')}}">
-              <sp-blog-home context="[[context]]"></sp-blog-home>
+              <sp-blog-home blog="[[applicationInstance]]" context="[[context]]"></sp-blog-home>
             </template>
           </div>
 

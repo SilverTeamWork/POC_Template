@@ -48,7 +48,7 @@
             <span class="month">[[creationDate.month]]</span> <span class="year">[[creationDate.year]]</span>
           </time>
           <h3>
-            <a class="link-article" href="#" on-click="_selectPost"><span class="editable input text">[[post.title]]</span></a>
+            <a class="link-article" href="#" on-click="_selectPost"><span class="input text">[[post.title]]</span></a>
           </h3>
 
           <p class="post-info">
@@ -84,6 +84,19 @@
         id="postsFetcher"
         on-response="_handleResponse">
     </sp-service-ajax>
+    <header>
+      <h2 class="title"><span id="title">{{blog.label}}</span></h2>
+      <aside id="applicationMenu" class="menu actions">
+        <div><a class="button select" href="#">Plus</a>
+          <ul>
+            <li><a href$="[[postCreationUrl]]">Créer un billet</a></li>
+            <li><a href="#">S'abonner</a></li>
+            <li><a href="#">Responsable de l'application</a></li>
+          </ul>
+        </div>
+      </aside>
+      <p id="description">{{blog.description}}</p>
+    </header>
     <div id="blog-posts-list">
     <template is="dom-repeat" items="[[posts]]" as="post">
       <sp-post-item post="[[post]]"></sp-post-item>
@@ -161,7 +174,7 @@
       is : 'sp-post-list',
       properties : {
         blog: {
-          type: String,
+          type: Object,
           observer: '_onBlogChange'
         },
         posts : {
@@ -176,7 +189,7 @@
         'blog-posts-list.mouseout': '_removeListenerOnScrolling'
       },
       ready: function() {
-        console.log("List posts of blog " + this.blog);
+        console.log("List posts of blog " + this.blog.label);
         this._scrollHandler = this._onScroll.bind(this);
       },
       reload: function() {
@@ -187,8 +200,10 @@
         this._fullLoaded = false;
         this._page = 5;
         if (!this.blog) {return;}
-        console.log('query posts of blog ' + this.blog);
-        this.$.postsFetcher.path = 'blogs/' + this.blog + '/posts?page=1;5';
+        console.log('query posts of blog ' + this.blog.label);
+        this.blog.instanceId = this.blog.name + this.blog.id;
+        this.postCreationUrl = '/instances/' + this.blog.instanceId + '/posts/new';
+        this.$.postsFetcher.path = 'blogs/' + this.blog.instanceId + '/posts?page=1;5';
         this.$.postsFetcher.send();
       },
       _handleResponse : function(event) {
@@ -211,7 +226,7 @@
         if ((scrollMaxY - window.scrollY) <= 100 && !this._fullLoaded) {
           console.log("I'm fetching additional posts dude! ");
           this._page += 1;
-          this.$.postsFetcher.path = 'blogs/' + this.blog + '/posts?page=' + this._page + ';1';
+          this.$.postsFetcher.path = 'blogs/' + this.blog.instanceId + '/posts?page=' + this._page + ';1';
           this.$.postsFetcher.send();
         }
       }
