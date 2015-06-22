@@ -64,7 +64,8 @@
                 updateDate : new Date().getTime(),
                 dateEvent : new Date().getTime(),
                 createDate : new Date().getTime()
-              }
+              };
+              this.setContextPageInfo({label : "Nouveau billet"});
               this.page = 'post-edition';
             } else {
               var postUri = this.getPostUriFromContext(this.context);
