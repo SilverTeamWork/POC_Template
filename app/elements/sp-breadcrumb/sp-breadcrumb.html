@@ -81,12 +81,14 @@
       },
 
       _spaceChanged : function() {
-        $S.queueing(function() {
-          this.applicationInstance = null;
-          this.pages = [];
-          this._pushSpaces(this.context.space);
-          this._backButtonDisplayed = (this.spaces.length > 1);
-        }.bind(this));
+        if(this.context.space) {
+          $S.queueing(function() {
+            this.applicationInstance = null;
+            this.pages = [];
+            this._pushSpaces(this.context.space);
+            this._backButtonDisplayed = (this.spaces.length > 1);
+          }.bind(this));
+        }
       },
 
       _appBreadcrumbClicked : function(e) {
@@ -100,11 +102,13 @@
       },
 
       _instanceChanged : function() {
-        $S.queueing(function() {
-          this.pages = [];
-          this._pushApplicationInstance(this.context.instance);
-          this._backButtonDisplayed = true;
-        }.bind(this));
+        if (this.context.instance) {
+          $S.queueing(function() {
+            this.pages = [];
+            this._pushApplicationInstance(this.context.instance);
+            this._backButtonDisplayed = true;
+          }.bind(this));
+        }
       },
 
       _pageBreadcrumbClicked : function(e) {

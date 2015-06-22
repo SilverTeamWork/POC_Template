@@ -63,7 +63,9 @@
       },
 
       _spaceChanged : function() {
-        this.space = this.context.space;
+        if (this.context.space) {
+          this.space = this.context.space;
+        }
       },
 
       _instanceChanged : function() {
@@ -71,8 +73,6 @@
           this._loadParentSpaces(this.context.instance, function() {
             this.space = this.context.instance.parentSpace;
           }.bind(this));
-        } else if (this.space) {
-          this.space = null;
         }
       },
 

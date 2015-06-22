@@ -2,6 +2,19 @@
   (function() {
     window.ApplicationInstanceBehavior = {
 
+      properties : {
+        homeSpace : {
+          type : Object,
+          notify : true,
+          readOnly : true,
+          value : {"type" : "space", "id" : "-1", "label" : "Home sweet home"}
+        },
+
+        unknownApplicationInstance : {
+          type : Object, notify : true, readOnly : true, value : {}
+        }
+      },
+
       /**
        * Gets the URI to get json data of application instance represented by the given parameter.
        * @param applicationInstance a application instance object or a its identifier.

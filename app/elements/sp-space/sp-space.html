@@ -59,7 +59,7 @@
       },
 
       _spaceNotFound : function() {
-        this.setContextSpace(null);
+        this.setContextSpace(this.unknownSpace);
         this.currentSpace = null;
         this.msgSpaceId = this.context.spaceId;
         this.$.msgNotFound.show();
