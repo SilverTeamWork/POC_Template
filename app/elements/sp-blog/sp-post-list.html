@@ -41,6 +41,18 @@
       left: 50%;
       width: 300px;
     }
+
+    .title-operation {
+      float:right;
+      padding: 5px 10px 10px 10px;
+      display: none;
+    }
+
+    .link-article:hover .title-operation,
+    .link-article:focus .title-operation,
+    .link-article:active .title-operation{
+      display: block;
+    }
   </style>
   <template>
     <div class="paper-dialog-div">
@@ -93,12 +105,17 @@
         </time>
         <h3>
           <template is="dom-if" if="{{!_updateTitle}}">
-            <a class="link-article" href="#" on-click="_updatePostTitle"><span class="input text">[[post.title]]</span>
-              <img class="title-operation" title="Modifier" alt="Modifier" src="../../images/update.gif"/></a>
+            <template is="dom-if" if="{{hasModificationRightsOn(post)}}">
+              <button class="link-article" on-click="_updatePostTitle"><span class="input text">[[post.title]]</span>
+                <img class="title-operation" title="Modifier" alt="Modifier" src="../../images/update.gif"/></button>
+            </template>
+            <template is="dom-if" if="{{!hasModificationRightsOn(post)}}">
+              <button class="link-article"><span class="input text">[[post.title]]</span></button>
+            </template>
           </template>
           <template is="dom-if" if="{{_updateTitle}}">
             <iron-a11y-keys target="{{_updateTitleInput()}}" keys="esc enter" on-keys-pressed="_doUpdatePostTitle"></iron-a11y-keys>
-            <input id="updateTitle" class="input text" style="width: 80%" value="{{_title::input}}" on-mouseover="_focus">
+            <input id="updateTitle" class="input text" style="width: 80%" value="{{_title::input}}" on-mouseover="_focus" on-click="_updatePostTitle">
           </template>
         </h3>
 
@@ -173,8 +190,10 @@
       _updatePostTitle: function(event) {
         event.preventDefault();
         event.stopPropagation();
-        this._title = this.post.title;
-        this._updateTitle = true;
+        if (!this._updateTitle) {
+          this._title = this.post.title;
+          this._updateTitle = true;
+        }
       },
       _focus: function() {
         this._updateTitleInput().focus();
