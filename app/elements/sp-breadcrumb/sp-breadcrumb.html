@@ -2,6 +2,11 @@
 <link rel="import" href="../sp-application/sp-app-libs.html">
 
 <dom-module id="sp-breadcrumb">
+  <style>
+    :host .content {
+      display: inline-flex;
+    }
+  </style>
   <template>
     <nav class="breadcrumb">
       <div class="content">
@@ -12,7 +17,7 @@
         <template is="dom-if" if="[[isValidApplicationInstance(applicationInstance)]]" restamp="true">
           <a href="[[getApplicationInstancePageUrl(applicationInstance)]]" class="app-breadcrumb" on-click="_appBreadcrumbClicked">[[applicationInstance.label]]</a>
         </template>
-        <template is="dom-repeat" items="[[pages]]" as="page" restamp="true">
+        <template is="dom-if" if="[[page]]" restamp="true">
           <a href="[[page.url]]" class="app-page-breadcrumb" on-click="_pageBreadcrumbClicked">[[page.label]]</a>
         </template>
       </div>
@@ -40,19 +45,17 @@
         },
 
         spaces : {
-          type : Array, notify : true, value : function() {
+          type : Array, value : function() {
             return [];
           }
         },
 
         applicationInstance : {
-          type : Object, notify : true
+          type : Object
         },
 
-        pages : {
-          type : Array, notify : true, value : function() {
-            return [];
-          }
+        page : {
+          type : Object
         },
 
         _backButtonDisplayed : false
@@ -65,26 +68,24 @@
         e.preventDefault();
         e.stopPropagation();
 
-        $S.queueing(function() {
-          var index = e.model.__key__;
-          var sliceIndex = -1;
-          if (this.isValidApplicationInstance(this.applicationInstance)) {
-            sliceIndex = index + 1;
-          } else if ((index + 1) < this.spaces.length) {
-            sliceIndex = index;
-          }
+        var index = e.model.__key__;
+        var sliceIndex = -1;
+        if (this.isValidApplicationInstance(this.applicationInstance)) {
+          sliceIndex = index + 1;
+        } else if ((index + 1) < this.spaces.length) {
+          sliceIndex = index;
+        }
 
-          if (sliceIndex > -1) {
-            page(this.getSpacePageUrl(this.spaces[index]));
-          }
-        }.bind(this));
+        if (sliceIndex > -1) {
+          page(this.getSpacePageUrl(this.spaces[index]));
+        }
       },
 
       _spaceChanged : function() {
-        if(this.context.space) {
-          $S.queueing(function() {
+        if (this.context.space) {
+          this.async(function() {
             this.applicationInstance = null;
-            this.pages = [];
+            this.page = null;
             this._pushSpaces(this.context.space);
             this._backButtonDisplayed = (this.spaces.length > 1);
           }.bind(this));
@@ -94,17 +95,15 @@
       _appBreadcrumbClicked : function(e) {
         e.preventDefault();
         e.stopPropagation();
-        $S.queueing(function() {
-          if (this.pages.length) {
-            page(this.getApplicationInstancePageUrl(this.applicationInstance));
-          }
-        }.bind(this));
+        if (this.pages.length) {
+          page(this.getApplicationInstancePageUrl(this.applicationInstance));
+        }
       },
 
       _instanceChanged : function() {
         if (this.context.instance) {
-          $S.queueing(function() {
-            this.pages = [];
+          this.async(function() {
+            this.page = null;
             this._pushApplicationInstance(this.context.instance);
             this._backButtonDisplayed = true;
           }.bind(this));
@@ -114,17 +113,11 @@
       _pageBreadcrumbClicked : function(e) {
         e.preventDefault();
         e.stopPropagation();
-        $S.queueing(function() {
-          var index = e.model.__key__;
-          if ((index + 1) < this.pages.length) {
-            page(this.pages[index].url);
-          }
-        }.bind(this));
       },
 
       _pageChanged : function() {
-        $S.queueing(function() {
-          this._pushPage(this.context.page);
+        this.async(function() {
+          this._pushPage(this.context.path, this.context.page);
           this._backButtonDisplayed = true;
         }.bind(this));
       },
@@ -181,35 +174,25 @@
         }
       },
 
-      _pushPage : function() {
-        if (this.context.page) {
-          var pages = [].concat(this.pages);
-          while (pages.length > 0) {
-            var currentPage = pages.pop();
-            if (currentPage.url === this.context.path) {
-              break;
-            }
+      _pushPage : function(path, page) {
+        if (page) {
+          if (page.label) {
+            this.page = {url : path, label : page.label};
           }
-          pages.push({url : this.context.path, label : this.context.page.label});
-          this.pages = pages;
+        } else {
+          this.page = null;
         }
       },
 
       _backButtonClicked : function(e) {
         e.preventDefault();
         e.stopPropagation();
-        var length = this.pages.length;
-        if (length) {
-          this.pages = [];
-          if (length > 1) {
-            page(this.pages[length - 2].url);
-          } else {
-            page(this.getApplicationInstancePageUrl(this.applicationInstance));
-          }
+        if (this.page) {
+          page(this.getApplicationInstancePageUrl(this.applicationInstance));
           return;
         }
 
-        length = this.spaces.length;
+        var length = this.spaces.length;
         if (this.applicationInstance) {
           page(this.getSpacePageUrl(this.spaces[length - 1]));
         } else if (length > 1) {
