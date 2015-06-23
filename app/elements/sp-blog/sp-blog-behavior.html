@@ -32,7 +32,7 @@
        */
       _getObjectId : function(object) {
         var objectId = object;
-        if (typeof object === 'object' && object != null) {
+        if (typeof object === 'object' && object !== null) {
           objectId = object.id;
         }
         return objectId;
@@ -45,7 +45,7 @@
        * @private
        */
       _getInstanceId : function(object) {
-        if (typeof object === 'object' && object != null) {
+        if (typeof object === 'object' && object !== null) {
           return object.componentId ? object.componentId : '';
         }
         return '';

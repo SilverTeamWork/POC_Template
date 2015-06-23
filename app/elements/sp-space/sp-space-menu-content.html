@@ -37,7 +37,7 @@
           type : Object, notify : true, value : function() {
             return {
               label : 'unknown'
-            }
+            };
           }, observer : '_spaceChanged'
         },
 
@@ -47,7 +47,7 @@
       },
 
       _spaceChanged : function() {
-        if (this.space != null && typeof this.space.id === 'string' && this.space.id != '-1') {
+        if (this.space && typeof this.space.id === 'string' && this.space.id != '-1') {
           this.$.requester.send();
         } else {
           this.spaceContent = [];

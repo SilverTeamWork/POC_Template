@@ -51,7 +51,7 @@
         page(this.getPostViewUrl(e.detail.post), e.detail.post);
       },
       _onContextChange : function() {
-        if (this.context.instanceId && this.context.instanceId.indexOf('blog') == 0) {
+        if (this.context.instanceId && this.context.instanceId.indexOf('blog') === 0) {
           if (this.context.page) {
             if (this.context.page.id === 'new') {
               this.selectedPost = {

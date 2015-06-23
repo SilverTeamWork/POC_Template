@@ -5,7 +5,7 @@
       'Octobre', 'Septembre', 'Novembre', 'Décembre'];
     window.DateBehavior = {
       _date: function(milliseconds) {
-        var jsDate = new Date(milliseconds)
+        var jsDate = new Date(milliseconds);
         var dayOfMonth = jsDate.getDate();
         var monthOfYear = jsDate.getMonth() + 1;
         return this._commonDateProcessing(jsDate);

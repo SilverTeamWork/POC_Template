@@ -30,10 +30,10 @@
         }
       },
       _computeFullNameOf: function(user) {
-        return (user == null ? '':user.firstName + ' ' + user.lastName);
+        return (user === null ? '':user.firstName + ' ' + user.lastName);
       },
       _computeAvatarUrlOf: function(user) {
-        return (user == null ? '': this.silverpeasHost + user.avatar);
+        return (user === null ? '': this.silverpeasHost + user.avatar);
       },
       disconnect: function() {
         console.log('disconnection asked by ' + this._fullName);

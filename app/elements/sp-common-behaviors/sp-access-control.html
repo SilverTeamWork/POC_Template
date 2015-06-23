@@ -27,7 +27,7 @@
           right = false;
           for(var i = 0; i < resource.links.length && !right; i++) {
             if (resource.links[i].method === 'DELETE') {
-              right = true
+              right = true;
             }
           }
         }
@@ -39,7 +39,7 @@
           right = false;
           for(var i = 0; i < resource.links.length && !right; i++) {
             if (resource.links[i].method === 'POST') {
-              right = true
+              right = true;
             }
           }
         }
@@ -51,7 +51,7 @@
           right = false;
           for(var i = 0; i < resource.links.length && !right; i++) {
             if (resource.links[i].method === 'PUT') {
-              right = true
+              right = true;
             }
           }
         }
@@ -62,6 +62,6 @@
           action.call();
         }
       }
-    }
+    };
   })();
 </script>

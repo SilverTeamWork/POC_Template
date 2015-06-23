@@ -68,7 +68,7 @@
               }
               page = {
                 type : routeData.params.resource, id : routeData.params.rid, params : params
-              }
+              };
             }
             this.setAndNotify('page', page);
             host.route = 'instance-home';
@@ -91,7 +91,7 @@
            * @returns {NavigationContextBehavior} the context itself.
            */
           ofUnknown : function(routeData) {
-            if (routeData.canonicalPath.indexOf('/#!') == 0) {
+            if (routeData.canonicalPath.indexOf('/#!') === 0) {
               var indexOfBadPath = routeData.path.indexOf('//');
               if (0 <= indexOfBadPath && indexOfBadPath <= 1) {
                 var path = routeData.path.replace(/^\/{2,}/gi, '/');

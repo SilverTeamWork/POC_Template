@@ -187,7 +187,7 @@ user to interact with
       },
       _handleDeleteResponse : function(event) {
         if (event.detail.succeeded) {
-          this.fire("comment-removed", event.detail)
+          this.fire("comment-removed", event.detail);
           this.remove();
         }
       },
@@ -245,7 +245,7 @@ user to interact with
 
       },
       ready : function() {
-        if (this.appid != undefined) {
+        if (this.appid !== undefined) {
           console.log('sp-comments element ready: appid=' + this.appid + ", contributionId = " +
               this.contributionid);
         }

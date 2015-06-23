@@ -67,7 +67,7 @@
         }
         ajax.url = __normalizeUrl(path);
         return ajax.generateRequest();
-      }
+      };
     };
 
     function __encodeData(data, contentType) {
@@ -82,7 +82,7 @@
       var normalizedUrl = path;
       if (path.indexOf("http") < 0) {
         normalizedUrl = SilverpeasUrl.silverpeasServiceUrl + '/' + normalizedUrl;
-        normalizedUrl = normalizedUrl.replace(/[^:]\/{2,}/gi, '/')
+        normalizedUrl = normalizedUrl.replace(/[^:]\/{2,}/gi, '/');
       }
       return normalizedUrl;
     }

@@ -4,7 +4,6 @@
 
 <script>
   (function() {
-    'use strict';
 
     Polymer({
       is : 'sp-service-ajax',
@@ -109,7 +108,7 @@
       observers : ['_requestOptionsChanged(path, method, params, auto)'],
 
       send : function() {
-        if (typeof this.path !== 'string' || this.path.length == 0) {
+        if (typeof this.path !== 'string' || this.path.length === 0) {
           return;
         }
         var self = this;
@@ -123,11 +122,11 @@
         // Wiring events
         ajax.onResponse(function(e) {
           self._setLastResponse(e.detail.response);
-          self.fire('response', e.detail)
+          self.fire('response', e.detail);
         });
         ajax.onError(function(e) {
           self._setLastError(e.detail.error);
-          self.fire('error', e.detail)
+          self.fire('error', e.detail);
         });
 
         return ajax.send(this.path, this.method);

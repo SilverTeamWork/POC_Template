@@ -51,7 +51,7 @@
        * @private
        */
       _loadParentSpaces : function(spaceOrInstance, callback) {
-        if (spaceOrInstance && spaceOrInstance != null) {
+        if (spaceOrInstance && spaceOrInstance !== null) {
           if (!spaceOrInstance.parentURI) {
             callback.call(this, spaceOrInstance);
           } else {
@@ -99,7 +99,7 @@
        * @returns {boolean} true if it represents a space, false otherwise.
        */
       isObjectTypeOfSpace : function(object) {
-        return object != null && (typeof object === 'object') && object.type === 'space';
+        return object !== null && (typeof object === 'object') && object.type === 'space';
       },
 
       /**
@@ -139,7 +139,7 @@
        */
       _getObjectId : function(object) {
         var objectId = object;
-        if (typeof object === 'object' && object != null) {
+        if (typeof object === 'object' && object !== null) {
           objectId = object.id;
           if (object.type === 'component') {
             objectId = object.name + objectId;

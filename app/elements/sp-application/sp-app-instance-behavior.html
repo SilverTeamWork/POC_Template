@@ -69,7 +69,7 @@
        * @returns {boolean} true if it represents a space, false otherwise.
        */
       isObjectTypeOfComponent : function(content) {
-        return content != null && (typeof content === 'object') && content.type === 'component';
+        return content !== null && (typeof content === 'object') && content.type === 'component';
       },
 
       /**
@@ -87,7 +87,7 @@
        */
       _getObjectId : function(object) {
         var objectId = object;
-        if (typeof object === 'object' && object != null) {
+        if (typeof object === 'object' && object !== null) {
           objectId = object.id;
           if (object.type === 'component') {
             objectId = object.name + objectId;

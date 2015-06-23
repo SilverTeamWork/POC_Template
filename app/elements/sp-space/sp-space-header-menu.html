@@ -63,7 +63,7 @@
       },
 
       _lastAccessedAreaChanged : function(area) {
-        if (area && area != null) {
+        if (area && area !== null) {
           this._getRootSpace(area, function(rootSpace) {
             this._markAsSelected(rootSpace);
           }.bind(this));
@@ -81,7 +81,7 @@
           });
 
           // Guess the new one
-          if (lastAccessedSpace != null && this.homeSpace.id === lastAccessedSpace.id) {
+          if (lastAccessedSpace !== null && this.homeSpace.id === lastAccessedSpace.id) {
 
             // Home space
             this.$.spaceHomepage.parentNode.classList.add('selected');
