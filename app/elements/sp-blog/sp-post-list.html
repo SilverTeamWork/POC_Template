@@ -289,7 +289,6 @@
         'blog-posts-list.mouseout': '_removeListenerOnScrolling'
       },
       ready: function() {
-        console.log("List posts of blog " + this.blog.label);
         this._scrollHandler = this._onScroll.bind(this);
         this._dateSelected = false;
       },
@@ -315,7 +314,7 @@
         this._fullLoaded = false;
         this._page = 5;
         if (!this.blog) {return;}
-        console.log('query posts of blog ' + this.blog.label);
+        console.log("List posts of blog " + this.blog.label);
         this.blog.instanceId = this.blog.name + this.blog.id;
         this.postCreationUrl = '/instances/' + this.blog.instanceId + '/posts/new';
         this.$.postsFetcher.path = 'blogs/' + this.blog.instanceId + '/posts?page=1;5';

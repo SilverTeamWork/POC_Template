@@ -7,7 +7,7 @@
     </sp-notifier>
 
     <sp-service-ajax id="requester"
-                     path="[[getSpaceUri(context.spaceId)]]"
+                     path="[[getSpaceUri(context.space.id)]]"
                      last-response="{{currentSpace}}"
                      on-error="_spaceNotFound"></sp-service-ajax>
     <div class="main-container flexitem-fluid flexbox-h">
@@ -48,11 +48,11 @@
         }
       },
 
-      observers : ['_spaceIdChanged(context.spaceId)'],
+      observers : ['_spaceIdChanged(context.space.id)'],
 
       _spaceIdChanged : function() {
         this.$.msgNotFound.hide();
-        if (this.isValidSpaceId(this.context.spaceId)) {
+        if (this.isValidSpaceId(this.context.space.id)) {
           this.$.requester.send();
           console.log("Loading data about the current valid space...");
         }
@@ -61,7 +61,7 @@
       _spaceNotFound : function() {
         this.setContextSpace(this.unknownSpace);
         this.currentSpace = null;
-        this.msgSpaceId = this.context.spaceId;
+        this.msgSpaceId = this.context.space.id;
         this.$.msgNotFound.show();
         this._currentSpaceChanged();
       },

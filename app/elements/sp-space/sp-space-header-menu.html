@@ -41,7 +41,7 @@
         }
       },
 
-      observers : ['_spaceChanged(context.space)', '_applicationInstanceChanged(context.instance)'],
+      observers : ['_spaceChanged(context.space.model)', '_applicationInstanceChanged(context.instance.model)'],
 
       created : function() {
         this._whenReady_ = new Promise(function(resolve, reject) {
@@ -55,11 +55,11 @@
       },
 
       _spaceChanged : function() {
-        this._lastAccessedAreaChanged(this.context.space);
+        this._lastAccessedAreaChanged(this.context.space.model);
       },
 
       _applicationInstanceChanged : function() {
-        this._lastAccessedAreaChanged(this.context.instance);
+        this._lastAccessedAreaChanged(this.context.instance.model);
       },
 
       _lastAccessedAreaChanged : function(area) {

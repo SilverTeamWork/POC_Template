@@ -29,9 +29,6 @@
         ApplicationInstanceBehavior, BlogBehavior],
 
       properties : {
-        blog: {
-          type: Object
-        },
 
         context : {
           type : Object
@@ -43,7 +40,7 @@
         }
       },
 
-      observers : ['_onContextChange(context.instance, context.page)'],
+      observers : ['_onContextChange(context.instance.model, context.instance.page)'],
 
       _viewPost : function(e) {
         e.preventDefault();
@@ -51,12 +48,12 @@
         page(this.getPostViewUrl(e.detail.post), e.detail.post);
       },
       _onContextChange : function() {
-        if (this.context.instanceId && this.context.instanceId.indexOf('blog') === 0) {
-          if (this.context.page) {
-            if (this.context.page.id === 'new') {
+        if (this.context.instance.model && this.context.instance.id.indexOf('blog') === 0) {
+          if (this.context.instance.page) {
+            if (this.context.instance.page.id === 'new') {
               this.selectedPost = {
                 id : null,
-                componentId : this.context.instanceId,
+                componentId : this.context.instance.id,
                 title : '',
                 content : '',
                 updateDate : new Date().getTime(),
@@ -71,9 +68,9 @@
                 this.selectedPost = event.detail.response;
                 this.setContextPageInfo({label : this.selectedPost.title});
                 var _page = 'post-info';
-                for (var i = 0; i < this.context.page.params.length; i++) {
-                  if (this.context.page.params[i].key === 'state') {
-                    switch (this.context.page.params[i].value) {
+                for (var i = 0; i < this.context.instance.page.params.length; i++) {
+                  if (this.context.instance.page.params[i].key === 'state') {
+                    switch (this.context.instance.page.params[i].value) {
                       case 'edition':
                         _page = 'post-edition';
                         break;
@@ -84,13 +81,14 @@
                 this.page = _page;
               }.bind(this)).onError(function() {
                 this.msgPostUri = postUri;
-                page(this.getApplicationInstancePageUrl(this.context.instanceId));
+                page(this.getApplicationInstancePageUrl(this.context.instance.id));
                 this.$.postNotFound.show();
               }.bind(this)).get(postUri);
             }
           } else {
-            this.instanceId = this.context.instanceId;
-            this.$$('sp-post-list').reload();
+//            this.instanceId = this.context.instance.id;
+//            this.$$('sp-post-list').reload();
+            this.blog = this.context.instance.model;
             this.page = 'blog-home';
           }
         }

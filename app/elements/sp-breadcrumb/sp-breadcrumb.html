@@ -61,8 +61,8 @@
         _backButtonDisplayed : false
       },
 
-      observers : ['_spaceChanged(context.space)', '_instanceChanged(context.instance)',
-        '_pageChanged(context.page.label)'],
+      observers : ['_spaceChanged(context.space.model)', '_instanceChanged(context.instance.model)',
+        '_pageChanged(context.instance.page.label)'],
 
       _spaceBreadcrumbClicked : function(e) {
         e.preventDefault();
@@ -82,11 +82,11 @@
       },
 
       _spaceChanged : function() {
-        if (this.context.space) {
+        if (this.context.space.model) {
           this.async(function() {
             this.applicationInstance = null;
             this.page = null;
-            this._pushSpaces(this.context.space);
+            this._pushSpaces(this.context.space.model);
             this._backButtonDisplayed = (this.spaces.length > 1);
           }.bind(this));
         }
@@ -95,16 +95,16 @@
       _appBreadcrumbClicked : function(e) {
         e.preventDefault();
         e.stopPropagation();
-        if (this.pages.length) {
+        if (this.page) {
           page(this.getApplicationInstancePageUrl(this.applicationInstance));
         }
       },
 
       _instanceChanged : function() {
-        if (this.context.instance) {
+        if (this.context.instance.model) {
           this.async(function() {
             this.page = null;
-            this._pushApplicationInstance(this.context.instance);
+            this._pushApplicationInstance(this.context.instance.model);
             this._backButtonDisplayed = true;
           }.bind(this));
         }
@@ -117,7 +117,7 @@
 
       _pageChanged : function() {
         this.async(function() {
-          this._pushPage(this.context.path, this.context.page);
+          this._pushPage(this.context.path, this.context.instance.page);
           this._backButtonDisplayed = true;
         }.bind(this));
       },

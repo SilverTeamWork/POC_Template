@@ -11,7 +11,7 @@
     </sp-notifier>
 
     <sp-service-ajax id="applicationInstanceRequester"
-                     path="[[getApplicationInstanceUri(context.instanceId)]]"
+                     path="[[getApplicationInstanceUri(context.instance.id)]]"
                      last-response="{{applicationInstance}}"
                      on-error="_applicationInstanceNotFound"></sp-service-ajax>
 
@@ -27,7 +27,7 @@
 
           <div class="application-content">
             <template is="dom-if" if="{{isApplicationNameEqualTo(applicationInstance, 'blog')}}">
-              <sp-blog-home blog="[[applicationInstance]]" context="[[context]]"></sp-blog-home>
+              <sp-blog-home context="[[context]]"></sp-blog-home>
             </template>
           </div>
 
@@ -62,7 +62,7 @@
         }
       },
 
-      observers : ['_instanceIdChanged(context.instanceId)'],
+      observers : ['_instanceIdChanged(context.instance.id)'],
 
       created : function() {
         this.handledApplications = [];
@@ -73,7 +73,7 @@
       _instanceIdChanged : function() {
         this.$.msgNotHandled.hide();
         this.$.msgNotFound.hide();
-        if (this.isValidApplicationInstanceId(this.context.instanceId)) {
+        if (this.isValidApplicationInstanceId(this.context.instance.id)) {
           this.$.applicationInstanceRequester.send();
           console.log("Loading data about the current valid application...");
         }
@@ -81,7 +81,7 @@
 
       _applicationInstanceNotFound : function() {
         this.applicationInstance = null;
-        this.msgInstanceId = this.context.instanceId;
+        this.msgInstanceId = this.context.instance.id;
         this.$.msgNotFound.show();
         this._applicationInstanceChanged();
       },

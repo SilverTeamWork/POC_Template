@@ -7,14 +7,11 @@
 
     var __clearSpaceContext = function(context, space) {
       var spaceValue = (space) ? space : null;
-      context.setAndNotify('spaceId', null);
-      context.setAndNotify('space', spaceValue);
+      context.setAndNotify('space', {model : spaceValue});
     };
 
-
     var __clearApplicationContext = function(context) {
-      context.setAndNotify('instanceId', null);
-      context.setAndNotify('instance', null);
+      context.setAndNotify('instance', {});
     };
 
     var __context;
@@ -32,7 +29,7 @@
           ofSpace : function(routeData) {
             __handleCommonRouteData(this, routeData);
             __clearApplicationContext(this);
-            this.setAndNotify('spaceId', routeData.params.id);
+            this.setAndNotify('space.id', routeData.params.id);
             host.route = 'space-home';
             return this;
           },
@@ -43,7 +40,7 @@
            * @returns {NavigationContextBehavior} the context itself.
            */
           setCurrentSpace : function(space) {
-            this.setAndNotify('space', space);
+            this.setAndNotify('space.model', space);
             return this;
           },
 
@@ -55,8 +52,9 @@
           ofApplicationInstance : function(routeData) {
             __clearSpaceContext(this);
             __handleCommonRouteData(this, routeData);
-            this.setAndNotify('instanceId', routeData.params.id);
-            var page = null;
+            var instance = {
+              id : routeData.params.id, model : null, page : null
+            };
             if (routeData.params.resource && routeData.params.rid) {
               var params = [];
               if (routeData.querystring) {
@@ -66,11 +64,11 @@
                   params.push({key : param[0], value : param[1]});
                 }
               }
-              page = {
+              instance.page = {
                 type : routeData.params.resource, id : routeData.params.rid, params : params
               };
             }
-            this.setAndNotify('page', page);
+            this.setAndNotify('instance', instance);
             host.route = 'instance-home';
             return this;
           },
@@ -81,7 +79,7 @@
            * @returns {NavigationContextBehavior} the context itself.
            */
           setCurrentApplicationInstance : function(instance) {
-            this.setAndNotify('instance', instance);
+            this.setAndNotify('instance.model', instance);
             return this;
           },
 
@@ -114,7 +112,7 @@
            */
           setPageInfo : function(pageInfo) {
             var _pageInfo = $S.extend({label : ''}, pageInfo);
-            this.setAndNotify('page.label', _pageInfo.label);
+            this.setAndNotify('instance.page.label', _pageInfo.label);
             return this;
           },
 
@@ -144,11 +142,8 @@
 
           reset : function() {
             this.path = null;
-            this.spaceId = null;
-            this.space = null;
-            this.instanceId = null;
-            this.instance = null;
-            this.page = null;
+            this.space = {};
+            this.instance = {};
             return this;
           }
         }.reset();

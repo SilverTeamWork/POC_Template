@@ -39,7 +39,7 @@
         }
       },
 
-      observers : ['_spaceChanged(context.space)', '_instanceChanged(context.instance)',
+      observers : ['_spaceChanged(context.space.model)', '_instanceChanged(context.instance.model)',
         '_renderDeployment(spaceMenuContext.deployed)'],
 
       ready : function() {
@@ -63,15 +63,15 @@
       },
 
       _spaceChanged : function() {
-        if (this.context.space) {
-          this.space = this.context.space;
+        if (this.context.space.model) {
+          this.space = this.context.space.model;
         }
       },
 
       _instanceChanged : function() {
-        if (this.context.instance) {
-          this._loadParentSpaces(this.context.instance, function() {
-            this.space = this.context.instance.parentSpace;
+        if (this.context.instance.model) {
+          this._loadParentSpaces(this.context.instance.model, function() {
+            this.space = this.context.instance.model.parentSpace;
           }.bind(this));
         }
       },
