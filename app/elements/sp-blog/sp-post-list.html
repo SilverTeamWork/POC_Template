@@ -98,10 +98,10 @@
     </div>
     <article on-click="_selectPost">
       <header>
-        <time class="calendar-presentation" datetime$="[[creationDate.toIso8601]]">
-          <span class="day">[[creationDate.day]]</span> <span class="number">[[creationDate.dayOfMonth]]</span>
-          <span class="month">[[creationDate.month]]</span>
-          <span class="year">[[creationDate.year]]</span>
+        <time class="calendar-presentation" datetime$="[[publicationDate.toIso8601]]">
+          <span class="day">[[publicationDate.day]]</span> <span class="number">[[publicationDate.dayOfMonth]]</span>
+          <span class="month">[[publicationDate.month]]</span>
+          <span class="year">[[publicationDate.year]]</span>
         </time>
         <h3>
           <template is="dom-if" if="{{!_updateTitle}}">
@@ -150,14 +150,15 @@
       behaviors : [DateBehavior, AccessControlBehavior],
       properties : {
         post : {
-          type : Object
+          type : Object,
+          observer: '_onPostChange'
         },
         postUrl: {
           type: String,
           computed: '_computePostUrl(post)'
         }
       },
-      ready: function() {
+      _onPostChange: function() {
         this.creationDate = this._date(this.post.createDate);
         this.publicationDate = this._date(this.post.dateEvent);
         this.modificationDate = this._date(this.post.updateDate);
@@ -233,6 +234,9 @@
         id="postsFetcher"
         on-response="_handleResponse">
     </sp-service-ajax>
+    <sp-notifier id="error" type="error">
+      Une erreur est survenue lors de la récupération des billets pour le calendrier.
+    </sp-notifier>
     <header>
       <h2 class="title"><span id="title">{{blog.label}}</span></h2>
       <aside id="applicationMenu" class="menu actions">
@@ -248,8 +252,11 @@
       </aside>
       <p id="description">{{blog.description}}</p>
     </header>
+    <aside class="aside-app" id="aside-app-fixed">
+      <sp-calendar events="[[_events]]" on-date-selected="_loadPostsAtGivenDate"></sp-calendar>
+    </aside>
     <div id="blog-posts-list">
-    <template is="dom-repeat" items="[[posts]]" as="post">
+    <template is="dom-repeat" items="{{posts}}" as="post">
       <sp-post-item post="[[post]]"></sp-post-item>
     </template>
     </div>
@@ -261,7 +268,7 @@
     // list, then use the reload() function.
     Polymer({
       is : 'sp-post-list',
-      behaviors: [AccessControlBehavior],
+      behaviors: [AccessControlBehavior, SilverpeasServiceAjaxBehavior],
       properties : {
         blog: {
           type: Object,
@@ -284,11 +291,26 @@
       ready: function() {
         console.log("List posts of blog " + this.blog.label);
         this._scrollHandler = this._onScroll.bind(this);
+        this._dateSelected = false;
       },
       reload: function() {
         this._onBlogChange();
       },
+      _loadAllEvents: function() {
+        SilverpeasServiceAjaxBehavior.newSilverpeasServiceAjax().onResponse(function(e) {
+          this._allPosts = e.detail.response.entities;
+          var events = [];
+          for (var i = 0; i < e.detail.response.entities.length; i++) {
+            events.push(new Date(e.detail.response.entities[i].dateEvent));
+          }
+          this._events = events;
+        }.bind(this)).onError(function(e) {
+            console.log(error);
+            this.$.error.show();
+        }.bind(this)).get('blogs/' + this.blog.instanceId + '/posts');
+      },
       _onBlogChange: function() {
+        this._dateSelected = false;
         this._setPosts([]);
         this._fullLoaded = false;
         this._page = 5;
@@ -298,6 +320,7 @@
         this.postCreationUrl = '/instances/' + this.blog.instanceId + '/posts/new';
         this.$.postsFetcher.path = 'blogs/' + this.blog.instanceId + '/posts?page=1;5';
         this.$.postsFetcher.send();
+        this._loadAllEvents();
       },
       _handleResponse : function(event) {
         this._postList = event.detail.response;
@@ -316,12 +339,26 @@
       _onScroll: function() {
         var scrollMaxY = (window.scrollMaxY ? window.scrollMaxY :
           document.documentElement.scrollHeight - document.documentElement.clientHeight + 1);
-        if ((scrollMaxY - window.scrollY) <= 100 && !this._fullLoaded) {
+        if ((scrollMaxY - window.scrollY) <= 100 && !this._fullLoaded && !this._dateSelected) {
           console.log("I'm fetching additional posts dude! ");
           this._page += 1;
           this.$.postsFetcher.path = 'blogs/' + this.blog.instanceId + '/posts?page=' + this._page + ';1';
           this.$.postsFetcher.send();
         }
+      },
+      _loadPostsAtGivenDate: function(event) {
+        this._dateSelected = true;
+        var date = event.detail;
+        var _posts = [];
+        for (var i = 0; i < this._allPosts.length; i++) {
+          var currentDate = new Date(this._allPosts[i].dateEvent);
+          if (currentDate.getMonth() === date.getMonth() && currentDate.getYear() === date.getYear()
+            && currentDate.getDate() === date.getDate()) {
+            _posts.push(this._allPosts[i]);
+          }
+        }
+        console.log("posts to render: " + _posts.length);
+        this._setPosts(_posts);
       }
     });
   </script>

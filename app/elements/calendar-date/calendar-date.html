@@ -1,10 +1,279 @@
-<!DOCTYPE html>
-<html>
-<head lang="en">
-  <meta charset="UTF-8">
-  <title></title>
-</head>
-<body>
+<script src="../../bower_components/moment/min/moment.min.js"></script>
+<script src="../../bower_components/moment/locale/fr.js"></script>
 
-</body>
-</html>
+<dom-module id="sp-calendar">
+  <style>
+    :host {
+      display: inline-block;
+      position: relative;
+      height: 250px;
+      width: 300px;
+    }
+
+    #container {
+      height: 100%;
+      width: 100%;
+      overflow-x: hidden;
+      overflow-y: auto;
+      padding: 0px 9px;
+      box-sizing: border-box;
+    }
+
+    #container::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    #container::-webkit-scrollbar-track {
+      -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
+      -webkit-border-radius: 10px;
+      border-radius: 10px;
+    }
+
+    #container::-webkit-scrollbar-thumb {
+      -webkit-border-radius: 10px;
+      border-radius: 10px;
+      background: rgba(0, 0, 0, 0.1);
+    }
+
+    #container::-webkit-scrollbar-thumb:window-inactive {
+      background: rgba(255, 0, 0, 0.2);
+    }
+
+    .days {
+      display: flex;
+      flex-wrap: wrap;
+      width: 100%;
+      align-content: stretch;
+      min-height: 210px;
+    }
+
+    .day {
+      width: calc(14% - 6px);
+      text-align: center;
+      margin: 3px;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .day[data-date] {
+      cursor: pointer;
+    }
+
+    .day span {
+      display: block;
+      width: 30px;
+      height: 30px;
+      line-height: 30px;
+    }
+
+    .day.selected span {
+      background-color: #009688;
+      color: white;
+      border-radius: 100%;
+    }
+
+    .day.title {
+      padding-top: 0px;
+      padding-bottom: 4px;
+      font-weight: bold;
+      color: rgba(0, 0, 0, .6);
+      cursor: default;
+    }
+
+    .day[enabled='false'] {
+      pointer-events: none;
+      color: rgba(0, 0, 0, .3);
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 13px;
+      color: rgba(0, 0, 0, .8);
+      margin: 0px;
+      padding: 0.67em 0px;
+    }
+  </style>
+
+  <template>
+    <div on-tap="_onDateSelection" id="container" on-scroll="_onScrolling">
+      <template is="dom-repeat" items="{{months}}" as="month">
+        <div class="month" month="{{month.number}}" year="{{month.year}}">
+          <h1>{{month.name}}</h1>
+
+          <div class="days">
+            <template is="dom-repeat" items="{{weekDayNames}}" as="name">
+              <div class="day title">{{name}}</div>
+            </template>
+            <template is="dom-repeat" items="{{month.days}}" as="day">
+              <template is="dom-if" if="{{!_isDefined(day)}}">
+                <div class="day"></div>
+              </template>
+              <template is="dom-if" if="{{_isDefined(day)}}">
+                <div class$="{{_dateClassNames(month, day)}}"
+                     date="{{day.n}}" month="{{month.number}}" year="{{month.year}}">
+                  <span>{{day.date}}</span>
+                </div>
+              </template>
+            </template>
+          </div>
+        </div>
+      </template>
+    </div>
+  </template>
+
+  <script>
+    Polymer({
+      is : 'sp-calendar',
+      properties : {
+        events : {
+          type : Array,
+          observer: '_onEventsChange'
+        },
+        locale : {
+          type : String, value : 'fr', observer : '_onLocaleChange'
+        }
+      },
+      ready : function() {
+        console.log("sp-calendar ready");
+        this.weekDayNames = moment.weekdaysMin();
+        this.triggerRange = 1;
+        this.loadPerTrigger = 7;
+        if (typeof window.orientation !== 'undefined') {
+          this.infiniteScrolling = false;
+        } else {
+          this.infiniteScrolling = true;
+        }
+        this.loadedRange = 14;
+      },
+      _reload : function() {
+        this._setUpDateWindow(moment());
+        this._setScrollingPosition();
+      },
+      _onEventsChange: function() {
+        console.log('sp-calendar: on event change');
+        this._reload();
+      },
+      _onLocaleChange : function() {
+        console.log("sp-calendar locale change");
+        moment.locale(this.locale);
+      },
+      _setUpMonths : function(start, end) {
+        var current = moment(start);
+        var months = [];
+        while (current.year() < end.year() ||
+        (current.year() === end.year() && current.month() <= end.month())) {
+          var currentMonth = moment(current).startOf('month');
+          var month = {
+            days : [],
+            name : currentMonth.format('MMMM YYYY'),
+            number : current.month(),
+            year : current.year()
+          };
+
+          var startDay = currentMonth.day();
+          for (var i = 0; i < startDay; i++) {
+            month.days.push({});
+          }
+          var endOfMonth = moment(currentMonth).endOf('month');
+          while (currentMonth.isBefore(endOfMonth)) {
+            month.days.push({
+              n : currentMonth.date(), date : currentMonth.format('DD')
+            });
+            currentMonth.add(1, 'day');
+          }
+          months.push(month);
+          current.add(1, 'month');
+        }
+        this.months = months;
+        console.log('sp-calendar initialized months count: ' + this.months.length);
+      },
+      _isDefined : function(day) {
+        return day.date !== undefined;
+      },
+      _dateClassNames : function(month, day) {
+        var selected = false;
+        var now = moment();
+        var isToday = day.n == now.date() && month.number == now.month() && month.year == now.year();
+        for (var i = 0; this.events && i < this.events.length && !selected; i++) {
+          var m = moment(this.events[i]);
+          selected = day.n == m.date() && month.number == m.month() && month.year == m.year();
+        }
+        var classNames = (selected ? 'day selected' : 'day');
+        return classNames + (isToday ? ' today' : '');
+      },
+      _onDateSelection : function(event) {
+        var data = event.path[1].date ? event.path[1] : event.path[0];
+        var day = data.date;
+        var month = data.month;
+        var year = data.year;
+        if (day && month && year) {
+          this.fire("date-selected", new Date(year, month, day));
+        }
+      },
+      _setScrollingPosition : function() {
+        setTimeout(function() {
+          var monthElements = Polymer.dom(this.root).querySelectorAll(".month");
+          var scrollTop = 0;
+
+          for (var i = 0; i < monthElements.length; i++) {
+            if (monthElements[i].querySelector(".day.today")) {
+              break;
+            } else {
+              scrollTop += monthElements[i].clientHeight;
+            }
+          }
+          if (Math.abs(this.$.container.scrollTop - scrollTop) > this.$.container.clientHeight) {
+            this.$.container.scrollTop = scrollTop;
+          }
+
+        }.bind(this), 0);
+      },
+      _onScrolling : function() {
+        if (this.infiniteScrolling) {
+          var monthElements = Polymer.dom(this.root).querySelectorAll(".month");
+          for (var i = monthElements.length - 1; i >= 0; i--) {
+            if (this.$.container.scrollTop + this.$.container.clientHeight / 2 >
+                monthElements[i].offsetTop) {
+              if (i < this.triggerRange) {
+                var start = moment().month(monthElements[0].month * 1)
+                    .year(monthElements[0].year * 1)
+                    .subtract(this.loadPerTrigger, 'month');
+                var end = moment().month(monthElements[monthElements.length - 1].month * 1)
+                    .year(monthElements[monthElements.length - 1].year * 1)
+                    .subtract(this.loadPerTrigger, 'month');
+                this._setUpMonths(start, end);
+                this.$.container.scrollTop += monthElements[0].clientHeight * this.loadPerTrigger;
+              }
+
+              if (i > monthElements.length - this.triggerRange - 1) {
+                var start = moment().month(monthElements[0].month * 1)
+                    .year(monthElements[0].year * 1)
+                    .add(this.loadPerTrigger, 'month');
+                var end = moment().month(monthElements[monthElements.length - 1].month * 1)
+                    .year(monthElements[monthElements.length - 1].year * 1)
+                    .add(this.loadPerTrigger, 'month');
+                this._setUpMonths(start, end);
+                this.$.container.scrollTop -= monthElements[0].clientHeight * this.loadPerTrigger;
+              }
+              break;
+            }
+          }
+        }
+      },
+      _setUpDateWindow : function(date) {
+        var start = moment(date), end = moment(date);
+        if (this.infiniteScrolling) {
+          start.add(-Math.floor(this.loadedRange / 2), 'month');
+          end.add(Math.ceil(this.loadedRange / 2), 'month');
+        } else {
+          start.startOf('year');
+          end.endOf('year');
+        }
+        this._setUpMonths(start, end);
+      }
+    });
+  </script>
+
+</dom-module>
