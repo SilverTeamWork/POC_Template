@@ -253,7 +253,10 @@
       <p id="description">{{blog.description}}</p>
     </header>
     <aside class="aside-app" id="aside-app-fixed">
-      <sp-calendar events="[[_events]]" on-date-selected="_loadPostsAtGivenDate"></sp-calendar>
+      <sp-date-picker events="[[_events]]"
+                   on-date-selected="_renderPostsAtGivenDate"
+                   on-date-unselected="_renderPreviousAllPosts">
+      </sp-date-picker>
     </aside>
     <div id="blog-posts-list">
     <template is="dom-repeat" items="{{posts}}" as="post">
@@ -345,19 +348,27 @@
           this.$.postsFetcher.send();
         }
       },
-      _loadPostsAtGivenDate: function(event) {
-        this._dateSelected = true;
-        var date = event.detail;
-        var _posts = [];
+      _renderPostsAtGivenDate: function(event) {
+        var date = event.detail, _posts = [];
         for (var i = 0; i < this._allPosts.length; i++) {
           var currentDate = new Date(this._allPosts[i].dateEvent);
-          if (currentDate.getMonth() === date.getMonth() && currentDate.getYear() === date.getYear()
-            && currentDate.getDate() === date.getDate()) {
+          if (currentDate.getMonth() === date.getMonth() &&
+              currentDate.getYear() === date.getYear() &&
+              currentDate.getDate() === date.getDate()) {
             _posts.push(this._allPosts[i]);
           }
         }
         console.log("posts to render: " + _posts.length);
+        if (!this._dateSelected) {
+          this._previousPosts = this.posts;
+          this._dateSelected = true;
+        }
         this._setPosts(_posts);
+      },
+      _renderPreviousAllPosts: function(event) {
+        this._setPosts(this._previousPosts);
+        this._previousPosts = null;
+        this._dateSelected = false;
       }
     });
   </script>

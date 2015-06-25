@@ -1,7 +1,7 @@
 <script src="../../bower_components/moment/min/moment.min.js"></script>
 <script src="../../bower_components/moment/locale/fr.js"></script>
 
-<dom-module id="sp-calendar">
+<dom-module id="sp-date-picker">
   <style>
     :host {
       display: inline-block;
@@ -68,9 +68,16 @@
       line-height: 30px;
     }
 
-    .day.selected span {
+    .day.selectable span {
       cursor: pointer;
       background-color: #333;
+      color: white;
+      border-radius: 100%;
+    }
+
+    .day.selected span {
+      cursor: pointer;
+      background-color: rgba(0, 0, 0, .3);
       color: white;
       border-radius: 100%;
     }
@@ -126,7 +133,7 @@
 
   <script>
     Polymer({
-      is : 'sp-calendar',
+      is : 'sp-date-picker',
       properties : {
         events : {
           type : Array,
@@ -137,7 +144,6 @@
         }
       },
       ready : function() {
-        console.log("sp-calendar ready");
         this.weekDayNames = moment.weekdaysMin();
         this.triggerRange = 1;
         this.loadPerTrigger = 7;
@@ -153,11 +159,9 @@
         this._setScrollingPosition();
       },
       _onEventsChange: function() {
-        console.log('sp-calendar: on event change');
         this._reload();
       },
       _onLocaleChange : function() {
-        console.log("sp-calendar locale change");
         moment.locale(this.locale);
       },
       _setUpMonths : function(start, end) {
@@ -188,7 +192,6 @@
           current.add(1, 'month');
         }
         this.months = months;
-        console.log('sp-calendar initialized months count: ' + this.months.length);
       },
       _isDefined : function(day) {
         return day.date !== undefined;
@@ -201,7 +204,7 @@
           var m = moment(this.events[i]);
           selected = day.n == m.date() && month.number == m.month() && month.year == m.year();
         }
-        var classNames = (selected ? 'day selected' : 'day');
+        var classNames = (selected ? 'day selectable' : 'day');
         return classNames + (isToday ? ' today' : '');
       },
       _onDateSelection : function(event) {
@@ -209,8 +212,17 @@
         var day = data.date;
         var month = data.month;
         var year = data.year;
-        if (day && month && year) {
-          this.fire("date-selected", new Date(year, month, day));
+        if (day && month && year && data.className.indexOf('selectable') >= 0) {
+          if (data.className.indexOf('selected') >= 0) {
+            data.className = data.className.replace('selected', '');
+            this.fire("date-unselected", new Date(year, month, day));
+          } else {
+            var dateElement = Polymer.dom(this.root).querySelector('.selected');
+            if (dateElement)
+              dateElement.className = dateElement.className.replace('selected', '');
+            data.className = data.className + ' selected';
+            this.fire("date-selected", new Date(year, month, day));
+          }
         }
       },
       _setScrollingPosition : function() {
