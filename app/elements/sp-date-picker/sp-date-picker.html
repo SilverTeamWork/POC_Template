@@ -135,6 +135,10 @@
     Polymer({
       is : 'sp-date-picker',
       properties : {
+        event : {
+          type : Object,
+          observer: '_onEventChange'
+        },
         events : {
           type : Array,
           observer: '_onEventsChange'
@@ -157,6 +161,9 @@
       _reload : function() {
         this._setUpDateWindow(moment());
         this._setScrollingPosition();
+      },
+      _onEventChange: function() {
+        this.events = [this.event];
       },
       _onEventsChange: function() {
         this._reload();

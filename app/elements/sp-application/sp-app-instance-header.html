@@ -1,0 +1,25 @@
+<link rel="import" href="../sp-space/sp-space-libs.html">
+<link rel="import" href="../sp-breadcrumb/sp-breadcrumb.html">
+
+<dom-module id="sp-app-instance-header">
+  <template>
+    <header>
+      <h2 class="title"><span>[[title]]</span></h2>
+      <content select="sp-app-instance-menu"></content>
+      <p>[[description]]</p>
+      <content></content>
+    </header>
+  </template>
+</dom-module>
+<script>
+  (function() {
+
+    Polymer({
+      is : 'sp-app-instance-header',
+
+      properties : {
+        title : '', description : ''
+      }
+    });
+  })();
+</script>

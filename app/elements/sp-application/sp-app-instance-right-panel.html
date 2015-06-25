@@ -1,0 +1,22 @@
+<link rel="import" href="../sp-space/sp-space-libs.html">
+<link rel="import" href="../sp-breadcrumb/sp-breadcrumb.html">
+
+<dom-module id="sp-app-instance-right-panel">
+  <template>
+    <aside class="aside-app" id="rightPanelContainer">
+      <content></content>
+    </aside>
+  </template>
+</dom-module>
+<script>
+  (function() {
+
+    Polymer({
+      is : 'sp-app-instance-right-panel',
+
+      properties : {
+        title : '', description : ''
+      }
+    });
+  })();
+</script>

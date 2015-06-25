@@ -1,0 +1,18 @@
+<link rel="import" href="../sp-space/sp-space-libs.html">
+<link rel="import" href="../sp-breadcrumb/sp-breadcrumb.html">
+
+<dom-module id="sp-app-instance-layout">
+  <template>
+    <content select="sp-app-instance-header"></content>
+    <content select="sp-app-instance-right-panel"></content>
+    <content select=".app-main"></content>
+  </template>
+</dom-module>
+<script>
+  (function() {
+
+    Polymer({
+      is : 'sp-app-instance-layout'
+    });
+  })();
+</script>

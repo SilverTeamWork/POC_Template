@@ -21,11 +21,7 @@
         <section data-field="app-section" class="with-aside-app">
           <sp-breadcrumb context="[[context]]"></sp-breadcrumb>
 
-          <!--<aside class="aside-app" id="aside-app-fixed">-->
-          <!--<img src="../../images/calendar-magie-mai.png" alt="calendrier"/>-->
-          <!--</aside>-->
-
-          <div class="application-content">
+          <div class="main wrapper flexitem-fluid application">
             <template is="dom-if" if="{{isApplicationNameEqualTo(applicationInstance, 'blog')}}">
               <sp-blog-home context="[[context]]"></sp-blog-home>
             </template>

@@ -6,16 +6,13 @@
   <script>
     // the snippet of a given post
     Polymer({
-      is: 'sp-post-snippet',
-      properties: {
-        post: {
-          type: Object
+      is : 'sp-post-snippet', properties : {
+        post : {
+          type : Object
         }
-      },
-      ready: function() {
+      }, ready : function() {
         this.$$('.content-from-wysiwyg').innerHTML = this._snippet(this.post);
-      },
-      _snippet : function(post) {
+      }, _snippet : function(post) {
         var snippet = post.content;
         var idx = snippet.length;
         for (var i = snippet.indexOf(". ", 0), p = 0; p < 10 && i != -1; i =
@@ -35,6 +32,7 @@
     .paper-dialog-div {
       position: absolute;
     }
+
     #confirm {
       position: relative;
       height: auto;
@@ -43,14 +41,14 @@
     }
 
     .title-operation {
-      float:right;
+      float: right;
       padding: 5px 10px 10px 10px;
       display: none;
     }
 
     .link-article:hover .title-operation,
     .link-article:focus .title-operation,
-    .link-article:active .title-operation{
+    .link-article:active .title-operation {
       display: block;
     }
   </style>
@@ -60,6 +58,7 @@
                     entry-animation="scale-up-animation" exit-animation="fade-out-animation"
                     class="ui-dialog ui-widget ui-widget-content ui-corner-all ui-front ui-dialog-buttons ui-draggable ui-resizable">
         <h2>Confirmation</h2>
+
         <div class="ui-dialog-content ui-widget-content">
           <p>Êtes vous sûr de vouloir le supprimer ?</p>
         </div>
@@ -107,7 +106,8 @@
           <template is="dom-if" if="{{!_updateTitle}}">
             <template is="dom-if" if="{{hasModificationRightsOn(post)}}">
               <button class="link-article" on-click="_updatePostTitle"><span class="input text">[[post.title]]</span>
-                <img class="title-operation" title="Modifier" alt="Modifier" src="../../images/update.gif"/></button>
+                <img class="title-operation" title="Modifier" alt="Modifier" src="../../images/update.gif"/>
+              </button>
             </template>
             <template is="dom-if" if="{{!hasModificationRightsOn(post)}}">
               <button class="link-article"><span class="input text">[[post.title]]</span></button>
@@ -128,9 +128,13 @@
       <sp-post-snippet post="[[post]]"></sp-post-snippet>
       <footer>
         <p class="publication-detail">
-          <span class="publication">Publié le <time datetime$="[[publicationDate.toIso8601]]">[[publicationDate.toLocaleDateTime]]</time> <span class="auteur">par <span>[[post.creator]]</span></span></span>
+          <span class="publication">Publié le <time datetime$="[[publicationDate.toIso8601]]">
+            [[publicationDate.toLocaleDateTime]]
+          </time> <span class="auteur">par <span>[[post.creator]]</span></span></span>
           <span class="sep"> - </span>
-          <span class="modification">Modifié le <time datetime$="[[modificationDate.toIso8601]]">[[modificationDate.toLocaleDateTime]]</time> <span class="auteur">par <span>[[post.updater]]</span></span></span>
+          <span class="modification">Modifié le <time datetime$="[[modificationDate.toIso8601]]">
+            [[modificationDate.toLocaleDateTime]]
+          </time> <span class="auteur">par <span>[[post.updater]]</span></span></span>
         </p>
         <template is="dom-if" if="{{hasModificationRightsOn(post)}}">
           <div class="operation">
@@ -146,49 +150,45 @@
   <script>
     // a brief presentation of a given post within a list
     Polymer({
-      is : 'sp-post-item',
-      behaviors : [DateBehavior, AccessControlBehavior],
-      properties : {
+      is : 'sp-post-item', behaviors : [DateBehavior, AccessControlBehavior], properties : {
         post : {
-          type : Object,
-          observer: '_onPostChange'
-        },
-        postUrl: {
-          type: String,
-          computed: '_computePostUrl(post)'
+          type : Object, observer : '_onPostChange'
+        }, postUrl : {
+          type : String, computed : '_computePostUrl(post)'
         }
       },
-      _onPostChange: function() {
+      _onPostChange : function() {
         this.creationDate = this._date(this.post.createDate);
         this.publicationDate = this._date(this.post.dateEvent);
         this.modificationDate = this._date(this.post.updateDate);
         this.$.deletion.path = 'blogs/' + this.post.componentId + '/posts/' + this.post.id;
-        this.editionUrl = '/instances/' + this.post.componentId + '/posts/' + this.post.id + '?state=edition';
+        this.editionUrl =
+            '/instances/' + this.post.componentId + '/posts/' + this.post.id + '?state=edition';
         this._updateTitle = false;
       },
       _selectPost : function(event) {
-        this.fire('post-selected', {post: this.post});
+        this.fire('post-selected', {post : this.post});
       },
-      _toggleConfirm: function() {
+      _toggleConfirm : function() {
         event.stopImmediatePropagation();
         this.$.confirm.toggle();
       },
-      _onConfirm: function() {
+      _onConfirm : function() {
         this.$.deletion.send();
       },
-      _handleResponse: function(event) {
+      _handleResponse : function(event) {
         if (event.detail.succeeded) {
           this.remove();
         }
       },
-      _titleUpdateIconShow: function() {
+      _titleUpdateIconShow : function() {
         console.log("coucou");
         this.$.titleUpdateIcon.show();
       },
-      _titleUpdateIconHide: function() {
+      _titleUpdateIconHide : function() {
         this.$.titleUpdateIcon.hide();
       },
-      _updatePostTitle: function(event) {
+      _updatePostTitle : function(event) {
         event.preventDefault();
         event.stopPropagation();
         if (!this._updateTitle) {
@@ -196,10 +196,10 @@
           this._updateTitle = true;
         }
       },
-      _focus: function() {
+      _focus : function() {
         this._updateTitleInput().focus();
       },
-      _doUpdatePostTitle: function(event) {
+      _doUpdatePostTitle : function(event) {
         if (event.detail.keyboardEvent.keyCode === 13) {
           if (this._title && this._title.trim().length > 0) {
             this.post.title = this._title;
@@ -210,17 +210,18 @@
         }
         this._updateTitle = false;
       },
-      _updateTitleInput: function() {
+      _updateTitleInput : function() {
         return this.$$('#updateTitle');
       },
-      _computePostUrl: function(post) {
-        return 'blogs/' + post.componentId + '/posts/' + (this.post.id === null ? '':this.post.id);
+      _computePostUrl : function(post) {
+        return 'blogs/' + post.componentId + '/posts/' +
+            (this.post.id === null ? '' : this.post.id);
       },
-      _success: function() {
+      _success : function() {
         this.notifyPath('post.title', this._title);
         this.$.updateSuccess.show();
       },
-      _error: function() {
+      _error : function() {
         this.$.updateError.show();
       }
     });
@@ -237,31 +238,28 @@
     <sp-notifier id="error" type="error">
       Une erreur est survenue lors de la récupération des billets pour le calendrier.
     </sp-notifier>
-    <header>
-      <h2 class="title"><span id="title">{{blog.label}}</span></h2>
-      <aside id="applicationMenu" class="menu actions">
-        <div><a class="button select" href="#">Plus</a>
-          <ul>
-            <template is="dom-if" if="{{hasCreationRightOn(_postList)}}">
-              <li><a href$="[[postCreationUrl]]">Créer un billet</a></li>
-            </template>
-            <li><a href="#">S'abonner</a></li>
-            <li><a href="#">Responsable de l'application</a></li>
-          </ul>
-        </div>
-      </aside>
-      <p id="description">{{blog.description}}</p>
-    </header>
-    <aside class="aside-app" id="aside-app-fixed">
+
+    <sp-app-instance-header title="[[blog.label]]" description="[[blog.description]]">
+      <sp-app-instance-menu>
+        <template is="dom-if" if="{{hasCreationRightOn(_postList)}}">
+          <li><a href$="[[postCreationUrl]]">Créer un billet</a></li>
+        </template>
+        <li><a href="#">S'abonner</a></li>
+        <li><a href="#">Responsable de l'application</a></li>
+      </sp-app-instance-menu>
+    </sp-app-instance-header>
+
+    <sp-app-instance-right-panel>
       <sp-date-picker events="[[_events]]"
-                   on-date-selected="_renderPostsAtGivenDate"
-                   on-date-unselected="_renderPreviousAllPosts">
+                      on-date-selected="_renderPostsAtGivenDate"
+                      on-date-unselected="_renderPreviousAllPosts">
       </sp-date-picker>
-    </aside>
+    </sp-app-instance-right-panel>
+
     <div id="blog-posts-list">
-    <template is="dom-repeat" items="{{posts}}" as="post">
-      <sp-post-item post="[[post]]"></sp-post-item>
-    </template>
+      <template is="dom-repeat" items="{{posts}}" as="post">
+        <sp-post-item post="[[post]]"></sp-post-item>
+      </template>
     </div>
   </template>
 
@@ -271,34 +269,28 @@
     // list, then use the reload() function.
     Polymer({
       is : 'sp-post-list',
-      behaviors: [AccessControlBehavior, SilverpeasServiceAjaxBehavior],
+      behaviors : [AccessControlBehavior, SilverpeasServiceAjaxBehavior],
       properties : {
-        blog: {
-          type: Object,
-          observer: '_onBlogChange'
-        },
-        posts : {
-          type : Array,
-          value: [],
-          notify : true,
-          readOnly : true
-        },
-        _postList: {
-          type: Object
+        blog : {
+          type : Object, observer : '_onBlogChange'
+        }, posts : {
+          type : Array, value : [], notify : true, readOnly : true
+        }, _postList : {
+          type : Object
         }
       },
-      listeners: {
-        'blog-posts-list.mouseover':'_addListenerOnScrolling',
-        'blog-posts-list.mouseout': '_removeListenerOnScrolling'
+      listeners : {
+        'blog-posts-list.mouseover' : '_addListenerOnScrolling',
+        'blog-posts-list.mouseout' : '_removeListenerOnScrolling'
       },
-      ready: function() {
+      ready : function() {
         this._scrollHandler = this._onScroll.bind(this);
         this._dateSelected = false;
       },
-      reload: function() {
+      reload : function() {
         this._onBlogChange();
       },
-      _loadAllEvents: function() {
+      _loadAllEvents : function() {
         SilverpeasServiceAjaxBehavior.newSilverpeasServiceAjax().onResponse(function(e) {
           this._allPosts = e.detail.response.entities;
           var events = [];
@@ -311,12 +303,14 @@
             this.$.error.show();
         }.bind(this)).get('blogs/' + this.blog.instanceId + '/posts');
       },
-      _onBlogChange: function() {
+      _onBlogChange : function() {
         this._dateSelected = false;
         this._setPosts([]);
         this._fullLoaded = false;
         this._page = 5;
-        if (!this.blog) {return;}
+        if (!this.blog) {
+          return;
+        }
         console.log("List posts of blog " + this.blog.label);
         this.blog.instanceId = this.blog.name + this.blog.id;
         this.postCreationUrl = '/instances/' + this.blog.instanceId + '/posts/new';
@@ -332,23 +326,24 @@
           this._fullLoaded = true;
         }
       },
-      _addListenerOnScrolling: function() {
+      _addListenerOnScrolling : function() {
         window.addEventListener('scroll', this._scrollHandler);
       },
-      _removeListenerOnScrolling: function() {
+      _removeListenerOnScrolling : function() {
         window.removeEventListener('scroll', this._scrollHandler);
       },
-      _onScroll: function() {
+      _onScroll : function() {
         var scrollMaxY = (window.scrollMaxY ? window.scrollMaxY :
-          document.documentElement.scrollHeight - document.documentElement.clientHeight + 1);
+        document.documentElement.scrollHeight - document.documentElement.clientHeight + 1);
         if ((scrollMaxY - window.scrollY) <= 100 && !this._fullLoaded && !this._dateSelected) {
           console.log("I'm fetching additional posts dude! ");
           this._page += 1;
-          this.$.postsFetcher.path = 'blogs/' + this.blog.instanceId + '/posts?page=' + this._page + ';1';
+          this.$.postsFetcher.path =
+              'blogs/' + this.blog.instanceId + '/posts?page=' + this._page + ';1';
           this.$.postsFetcher.send();
         }
       },
-      _renderPostsAtGivenDate: function(event) {
+      _renderPostsAtGivenDate : function(event) {
         var date = event.detail, _posts = [];
         for (var i = 0; i < this._allPosts.length; i++) {
           var currentDate = new Date(this._allPosts[i].dateEvent);
@@ -365,7 +360,7 @@
         }
         this._setPosts(_posts);
       },
-      _renderPreviousAllPosts: function(event) {
+      _renderPreviousAllPosts : function(event) {
         this._setPosts(this._previousPosts);
         this._previousPosts = null;
         this._dateSelected = false;

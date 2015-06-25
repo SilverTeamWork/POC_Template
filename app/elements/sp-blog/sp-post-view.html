@@ -5,14 +5,12 @@
 
   <script>
     Polymer({
-      is: 'sp-post-content',
-      properties: {
-        post: {
-          type: Object,
-          observer: '_onPostChange'
+      is : 'sp-post-content', properties : {
+        post : {
+          type : Object, observer : '_onPostChange'
         }
       },
-      _onPostChange: function() {
+      _onPostChange : function() {
         this.$$('.content-from-wysiwyg').innerHTML = this.post.content;
       }
     });
@@ -21,54 +19,58 @@
 
 <dom-module id="sp-post-view">
   <template>
-    <header>
-      <h2 class="title">[[post.title]]</h2>
+    <sp-app-instance-header title="[[post.title]]">
       <template is="dom-if" if="{{hasModificationRightsOn(post)}}">
-        <aside class="menu actions">
-          <div><a class="button select" href="#">Plus</a>
-            <ul>
-              <li><a href$="[[editionUrl]]">Modifier ce billet</a></li>
-            </ul>
-          </div>
-        </aside>
+        <sp-app-instance-menu>
+          <li><a href$="[[editionUrl]]">Modifier ce billet</a></li>
+        </sp-app-instance-menu>
       </template>
       <p class="post-info">
         <sp-rating id="postRatingId" appid="[[post.componentId]]" contributionid="[[post.id]]"></sp-rating>
         <a href="#commentaires" class="nb-comment"><img src="../../images/talk2user.gif" alt="commentaire"/>&nbsp;<span id="nbComment">[[post.nbComments]]</span></a>
       </p>
-    </header>
+    </sp-app-instance-header>
+
+    <sp-app-instance-right-panel>
+      <sp-date-picker id="datePicker"></sp-date-picker>
+    </sp-app-instance-right-panel>
+
     <sp-post-content post="[[post]]"></sp-post-content>
 
     <sp-comments id="spCommentId" appid="[[post.componentId]]" contributionid="[[post.id]]"
                  authorid="[[_userId()]]" avatarurl="[[_userAvatarUrl()]]" canbeupdated="true"></sp-comments>
     <footer>
-      <p class="publication-detail"> <span class="publication">Publiée le <time datetime$="[[publicationDate.toIso8601]]">[[publicationDate.toLocaleDateTime]]</time>
-          <span class="auteur">par <span>[[post.creator]]</span></span></span>
-        <span class="sep"> - </span> <span class="modification">Modifié le <time datetime$="[[modificationDate.toIso8601]]">[[modificationDate.toLocaleDateTime]]</time>
-          <span class="auteur">par <span>[[post.updater]]</span></span></span></p>
+      <p class="publication-detail"> <span class="publication">Publiée le <time datetime$="[[publicationDate.toIso8601]]">
+        [[publicationDate.toLocaleDateTime]]
+      </time>
+        <span class="auteur">par <span>[[post.creator]]</span></span></span>
+        <span class="sep"> - </span> <span class="modification">Modifié le <time datetime$="[[modificationDate.toIso8601]]">
+          [[modificationDate.toLocaleDateTime]]
+        </time>
+        <span class="auteur">par <span>[[post.updater]]</span></span></span></p>
     </footer>
   </template>
 
   <script>
     Polymer({
-      is: 'sp-post-view',
+      is : 'sp-post-view',
       behaviors : [DateBehavior, SessionBehavior, SilverpeasUrl, AccessControlBehavior],
-      properties: {
-        post: {
-          type: Object,
-          observer: '_onPostChange'
+      properties : {
+        post : {
+          type : Object, observer : '_onPostChange'
         }
       },
       listeners : {
-        'comment-removed' : '_commentRemoved',
-        'comment-created' : '_commentCreated'
+        'comment-removed' : '_commentRemoved', 'comment-created' : '_commentCreated'
       },
-      _onPostChange: function() {
+      _onPostChange : function() {
         console.log("view post " + this.post.id + ": " + this.post.title);
         this.creationDate = this._date(this.post.createDate);
         this.publicationDate = this._date(this.post.dateEvent);
         this.modificationDate = this._date(this.post.updateDate);
-        this.editionUrl = '/instances/' + this.post.componentId + '/posts/' + this.post.id + '?state=edition';
+        this.$.datePicker.event = new Date(this.post.dateEvent);
+        this.editionUrl =
+            '/instances/' + this.post.componentId + '/posts/' + this.post.id + '?state=edition';
         document.querySelector('#postRatingId')._retrieveContributionRating();
         document.querySelector('#spCommentId').setAttribute("appid", this.post.componentId);
         document.querySelector('#spCommentId').setAttribute("contributionid", this.post.id);
@@ -77,7 +79,7 @@
         document.querySelector('#spCommentId').setAttribute("avatarurl", this._userAvatarUrl());
         document.querySelector('#spCommentId').loadComments();
       },
-      _userAvatarUrl: function() {
+      _userAvatarUrl : function() {
         console.log("sp-post-view avatar=" + this.currentUser.avatar);
         return this.silverpeasHost + this.currentUser.avatar;
       },

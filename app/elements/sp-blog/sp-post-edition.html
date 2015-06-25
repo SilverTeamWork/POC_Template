@@ -22,6 +22,13 @@
       on-response="_success"
       on-error="_error">
     </sp-service-ajax>
+
+    <sp-app-instance-header title="[[_title]]"></sp-app-instance-header>
+
+    <sp-app-instance-right-panel>
+      <sp-date-picker id="datePicker"></sp-date-picker>
+    </sp-app-instance-right-panel>
+
     <form id="edition">
       <fieldset>
         <div>
@@ -63,12 +70,23 @@
         editionMethod: {
           type: String,
           computed: '_computeEditionMethod(post)'
+        },
+        _title : {
+          type : String,
+          value: null,
+          observer : '_onTitleChange'
+        }
+      },
+      _onTitleChange : function() {
+        if (this.post && this.post.id === null && !this._title.length) {
+          this._title = 'Nouveau billet ...';
         }
       },
       _onPostChange : function() {
         console.log((this.post.id === null ? "create new post":"edit post " + this.post.id + ": " + this.post.title));
         this._title = this.post.title;
         this._content = this.post.content;
+        this.$.datePicker.event = this.post.id ? new Date(this.post.dateEvent) : new Date();
       },
       _cancel: function() {
         page('/instances/' + this.post.componentId);

@@ -11,8 +11,6 @@
   <script src="bower_components/webcomponentsjs/webcomponents-lite.js"></script>
   <script src="bower_components/page/page.js"></script>
   <link rel="import" href="elements/elements.html">
-  <script type="text/javascript" src="scripts/jquery/jquery-1.10.2.min.js"></script>
-  <script type="text/javascript" src="bower_components/i18next/i18next.js"></script>
   <script type="text/javascript" src="bower_components/ckeditor/ckeditor.js"></script>
   <link rel="import" href="locales/fr/translation.json">
 </head>
@@ -117,20 +115,6 @@
 
       Polymer.dom(document.body).querySelector('h1').addEventListener('click', function(e) {
         document.location = "/yocha.html";
-      });
-
-      var i18nOptions = {
-        lng : "fr",
-        preload: ['en'],
-        nsseparator : ':::',
-        keyseparator : '::'
-      };
-
-      i18n.init(i18nOptions, function(t) {
-        // Translate all data-i18n attribute inside DOM
-        $(".page-home").i18n();
-        // programatical access
-        console.log("Loading json string " + t("silverpeas.footer.copyright"));
       });
     });
   })(document);
