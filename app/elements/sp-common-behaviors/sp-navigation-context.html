@@ -29,7 +29,7 @@
           ofSpace : function(routeData) {
             __handleCommonRouteData(this, routeData);
             __clearApplicationContext(this);
-            this.setAndNotify('space.id', routeData.params.id);
+            this.setAndNotify('space', {id : routeData.params.id});
             host.route = 'space-home';
             return this;
           },
