@@ -16,6 +16,13 @@
 
       properties : {
         title : '', description : ''
+      },
+
+      ready : function() {
+        window.addEventListener("scroll", function() {
+          var currentScroll = document.body.scrollTop || document.documentElement.scrollTop;
+          this.toggleClass('fixed', (currentScroll >= 273), this.$.rightPanelContainer);
+        }.bind(this), false);
       }
     });
   })();

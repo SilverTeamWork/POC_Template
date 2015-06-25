@@ -22,7 +22,7 @@
           <sp-breadcrumb context="[[context]]"></sp-breadcrumb>
 
           <div class="main wrapper flexitem-fluid application">
-            <template is="dom-if" if="{{isApplicationNameEqualTo(applicationInstance, 'blog')}}">
+            <template is="dom-if" if="{{isApplicationNameEqualTo(applicationInstance, 'blog')}}" restamp="true">
               <sp-blog-home context="[[context]]"></sp-blog-home>
             </template>
           </div>
@@ -72,6 +72,8 @@
         if (this.isValidApplicationInstanceId(this.context.instance.id)) {
           this.$.applicationInstanceRequester.send();
           console.log("Loading data about the current valid application...");
+        } else {
+          this.applicationInstance = null;
         }
       },
 
