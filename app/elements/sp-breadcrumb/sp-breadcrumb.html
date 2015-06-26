@@ -23,8 +23,9 @@
       </div>
       <template is="dom-if" if="[[_backButtonDisplayed]]" restamp="true">
         <div id="backContainer" class="back">
-          <a title="Retour à la page précédente" href="#" on-click="_backButtonClicked">Retour à la
-            page précédente</a>
+          <a title="[[previousPageMsg]]" href="#" on-click="_backButtonClicked">
+            <sp-i18n key="page.previous.back" message="{{previousPageMsg}}"></sp-i18n>
+          </a>
         </div>
       </template>
     </nav>

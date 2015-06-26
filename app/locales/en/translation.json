@@ -1,4 +1,8 @@
 {
+  "welcome": "Hello {0} {1}",
+  "error.space.not.found": "There is no space with identifier {0}.",
+  "error.app.instance.not.found": "There is no application instance with identifier {0}.",
+  "error.app.instance.not.handled": "{0} application is not yet handled.",
   "user.current.connected.log": "Current connected user: {0}",
   "HeaderWidget.disconnection": "Sign out",
   "RatingWidget.labels": "Bad,Fair,Fairly well,Well,Great",
@@ -27,7 +31,7 @@
   "title.label": "Title",
   "post": "post",
   "blog.title.new.label": "New post ...",
-  "post.date.event" : "Event date",
-  "silverpeas.footer.copyright" : "2015 Silverpeas one again ! Tac tac",
-  "silverpeas.header.logout" : "Logout"
+  "post.date.event": "Event date",
+  "silverpeas.footer.copyright": "2015 Silverpeas one again ! Tac tac",
+  "silverpeas.header.logout": "Logout"
 }

@@ -1,4 +1,8 @@
 {
+  "welcome": "Bonjour {0} {1}",
+  "error.space.not.found": "Il n'existe pas d'espace ayant l'identifiant {0}.",
+  "error.app.instance.not.found": "Il n'existe pas d'instance d'application ayant l'identifiant {0}.",
+  "error.app.instance.not.handled": "L'application {0} n'est pas encore prise en charge",
   "user.current.connected.log": "Utilsateur courant connecté : {0}",
   "RatingWidget.labels": "Mauvais,Passable,Assez bien,Bien,Très bien",
   "RatingWidget.votes": "avis",
@@ -26,8 +30,7 @@
   "title.label": "Titre",
   "post": "billet",
   "blog.title.new.label": "Nouveau billet ...",
-  "post.date.event" : "Date de l'événement",
-  "silverpeas.footer.copyright" : "2015 Silverpeas represente ! Tac tac",
-  "silverpeas.header.logout" : "Se déconnecter"
-
+  "post.date.event": "Date de l'événement",
+  "silverpeas.footer.copyright": "2015 Silverpeas represente ! Tac tac",
+  "silverpeas.header.logout": "Se déconnecter"
 }

@@ -1,18 +1,29 @@
 <script>
   (function() {
+
     // TODO find a way to fetch url of Silverpeas (backend) by conf
     var SILVERPEAS_HOST = 'http://localhost:8000';
     var SILVERPEAS_CONTEXT = 'silverpeas';
     var SILVERPEAS_SERVICE_CONTEXT = 'silverpeas/services';
+    var SILVERPEAS_CLIENT_CONTEXT = '';
+
     window.SilverpeasUrl = {
+
       get silverpeasHost() {
         return SILVERPEAS_HOST;
       },
+
       get silverpeasUrl() {
         return SILVERPEAS_HOST + '/' + SILVERPEAS_CONTEXT;
       },
+
       get silverpeasServiceUrl() {
         return SILVERPEAS_HOST + '/' + SILVERPEAS_SERVICE_CONTEXT;
+      },
+
+      get silverpeasClientUrl() {
+        return window.location.protocol + "//" + window.location.host +
+            (SILVERPEAS_CLIENT_CONTEXT ? ('/' + SILVERPEAS_CLIENT_CONTEXT) : '');
       }
     };
   })();

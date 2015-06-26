@@ -4,10 +4,14 @@
 <dom-module id="sp-app-instance">
   <template>
     <sp-notifier id="msgNotHandled" type="warning">
-      L'application <b><span>{{msgInstanceName}}</span></b> n'est pas encore prise en charge.
+      <sp-i18n key="error.app.instance.not.handled">
+        <sp-i18n-param><b>[[msgInstanceName]]</b></sp-i18n-param>
+      </sp-i18n>
     </sp-notifier>
     <sp-notifier id="msgNotFound" type="error">
-      Il n'existe pas d'instance d'application ayant l'identifiant <b><span>{{msgInstanceId}}</span></b>.
+      <sp-i18n key="error.app.instance.not.found">
+        <sp-i18n-param><b>[[msgInstanceId]]</b></sp-i18n-param>
+      </sp-i18n>
     </sp-notifier>
 
     <sp-service-ajax id="applicationInstanceRequester"

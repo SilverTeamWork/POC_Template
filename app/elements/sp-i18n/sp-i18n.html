@@ -1,0 +1,284 @@
+<link rel="import" href="../sp-session/sp-session.html">
+
+<!--
+The `i18nBehavior` behavior provides i18n bundle functionality.
+For now, when client application is starting, a synchronized request retrieves the 'translation'
+bundle according to the language of the current connected user.
+
+The translation files are localized into locales directory. Each "translation.json" is placed into
+a directory which the name is equal to the language.
+
+        [file structure]
+        - locales
+          -fr
+            translation.json
+          -en
+            translation.json
+          -de
+            translation.json
+          ...
+
+To be used from WEB-COMPONENT defined by Polymer, simply declare this behavior and use it into
+[[]] or {{}} by calling the i18n function. For example from the template of any component which
+declares this behavior :
+
+    <span>[[i18n('message.success')]]</span>
+
+So it can be simply used from every Polymer component by calling the method i18n
+as for example:
+
+        "var successMessage = this.i18n('message.success');"
+
+and from any other javascript code out of a Polymer element as for example:
+
+        "alert(i18nBehavior.i18n('message.success'));"
+
+It is possible to handle message parameters with '{numeric}' pattern.
+For example with {"message.success" : "{0} has been successfully saved !"}:
+
+        this.i18n('message.success', 'Contribution') returns "Contribution has been successfully saved !"
+
+With {"message.success" : "{1}, {0} has been successfully saved !"}:
+
+        this.i18n('message.success', 'Contribution', 'Yocha') returns "Yocha, Contribution has been successfully saved !"
+        this.i18n('message.success', ['Contribution', 'Yocha']) returns "Yocha, Contribution has been successfully saved !"
+-->
+<script>
+  (function() {
+
+    var DEFAULT_USER_LANGUAGE = "fr";
+    var DEFAULT_TRANSLATION_FILENAME = "translation";
+
+    var __currentUserLanguage;
+    var __translations;
+
+    window.i18nBehavior = {
+
+      /**
+       * Gets the current user language.
+       * The user language is persisted into localStorage.
+       */
+      get i18nUserLanguage() {
+        if (!__currentUserLanguage) {
+          if (SessionBehavior.currentUser) {
+            __currentUserLanguage = SessionBehavior.currentUser.language;
+          } else {
+            __currentUserLanguage = DEFAULT_USER_LANGUAGE;
+          }
+        }
+        return __currentUserLanguage;
+      },
+
+      /**
+       * Gets the translation corresponding to the given key.
+       */
+      i18n : function() {
+        if (!__translations) {
+          __translations = {};
+          i18nBehavior.i18nLoad(i18nBehavior.i18nUserLanguage);
+        }
+
+        var key = arguments[0];
+        var translation = __translations[key];
+
+        var paramIndex = 0;
+        for (var i = 1; i < arguments.length; i++) {
+          var params = arguments[i];
+          if (params && typeof params === 'object' && params.length) {
+            params.forEach(function(param) {
+              translation =
+                  translation.replace(new RegExp('[{]' + (paramIndex++) + '[}]', 'g'), param);
+            });
+          } else if (params && typeof params === 'string') {
+            translation =
+                translation.replace(new RegExp('[{]' + (paramIndex++) + '[}]', 'g'), params);
+          }
+        }
+        return translation.replace(/[{][0-9]+[}]/g, '');
+      },
+
+      /**
+       * Sets the given user language into context and load synchronously the translations.
+       * @param userLanguage the user language.
+       */
+      i18nLoad : function(userLanguage) {
+        __currentUserLanguage = userLanguage;
+
+        var url = SilverpeasUrl.silverpeasClientUrl + '/locales/' + userLanguage + '/' +
+            DEFAULT_TRANSLATION_FILENAME + '.json';
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', url, false);
+        xhr.onload = function(e) {
+          if (e.target.status !== 200) {
+            return;
+          }
+          __translations = JSON.parse('[' + e.target.response + ']')[0];
+        };
+        xhr.onerror = function(e) {
+          console.log(e);
+        };
+        xhr.send();
+      }
+    }
+  })();
+</script>
+
+<!--
+The `sp-i18n` element permits to handle i18n bundle. This component deals with i18nBehavior.
+Simply indicate the bundle key to the "key" attribute in order to obtain the i18n message.
+The i18n message is put into <sp-i18n> content.
+An example:
+
+    <sp-i18n key='message.success'></sp-i18n>
+
+    After the computing, the dom looks like that:
+    <sp-i18n key='message.success'>Saved successfully</sp-i18n>
+
+It is possible to perform binding with the read only 'message' attribute.
+If a content exist into the TAG, it is no trashed.
+An example:
+
+    <sp-i18n key="message.success" message="{{successMessage}}"><div class="highlight">[[successMessage]]</div></sp-i18n>
+
+Also, when a message must be displayed several times from a same place, thanks to "message"
+attribute, it is possible to do that:
+
+    <sp-i18n key="message.success" message="{{successMessage}}" hidden="true"></sp-i18n>
+    ...
+    <span>[[successMessage]]</span>
+    ...
+    <h2>[[successMessage]]</h2>
+
+It is possible to handle message parameters with Array "params" attribute.
+For example with {"message.success" : "{0} has been successfully saved !"}:
+
+    <sp-i18n key='message.success' params='Contribution'></sp-i18n>
+    becomes
+    <sp-i18n key='message.success'>
+      <div>Contribution has been successfully saved !</div>
+      ...
+    </sp-i18n>
+
+With {"message.success" : "{1}, {0} has been successfully saved !"}:
+
+    <sp-i18n key='message.success' params='["Contribution", "Yocha"]'></sp-i18n>
+    (and not params="['Contribution','Yocha']" because since Polymer 1.0, attribute JSON deserialization respects strictly the JSON specifications)
+    (cf. https://www.polymer-project.org/1.0/docs/migration.html#attr)
+    becomes
+    <sp-i18n key='message.success'>
+      <div>Yocha, Contribution has been successfully saved !</div>
+      ...
+    </sp-i18n>
+
+    Powerful behavior can be implemented with binding.
+    By this way, the message is computed again each time the binding value change !
+
+    <sp-i18n key='message.success' params="[[messageParams]]"></sp-i18n>
+    (messageParams can be a String or an Array of String)
+
+So, now, the best for the end.
+It is possible to put inside <sp-i18n> TAG several <sp-i18n-param> TAGs. If it exist at least one
+<sp-i18n-param> TAG then "params" attribute is ignored.
+This method permits to perform binding in order to get dynamic messages !
+It also permits to format easily the display of each parameters.
+With {"message.success" : "{1}, {0} has been successfully saved !"} and post.label = 'New i18n component !':
+
+    <sp-i18n key='message.success'>
+      <sp-i18n-param>[[currentUserName]]</sp-i18n-param>
+      <sp-i18n-param><b>[[post.label]]</b></sp-i18n-param>
+    </sp-i18n>
+    becomes
+    <sp-i18n key='message.success'>
+      <div>Yocha, <b>New i18n component !</b> has been successfully saved !</div>
+      <div id="paramContainer" hidden="true" class="style-scope sp-i18n">
+        <sp-i18n-param>[[currentUserName]]</sp-i18n-param>
+        <sp-i18n-param><b>[[post.label]]</b></sp-i18n-param>
+      </div>
+    </sp-i18n>
+
+If somewhere the path 'post.label' is updated (this.set('post.label', new_value) or
+this.notifyPath('post.label', new_value)), then the message will change automatically !
+Try it !!!
+
+-->
+<dom-module id="sp-i18n">
+  <template>
+    <div></div>
+    <div id="paramContainer" hidden="true">
+      <content id="params" select="sp-i18n-param"></content>
+    </div>
+    <content id="content" select=":not(sp-i18n-param)"></content>
+  </template>
+</dom-module>
+<script>
+  (function() {
+
+    Polymer({
+      is : 'sp-i18n',
+
+      behaviors : [i18nBehavior],
+
+      properties : {
+        key : {
+          type : String
+        },
+
+        params : {
+          type : Array, value : function() {
+            return [];
+          }
+        },
+
+        /**
+         * This property permits to avoid calling several times this components on host for a same bundle key.
+         * Actually, when same message is required, that is pretty cool to handle it by a binding mechanism.
+         */
+        message : {
+          type : String, notify : true, readOnly : true
+        }
+      },
+
+      observers : ['_updateMessage(key, params)'],
+
+      ready : function() {
+        var observer = new MutationObserver(function() {
+          this._updateMessage();
+        }.bind(this));
+        observer.observe(this.$.paramContainer, {
+          childList : true, characterData : true, subtree : true
+        });
+      },
+
+      _updateMessage : function() {
+        var params = this.params;
+        var paramNodes = Polymer.dom(this.$.params).getDistributedNodes();
+        if (paramNodes.length) {
+          params = [];
+          paramNodes.forEach(function(paramNode) {
+            params.push(paramNode.innerHTML.replace(/(^[\r\n ]*|[\r\n ]*$)/g, ''));
+          });
+        }
+
+        this._setMessage(this.i18n(this.key, params));
+
+        if (!Polymer.dom(this.$.content).getDistributedNodes().length) {
+          Polymer.dom(this.root).querySelector('div').innerHTML = this.message;
+        }
+      }
+    });
+  })();
+</script>
+
+<dom-module id="sp-i18n-param">
+  <template>
+    <content></content>
+  </template>
+</dom-module>
+<script>
+  (function() {
+
+    Polymer({
+      is : 'sp-i18n-param'
+    });
+  })();
+</script>

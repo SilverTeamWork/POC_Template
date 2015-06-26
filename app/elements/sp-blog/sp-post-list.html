@@ -135,9 +135,9 @@
         <template is="dom-if" if="{{hasModificationRightsOn(post)}}">
           <div class="operation">
             <a title="Modifier" href$="[[editionUrl]]"><img title="Modifier" alt="Modifier" src="../../images/update.gif"/></a>
-            <button-paper id="postDeletion" label="Supprimer" on-click="_toggleConfirm">
+            <paper-button id="postDeletion" label="Supprimer" on-click="_toggleConfirm">
               <img title="Supprimer" alt="Supprimer" src="../../images/delete.gif"/>
-            </button-paper>
+            </paper-button>
           </div>
         </template>
       </footer>

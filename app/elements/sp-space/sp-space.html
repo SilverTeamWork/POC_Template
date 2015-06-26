@@ -3,7 +3,9 @@
 <dom-module id="sp-space">
   <template>
     <sp-notifier id="msgNotFound" type="error">
-      Il n'existe pas d'espace ayant l'identifiant <b><span>{{msgSpaceId}}</span></b>.
+      <sp-i18n key="error.space.not.found">
+        <sp-i18n-param><b>[[msgSpaceId]]</b></sp-i18n-param>
+      </sp-i18n>
     </sp-notifier>
 
     <sp-service-ajax id="requester"
@@ -16,9 +18,8 @@
         <sp-breadcrumb context="[[context]]"></sp-breadcrumb>
         <section class="space">
           <template is="dom-if" if="[[isSpaceFound]]">
-            <h2 class="title"><span>Chez Silverpeas</span></h2>
-            Space label: <span id="spaceId">{{currentSpace.label}}</span><br/>
-            Space description: <span>{{currentSpace.description}}</span>
+            <h2 class="title"><span>{{currentSpace.label}}</span></h2>
+            <span>{{currentSpace.description}}</span>
           </template>
         </section>
       </div>

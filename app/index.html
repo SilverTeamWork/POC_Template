@@ -12,7 +12,6 @@
   <script src="bower_components/page/page.js"></script>
   <link rel="import" href="elements/elements.html">
   <script type="text/javascript" src="bower_components/ckeditor/ckeditor.js"></script>
-  <link rel="import" href="locales/fr/translation.json">
 </head>
 <body unresolved class="page-home w100 flexbox-v">
 <template is="dom-bind" id="app">
@@ -37,12 +36,15 @@
     </iron-pages>
   </div>
   <sp-notifier id="noty1" text="Hey !" auto>
-    Bienvenue <b><span>{{currentUser.firstName}}</span> <span>{{currentUser.lastName}}</span></b>
+    <sp-i18n key="welcome">
+      <sp-i18n-param><b>[[currentUser.firstName]]</b></sp-i18n-param>
+      <sp-i18n-param><b>[[currentUser.lastName]]</b></sp-i18n-param>
+    </sp-i18n>
   </sp-notifier>
   <!-- #main-container -->
   <div class="footer-container pam">
     <footer class="wrapper">
-      <div id="footerContent" data-i18n="[html]silverpeas.footer.copyright"></div>
+      <sp-i18n key="silverpeas.footer.copyright"></sp-i18n>
     </footer>
   </div>
   <a id="transition" style="display: none"></a>
@@ -55,6 +57,7 @@
     var CKEDITOR_BASEPATH = 'bower_components/ckeditor/';
 
     window.addEventListener('WebComponentsReady', function() {
+
       var app = document.querySelector('#app');
       app.context = NavigationContextBehavior.init(app);
 
@@ -73,6 +76,11 @@
 
         addEventListener("scroll", scrolled, false);
       })();
+
+      window.setTimeout(function() {
+        app.set('currentUser.firstName', 'Petit(e)');
+        app.set('currentUser.lastName', 'Arsouille :-)');
+      }, 1000);
 
       // load routing rules.
       (function() {
