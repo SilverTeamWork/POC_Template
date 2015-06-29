@@ -26,7 +26,7 @@
     <sp-app-instance-header title="[[_title]]"></sp-app-instance-header>
 
     <sp-app-instance-right-panel>
-      <sp-date-picker id="datePicker"></sp-date-picker>
+      <sp-date-picker id="datePicker" locale="[[i18nUserLanguage]]"></sp-date-picker>
     </sp-app-instance-right-panel>
 
     <form id="edition">
@@ -52,6 +52,7 @@
   <script>
     Polymer({
       is : 'sp-post-edition',
+      behavior: [i18nBehavior],
       properties : {
         post : {
           type : Object,

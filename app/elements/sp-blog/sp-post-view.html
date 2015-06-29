@@ -32,7 +32,7 @@
     </sp-app-instance-header>
 
     <sp-app-instance-right-panel>
-      <sp-date-picker id="datePicker"></sp-date-picker>
+      <sp-date-picker id="datePicker" locale="[[i18nUserLanguage]]"></sp-date-picker>
     </sp-app-instance-right-panel>
 
     <sp-post-content post="[[post]]"></sp-post-content>
@@ -50,7 +50,7 @@
   <script>
     Polymer({
       is : 'sp-post-view',
-      behaviors : [DateBehavior, SessionBehavior, SilverpeasUrl, AccessControlBehavior],
+      behaviors : [DateBehavior, SessionBehavior, SilverpeasUrl, AccessControlBehavior, i18nBehavior],
       properties : {
         post : {
           type : Object, observer : '_onPostChange'

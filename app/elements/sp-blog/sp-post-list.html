@@ -250,6 +250,7 @@
 
     <sp-app-instance-right-panel>
       <sp-date-picker events="[[_events]]"
+                      locale="[[i18nUserLanguage]]"
                       on-date-selected="_renderPostsAtGivenDate"
                       on-date-unselected="_renderPreviousAllPosts">
       </sp-date-picker>
@@ -268,7 +269,7 @@
     // list, then use the reload() function.
     Polymer({
       is : 'sp-post-list',
-      behaviors : [AccessControlBehavior, SilverpeasServiceAjaxBehavior],
+      behaviors : [AccessControlBehavior, SilverpeasServiceAjaxBehavior, i18nBehavior],
       properties : {
         blog : {
           type : Object, observer : '_onBlogChange'

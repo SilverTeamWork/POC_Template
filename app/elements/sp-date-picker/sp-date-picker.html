@@ -144,7 +144,7 @@
           observer: '_onEventsChange'
         },
         locale : {
-          type : String, value : 'fr', observer : '_onLocaleChange'
+          type : String, observer : '_onLocaleChange'
         }
       },
       ready : function() {
@@ -170,6 +170,7 @@
       },
       _onLocaleChange : function() {
         moment.locale(this.locale);
+        this._reload();
       },
       _setUpMonths : function(start, end) {
         var current = moment(start);
