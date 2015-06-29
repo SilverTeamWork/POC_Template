@@ -169,6 +169,7 @@
         this._reload();
       },
       _onLocaleChange : function() {
+        console.log("sp-date-picker: locale change to " + this.locale);
         moment.locale(this.locale);
         this._reload();
       },

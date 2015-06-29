@@ -30,7 +30,7 @@
     <sp-app-instance-header title="[[_title]]"></sp-app-instance-header>
 
     <sp-app-instance-right-panel>
-      <sp-date-picker id="datePicker" locale="[[i18nUserLanguage]]"></sp-date-picker>
+      <sp-date-picker id="datePicker" locale="[[_locale]]"></sp-date-picker>
     </sp-app-instance-right-panel>
 
     <form id="edition">
@@ -89,6 +89,9 @@
           value: null,
           observer : '_onTitleChange'
         }
+      },
+      ready: function() {
+        this._locale = this.i18nUserLanguage;
       },
       _onTitleChange : function() {
         if (this.post && this.post.id === null && !this._title.length) {

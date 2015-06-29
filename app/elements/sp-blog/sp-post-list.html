@@ -257,7 +257,7 @@
 
     <sp-app-instance-right-panel>
       <sp-date-picker events="[[_events]]"
-                      locale="[[i18nUserLanguage]]"
+                      locale="[[_locale]]"
                       on-date-selected="_renderPostsAtGivenDate"
                       on-date-unselected="_renderPreviousAllPosts">
       </sp-date-picker>
@@ -293,6 +293,7 @@
       ready : function() {
         this._scrollHandler = this._onScroll.bind(this);
         this._dateSelected = false;
+        this._locale = this.i18nUserLanguage;
       },
       reload : function() {
         this._onBlogChange();
