@@ -81,6 +81,11 @@
           var classes = NAV_GAUCHE +
               ((this.spaceMenuContext && !this.spaceMenuContext.deployed) ? ' minimize' : '');
           this.set('spaceMenuContext.classes', classes);
+        } else {
+          this.spaceMenuContext = {
+            deployed: true,
+            classes: NAV_GAUCHE
+          }
         }
       }
     });

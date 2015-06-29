@@ -227,6 +227,7 @@
 
 <dom-module id="sp-post-list">
   <template>
+    <sp-i18n key="post.a" message="{{aPostLabel}}" hidden></sp-i18n>
     <sp-service-ajax
         id="postsFetcher"
         on-response="_handleResponse">
@@ -238,7 +239,9 @@
     <sp-app-instance-header title="[[blog.label]]" description="[[blog.description]]">
       <sp-app-instance-menu>
         <template is="dom-if" if="{{hasCreationRightOn(_postList)}}">
-          <li><a href$="[[postCreationUrl]]">Créer un billet</a></li>
+          <li>
+            <a href$="[[postCreationUrl]]"><sp-i18n key="action.create"><sp-i18n-param><sp-i18n key="post.a"></sp-i18n></sp-i18n-param></sp-i18n></a>
+          </li>
         </template>
         <li><a href="#">S'abonner</a></li>
         <li><a href="#">Responsable de l'application</a></li>

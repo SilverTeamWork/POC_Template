@@ -4,7 +4,9 @@
 <dom-module id="sp-app-instance-menu">
   <template>
     <aside id="applicationMenu" class="menu actions">
-      <div><a class="button select" href="#">Plus</a>
+      <div>
+        <sp-i18n key="app.menu.label" message="{{appMenuLabel}}" hidden></sp-i18n>
+        <a class="button select" href="#">[[appMenuLabel]]</a>
         <ul>
           <content></content>
         </ul>

@@ -255,6 +255,10 @@ Try it !!!
         if (paramNodes.length) {
           params = [];
           paramNodes.forEach(function(paramNode) {
+            var subI18n = Polymer.dom(paramNode).querySelector('sp-i18n');
+            if (subI18n && subI18n.childElementCount) {
+              paramNode = subI18n.firstElementChild;
+            }
             params.push(paramNode.innerHTML.replace(/(^[\r\n ]*|[\r\n ]*$)/g, ''));
           });
         }
