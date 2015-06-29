@@ -1,10 +1,16 @@
 <dom-module id="sp-blog-home">
   <template>
+    <sp-i18n key="post" message="{{postLabel}}" hidden></sp-i18n>
     <sp-notifier id="postNotFound" type="error">
-      Il n'existe pas de billet à cette URI <b><span>{{msgPostUri}}</span></b>.
+      <sp-i18n key="error.blog.post.not.found">
+        <sp-i18n-param><b><span>{{msgPostUri}}</span></b></sp-i18n-param>
+      </sp-i18n>
+    </sp-notifier>
+    <sp-notifier id="createSuccess" type="success">
+      <sp-i18n key="message.contribution.create.success" params="[[postLabel]]"></sp-i18n>
     </sp-notifier>
     <sp-notifier id="updateSuccess" type="success">
-      Votre billet a bien été mis à jour.
+      <sp-i18n key="message.contribution.update.success" params="[[postLabel]]"></sp-i18n>
     </sp-notifier>
     <sp-app-instance-layout on-post-selected="_viewPost">
       <iron-pages class="app-main" attr-for-selected="data-page" selected="{{page}}" activate-event="">
@@ -15,7 +21,9 @@
           <sp-post-view post="[[selectedPost]]" class="publication"></sp-post-view>
         </section>
         <section data-page="post-edition" class="blog with-aside-app">
-          <sp-post-edition post="[[selectedPost]]" updated="{{_updated}}"></sp-post-edition>
+          <sp-post-edition post="[[selectedPost]]"
+                           created-flag="{{_created}}"
+                           updated-flag="{{_updated}}"></sp-post-edition>
         </section>
       </iron-pages>
     </sp-app-instance-layout>
@@ -26,12 +34,16 @@
       is : 'sp-blog-home',
 
       behaviors : [NavigationContextBehavior, SilverpeasServiceAjaxBehavior,
-        ApplicationInstanceBehavior, BlogBehavior],
+        ApplicationInstanceBehavior, BlogBehavior, i18nBehavior],
 
       properties : {
 
         context : {
           type : Object
+        },
+
+        _created : {
+          type : Boolean, observer : '_onCreatedChange'
         },
 
         _updated : {
@@ -60,7 +72,7 @@
                 dateEvent : new Date().getTime(),
                 createDate : new Date().getTime()
               };
-              this.setContextPageInfo({label : "Nouveau billet"});
+              this.setContextPageInfo({label : this.i18n("blog.title.new.label")});
               this.page = 'post-edition';
             } else {
               var postUri = this.getPostUriFromContext(this.context);
@@ -89,6 +101,12 @@
             this.blog = this.context.instance.model;
             this.page = 'blog-home';
           }
+        }
+      },
+
+      _onCreatedChange : function() {
+        if (this._created) {
+          this.$.createSuccess.show();
         }
       },
 

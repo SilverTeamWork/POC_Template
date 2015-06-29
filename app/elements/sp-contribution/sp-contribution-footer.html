@@ -1,0 +1,46 @@
+<link rel="import" href="../sp-space/sp-space-libs.html">
+<link rel="import" href="../sp-breadcrumb/sp-breadcrumb.html">
+
+<dom-module id="sp-contribution-footer">
+  <template>
+    <sp-i18n key="publication.publishedIn" message="{{publishedInLabel}}" hidden></sp-i18n>
+    <sp-i18n key="publication.publishedBy" message="{{publishedByLabel}}" hidden>
+      <sp-i18n-param>[[contribution.creator]]</sp-i18n-param>
+    </sp-i18n>
+    <sp-i18n key="publication.modifiedIn" message="{{modifiedInLabel}}" hidden></sp-i18n>
+    <sp-i18n key="publication.modifiedBy" message="{{modifiedByLabel}}" hidden>
+      <sp-i18n-param>[[contribution.updater]]</sp-i18n-param>
+    </sp-i18n>
+    <footer>
+      <p class="publication-detail">
+        <span class="publication"><span>[[publishedInLabel]]</span> <time datetime$="[[publicationDate.toIso8601]]">[[publicationDate.toLocaleDateTime]]</time> <span class="auteur"> <span>[[publishedByLabel]]</span></span></span>
+        <span class="sep"> - </span>
+        <span class="modification"><span>[[modifiedInLabel]]</span> <time datetime$="[[modificationDate.toIso8601]]">[[modificationDate.toLocaleDateTime]]</time> <span class="auteur"> <span>[[modifiedByLabel]]</span></span></span>
+      </p>
+      <content></content>
+    </footer>
+  </template>
+</dom-module>
+<script>
+  (function() {
+
+    Polymer({
+      is : 'sp-contribution-footer',
+
+      behaviors : [DateBehavior],
+
+      properties : {
+        contribution: {
+          type: Object, observer: '_onContributionChange'
+        }
+      },
+
+      _onContributionChange: function() {
+        if (this.contribution) {
+          this.publicationDate = this._date(this.contribution.createDate);
+          this.modificationDate = this._date(this.contribution.updateDate);
+        }
+      }
+    });
+  })();
+</script>

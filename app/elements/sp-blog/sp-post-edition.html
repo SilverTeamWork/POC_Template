@@ -6,11 +6,15 @@
     }
   </style>
   <template>
+    <sp-i18n key="post" message="{{postLabel}}" hidden></sp-i18n>
+    <sp-notifier id="createError" type="error">
+      <sp-i18n key="message.contribution.create.error" params="[[postLabel]]"></sp-i18n>
+    </sp-notifier>
     <sp-notifier id="updateError" type="error">
-      Une erreur est survenue. Votre billet n'a pas pu être mis à jour.
+      <sp-i18n key="message.contribution.update.error" params="[[postLabel]]"></sp-i18n>
     </sp-notifier>
     <sp-notifier id="titleError" type="error">
-      Le titre ne peut être vide.
+      <sp-i18n key="error.blog.post.title.empty.error"></sp-i18n>
     </sp-notifier>
     <sp-service-ajax
       id="request"
@@ -37,11 +41,11 @@
         <sp-wysiwyg text="[[_content]]"></sp-wysiwyg>
         <div class="buttonBar txtcenter">
           <div class="buttonSet">
-            <paper-button value="Annuler" dialog-dismiss autofocus on-click="_cancel" class="button btn" type="submit">
-              Annuler
+            <paper-button value="[[cancelLabel]]" dialog-dismiss autofocus on-click="_cancel" class="button btn" type="submit">
+              <sp-i18n key="action.cancel" message="{{cancelLabel}}"></sp-i18n>
             </paper-button>
-            <paper-button value="Valider" dialog-confirm on-click="_submit" class="button btn" type="submit">
-              Valider
+            <paper-button value="[[validateLabel]]" dialog-confirm on-click="_submit" class="button btn" type="submit">
+              <sp-i18n key="action.validate" message="{{validateLabel}}"></sp-i18n>
             </paper-button>
           </div>
         </div>
@@ -52,13 +56,21 @@
   <script>
     Polymer({
       is : 'sp-post-edition',
-      behavior: [i18nBehavior],
+
+      behaviors: [i18nBehavior],
+
       properties : {
         post : {
           type : Object,
           observer : '_onPostChange'
         },
-        updated: {
+        createdFlag: {
+          type: Boolean,
+          value: false,
+          notify: true,
+          readOnly: true
+        },
+        updatedFlag: {
           type: Boolean,
           value: false,
           notify: true,
@@ -80,11 +92,12 @@
       },
       _onTitleChange : function() {
         if (this.post && this.post.id === null && !this._title.length) {
-          this._title = 'Nouveau billet ...';
+          this._title = this.i18n("blog.title.new.label");
         }
       },
       _onPostChange : function() {
-        console.log((this.post.id === null ? "create new post":"edit post " + this.post.id + ": " + this.post.title));
+        this._creationRequest = this.post && this.post.id === null;
+        console.log((this._creationRequest ? "create new post":"edit post " + this.post.id + ": " + this.post.title));
         this._title = this.post.title;
         this._content = this.post.content;
         this.$.datePicker.event = this.post.id ? new Date(this.post.dateEvent) : new Date();
@@ -108,12 +121,21 @@
         }
       },
       _success: function() {
-        this._setUpdated(true);
+        if (this._creationRequest) {
+          this._setCreatedFlag(true);
+        } else {
+          this._setUpdatedFlag(true);
+        }
         page('/instances/' + this.post.componentId);
       },
       _error: function() {
-        this._setUpdated(false);
-        this.$.updateError.show();
+        if (this._creationRequest) {
+          this._setCreatedFlag(false);
+          this.$.createError.show();
+        } else {
+          this._setUpdatedFlag(false);
+          this.$.updateError.show();
+        }
       }
     });
   </script>

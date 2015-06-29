@@ -53,6 +53,11 @@
     }
   </style>
   <template>
+    <sp-i18n key="post" message="{{postLabel}}" hidden></sp-i18n>
+    <sp-i18n key="action.modify" message="{{modifyLabel}}" hidden></sp-i18n>
+    <sp-i18n key="action.delete" message="{{deleteLabel}}" hidden></sp-i18n>
+    <sp-i18n key="action.ok" message="{{okLabel}}" hidden></sp-i18n>
+    <sp-i18n key="action.cancel" message="{{cancelLabel}}" hidden></sp-i18n>
     <div class="paper-dialog-div">
       <paper-dialog id="confirm" modal="true"
                     entry-animation="scale-up-animation" exit-animation="fade-out-animation"
@@ -60,25 +65,25 @@
         <h2>Confirmation</h2>
 
         <div class="ui-dialog-content ui-widget-content">
-          <p>Êtes vous sûr de vouloir le supprimer ?</p>
+          <p><sp-i18n key="message.confirmation.deletion"></sp-i18n></p>
         </div>
         <div id="button-bar" class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
           <div id="button-set" class="ui-dialog-buttonset">
-            <paper-button label="Annuler" raised dialog-dismiss autofocus class="secondary">
-              <span class="ui-button-text">Annuler</span></paper-button>
-            <paper-button label="Ok" raised dialog-confirm on-click="_onConfirm" class="primary">
-              <span class="ui-button-text">Ok</span></paper-button>
+            <paper-button label="[[cancelLabel]]" raised dialog-dismiss autofocus class="secondary">
+              <span class="ui-button-text">[[cancelLabel]]</span></paper-button>
+            <paper-button label="[[okLabel]]" raised dialog-confirm on-click="_onConfirm" class="primary">
+              <span class="ui-button-text">[[okLabel]]</span></paper-button>
           </div>
         </div>
       </paper-dialog>
       <sp-notifier id="updateSuccess" type="success">
-        Le titre du billet a bien été mis à jour.
+        <sp-i18n key="message.contribution.title.update.success" params="[[postLabel]]"></sp-i18n>
       </sp-notifier>
       <sp-notifier id="updateError" type="error">
-        Une erreur est survenue. Votre billet n'a pas pu être mis à jour.
+        <sp-i18n key="message.contribution.update.error" params="[[postLabel]]"></sp-i18n>
       </sp-notifier>
       <sp-notifier id="titleError" type="error">
-        Le titre ne peut être vide.
+        <sp-i18n key="error.blog.post.title.empty.error"></sp-i18n>
       </sp-notifier>
       <sp-service-ajax
           id="update"
@@ -126,27 +131,26 @@
         </p>
       </header>
       <sp-post-snippet post="[[post]]"></sp-post-snippet>
-      <footer>
-        <p class="publication-detail">
-          <span class="publication">Publié le <time datetime$="[[publicationDate.toIso8601]]">[[publicationDate.toLocaleDateTime]]</time><span class="auteur"> par <span>[[post.creator]]</span></span></span>
-          <span class="sep"> - </span>
-          <span class="modification">Modifié le <time datetime$="[[modificationDate.toIso8601]]">[[modificationDate.toLocaleDateTime]]</time> <span class="auteur"> par <span>[[post.updater]]</span></span></span>
-        </p>
+      <sp-contribution-footer contribution="[[post]]">
         <template is="dom-if" if="{{hasModificationRightsOn(post)}}">
           <div class="operation">
-            <a title="Modifier" href$="[[editionUrl]]"><img title="Modifier" alt="Modifier" src="../../images/update.gif"/></a>
-            <paper-button id="postDeletion" label="Supprimer" on-click="_toggleConfirm">
-              <img title="Supprimer" alt="Supprimer" src="../../images/delete.gif"/>
+            <a title="[[modifyLabel]]" href$="[[editionUrl]]"><img title="[[modifyLabel]]" alt="[[modifyLabel]]" src="../../images/update.gif"/></a>
+            <paper-button id="postDeletion" label="[[deleteLabel]]" on-click="_toggleConfirm">
+              <img title="[[deleteLabel]]" alt="[[deleteLabel]]" src="../../images/delete.gif"/>
             </paper-button>
           </div>
         </template>
-      </footer>
+      </sp-contribution-footer>
     </article>
   </template>
   <script>
     // a brief presentation of a given post within a list
     Polymer({
-      is : 'sp-post-item', behaviors : [DateBehavior, AccessControlBehavior], properties : {
+      is : 'sp-post-item',
+
+      behaviors : [DateBehavior, AccessControlBehavior],
+
+      properties : {
         post : {
           type : Object, observer : '_onPostChange'
         }, postUrl : {
@@ -227,7 +231,6 @@
 
 <dom-module id="sp-post-list">
   <template>
-    <sp-i18n key="post.a" message="{{aPostLabel}}" hidden></sp-i18n>
     <sp-service-ajax
         id="postsFetcher"
         on-response="_handleResponse">
@@ -240,11 +243,15 @@
       <sp-app-instance-menu>
         <template is="dom-if" if="{{hasCreationRightOn(_postList)}}">
           <li>
-            <a href$="[[postCreationUrl]]"><sp-i18n key="action.create"><sp-i18n-param><sp-i18n key="post.a"></sp-i18n></sp-i18n-param></sp-i18n></a>
+            <a href$="[[postCreationUrl]]">
+              <sp-i18n key="action.create">
+                <sp-i18n-param><sp-i18n key="post.a"></sp-i18n></sp-i18n-param>
+              </sp-i18n>
+            </a>
           </li>
         </template>
-        <li><a href="#">S'abonner</a></li>
-        <li><a href="#">Responsable de l'application</a></li>
+        <li><a href="#"><sp-i18n key="subscribe.label"></sp-i18n></a></li>
+        <li><a href="#"><sp-i18n key="application.responsible.label"></sp-i18n></a></li>
       </sp-app-instance-menu>
     </sp-app-instance-header>
 
