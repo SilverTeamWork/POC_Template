@@ -171,6 +171,7 @@
       _onLocaleChange : function() {
         console.log("sp-date-picker: locale change to " + this.locale);
         moment.locale(this.locale);
+        this.weekDayNames = moment.weekdaysMin();
         this._reload();
       },
       _setUpMonths : function(start, end) {
