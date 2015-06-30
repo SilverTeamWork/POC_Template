@@ -2,7 +2,7 @@
  * Cache management.
  * @type {cache} the cache object used in Silverpeas.
  */
-var cache = new function() {
+SilverpeasCache = function() {
   var sessionTokenKey = 'user-auth-token';
   var userProfileKey = 'user-profile';
   this.putSessionId = function(token) {
@@ -21,6 +21,8 @@ var cache = new function() {
     return JSON.parse(localStorage.getItem(userProfileKey));
   };
 };
+
+var cache = new SilverpeasCache();
 
 /**
  * Authenticates the user behind Silverpeas.

@@ -259,11 +259,12 @@
           for (var i = monthElements.length - 1; i >= 0; i--) {
             if (this.$.container.scrollTop + this.$.container.clientHeight / 2 >
                 monthElements[i].offsetTop) {
+              var start, end;
               if (i < this.triggerRange) {
-                var start = moment().month(monthElements[0].month * 1)
+                start = moment().month(monthElements[0].month * 1)
                     .year(monthElements[0].year * 1)
                     .subtract(this.loadPerTrigger, 'month');
-                var end = moment().month(monthElements[monthElements.length - 1].month * 1)
+                end = moment().month(monthElements[monthElements.length - 1].month * 1)
                     .year(monthElements[monthElements.length - 1].year * 1)
                     .subtract(this.loadPerTrigger, 'month');
                 this._setUpMonths(start, end);
@@ -271,10 +272,10 @@
               }
 
               if (i > monthElements.length - this.triggerRange - 1) {
-                var start = moment().month(monthElements[0].month * 1)
+                start = moment().month(monthElements[0].month * 1)
                     .year(monthElements[0].year * 1)
                     .add(this.loadPerTrigger, 'month');
-                var end = moment().month(monthElements[monthElements.length - 1].month * 1)
+                end = moment().month(monthElements[monthElements.length - 1].month * 1)
                     .year(monthElements[monthElements.length - 1].year * 1)
                     .add(this.loadPerTrigger, 'month');
                 this._setUpMonths(start, end);

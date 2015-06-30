@@ -8,9 +8,9 @@
     Polymer({
       is : 'sp-post-snippet', properties : {
         post : {
-          type : Object
+          type : Object, observer: '_onPostChange'
         }
-      }, ready : function() {
+      }, _onPostChange : function() {
         this.$$('.content-from-wysiwyg').innerHTML = this._snippet(this.post);
       }, _snippet : function(post) {
         var snippet = post.content;
